@@ -476,6 +476,16 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
   </div>
 </div>
 
+<!-- MODAL EDIT PRODUK -->
+<div class="mbg" id="m-edit-produk">
+  <div class="modal">
+    <div class="mtitle">✏️ Edit Produk <button class="mclose" onclick="closeM('m-edit-produk')">✕</button></div>
+    <div class="fg"><label class="fl">Nama Produk</label><input class="fc" id="ep-nama" type="text"></div>
+    <div class="fg"><label class="fl">Harga (Rp)</label><input class="fc" id="ep-harga" type="number" min="0"></div>
+    <button class="btn btn-p" onclick="simpanEditProduk()">✅ Simpan</button>
+  </div>
+</div>
+
 <!-- MODAL SETUP -->
 <div class="mbg" id="m-setup">
   <div class="modal">
@@ -498,7 +508,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
 var DEFAULT_KATALOG = [
   // === PET SHOP (WARUNG KUCING) ===
   {id:'k1', bisnis:'kucing',nama_produk:'Cat Choize Adult',  harga:21000,satuan:'pcs',stok:20,aktif:true},
-  {id:'k2', bisnis:'kucing',nama_produk:'Cat Choize Kitten', harga:29000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k2', bisnis:'kucing',nama_produk:'Cat Choize Kitten', harga:28000,satuan:'pcs',stok:20,aktif:true},
   {id:'k3', bisnis:'kucing',nama_produk:'Bolt Adult',         harga:21000,satuan:'pcs',stok:20,aktif:true},
   {id:'k4', bisnis:'kucing',nama_produk:'Bolt Kitten',        harga:15000,satuan:'pcs',stok:20,aktif:true},
   {id:'k5', bisnis:'kucing',nama_produk:'Misterpuss',         harga:13000,satuan:'pcs',stok:20,aktif:true},
@@ -521,6 +531,8 @@ var DEFAULT_KATALOG = [
   {id:'k22',bisnis:'kucing',nama_produk:'Pasir 5L',           harga:35000,satuan:'pcs',stok:20,aktif:true},
   {id:'k23',bisnis:'kucing',nama_produk:'Perapatan',          harga:7000, satuan:'pcs',stok:20,aktif:true},
   {id:'k24',bisnis:'kucing',nama_produk:'Tasty Kitten',       harga:32000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k26',bisnis:'kucing',nama_produk:'Whiskas Sachet',      harga:7000, satuan:'pcs',stok:20,aktif:true},
+  {id:'k27',bisnis:'kucing',nama_produk:'Bolt Curah Karungan',harga:600000,satuan:'karung',stok:1,aktif:true},
   {id:'k25',bisnis:'kucing',nama_produk:'✏️ Lainnya',         harga:0,    satuan:'pcs',stok:null,aktif:true,is_custom:true},
   // === LAUNDRY — Per Kg ===
   {id:'l1',bisnis:'laundry',nama_produk:'Cuci Gosok Biasa',  harga:7000,satuan:'kg',stok:null,aktif:true,tipe:'per_kg'},
@@ -1160,7 +1172,10 @@ function renderStok(){
     var icon=p.bisnis==='kucing'?'🐾':'👕';
     return '<div class="kat-item">'+
       '<div style="width:32px;height:32px;border-radius:9px;background:'+(p.bisnis==='kucing'?'#FEF3C7':'#CFFAFE')+';display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">'+icon+'</div>'+
-      '<div class="kat-info"><div class="kn">'+p.nama_produk.replace('✏️ ','')+'</div><div class="kh">'+fmtF(p.harga)+'</div></div>'+
+      '<div class="kat-info" onclick="openEditProduk('+ri+')" style="cursor:pointer;flex:1;">'+
+        '<div class="kn">'+p.nama_produk.replace('✏️ ','')+'</div>'+
+        '<div class="kh">'+fmtF(p.harga)+' <span style="font-size:10px;color:var(--muted);">✏️</span></div>'+
+      '</div>'+
       (hasStok?
         '<div class="stk-box">'+
           '<button class="stk-btn" onclick="adjustStok('+ri+',-1)">−</button>'+
@@ -1191,6 +1206,25 @@ async function simpanStok(){
   closeM('m-stok');renderStok();renderProdGrid();
   await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(katalog[_stokRi]))});
   _stokRi=null;
+}
+var _editRi=null;
+function openEditProduk(ri){
+  _editRi=ri;var p=katalog[ri];
+  document.getElementById('ep-nama').value=p.nama_produk.replace('✏️ ','');
+  document.getElementById('ep-harga').value=p.harga||0;
+  document.getElementById('m-edit-produk').classList.add('open');
+}
+async function simpanEditProduk(){
+  if(_editRi===null)return;
+  var nama=document.getElementById('ep-nama').value.trim();
+  var harga=parseInt(document.getElementById('ep-harga').value)||0;
+  if(!nama){alert('Nama tidak boleh kosong');return;}
+  katalog[_editRi].nama_produk=nama;
+  katalog[_editRi].harga=harga;
+  sd('kat_v3',katalog);
+  closeM('m-edit-produk');renderStok();renderProdGrid();
+  await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(katalog[_editRi]))});
+  _editRi=null;
 }
 
 // ══════════════════════════════════════════════
