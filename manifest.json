@@ -1,0 +1,19 @@
+{
+  "name": "Sister Laundry & Pet Shop",
+  "short_name": "Sister",
+  "description": "Laporan Keuangan Harian Sister Laundry & Pet Shop",
+  "start_url": "/sister-laundry/",
+  "scope": "/sister-laundry/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#4F46E5",
+  "theme_color": "#4F46E5",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
