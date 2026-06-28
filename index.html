@@ -1195,18 +1195,28 @@ async function pushStokKeCloud(){
   if(!CFG.URL){alert('URL Google Sheets belum diisi.\nTap icon ☁️ di atas untuk setup dulu.');return;}
   var btn=document.getElementById('btn-push-cloud');
   var info=document.getElementById('push-cloud-info');
-  btn.textContent='⏳ Mengupload...';btn.disabled=true;
+  btn.textContent='⏳ Mempersiapkan...';btn.disabled=true;info.style.display='none';
   try{
-    var res=await cloudGet({action:'sync_produk',data:encodeURIComponent(JSON.stringify(katalog))});
-    if(res&&res.success){
-      btn.textContent='✅ Upload Berhasil!';
-      info.textContent='✅ '+katalog.length+' produk ter-upload. HP lain akan sync otomatis saat dibuka.';
-      info.style.display='block';
-      setTimeout(function(){btn.textContent='☁️ Upload Stok ke Cloud (sync HP lain)';btn.disabled=false;},3000);
-    } else {
-      btn.textContent='❌ Gagal, coba lagi';btn.disabled=false;
-      info.textContent='Gagal upload. Cek koneksi atau URL Sheets.';info.style.display='block';
+    // Cek produk yang sudah ada di cloud
+    var res=await cloudGet({action:'read'});
+    var cloudIds=(res&&res.produk)?res.produk.map(function(p){return String(p.id);}):[];
+    var ok=0,fail=0;
+    for(var i=0;i<katalog.length;i++){
+      var p=katalog[i];
+      var act=cloudIds.indexOf(String(p.id))>=0?'update_produk':'add_produk';
+      btn.textContent='⏳ '+(i+1)+'/'+katalog.length+' produk...';
+      var r=await cloudGet({action:act,data:encodeURIComponent(JSON.stringify(p))});
+      if(r&&r.success) ok++; else fail++;
     }
+    if(fail===0){
+      btn.textContent='✅ Upload Berhasil!';
+      info.textContent='✅ '+ok+' produk ter-upload. HP lain sync otomatis saat dibuka.';
+    } else {
+      btn.textContent='⚠️ Sebagian gagal ('+fail+')';
+      info.textContent=ok+' berhasil, '+fail+' gagal. Coba ulangi.';
+    }
+    info.style.display='block';
+    setTimeout(function(){btn.textContent='☁️ Upload Stok ke Cloud (sync HP lain)';btn.disabled=false;},4000);
   }catch(e){
     btn.textContent='❌ Error';btn.disabled=false;
     info.textContent='Error: '+e.message;info.style.display='block';
