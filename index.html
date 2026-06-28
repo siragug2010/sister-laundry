@@ -558,7 +558,8 @@ var CFG = {URL: localStorage.getItem('wk_url')||''};
 // ══════════════════════════════════════════════
 function fmt(n){var a=Math.abs(n);if(a>=1000000)return 'Rp '+(n/1000000).toFixed(1)+'jt';return 'Rp '+Number(n).toLocaleString('id-ID');}
 function fmtF(n){return 'Rp '+Number(n).toLocaleString('id-ID');}
-function today(){return new Date().toISOString().slice(0,10);}
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function localDate(v){if(!v)return '';var s=String(v);if(s.length===10)return s;var d=new Date(v);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtD(d){var D=['Min','Sen','Sel','Rab','Kam','Jum','Sab'],M=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'],dt=new Date(d+'T00:00:00');return D[dt.getDay()]+' '+dt.getDate()+' '+M[dt.getMonth()];}
 function uid(){return Date.now().toString()+Math.floor(Math.random()*999);}
 
@@ -589,7 +590,10 @@ async function manualSync(){
   setSyncBadge('ing');
   var res=await cloudGet({action:'read'});
   if(res&&res.success){
-    // Merge transaksi: gabung lokal + cloud, deduplikasi by id, jangan timpa lokal kalau cloud kosong
+    // Normalisasi tanggal dari Sheets (UTC ISO → local YYYY-MM-DD)
+    if(res.transaksi) res.transaksi.forEach(function(t){t.tanggal=localDate(t.tanggal);});
+    if(res.utang) res.utang.forEach(function(t){t.tanggal=localDate(t.tanggal);});
+    // Merge transaksi: gabung lokal + cloud, deduplikasi by id
     if(res.transaksi&&res.transaksi.length){
       var idMap={};
       transaksi.forEach(function(t){idMap[t.id]=t;});
