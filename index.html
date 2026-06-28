@@ -408,6 +408,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
     </div>
     <button id="btn-push-cloud" onclick="pushStokKeCloud()" style="width:100%;padding:10px;border-radius:9px;border:none;background:#DBEAFE;color:#1E40AF;font-size:12px;font-weight:700;cursor:pointer;">☁️ Upload Stok ke Cloud (sync HP lain)</button>
     <div id="push-cloud-info" style="display:none;font-size:11px;color:#166534;margin-top:6px;text-align:center;"></div>
+    <button onclick="document.getElementById('m-add-produk').classList.add('open')" style="width:100%;padding:10px;border-radius:9px;border:none;background:#D1FAE5;color:#065F46;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;">➕ Tambah Produk Baru</button>
   </div>
   <div class="card"><div id="stok-list"></div></div>
 </div>
@@ -483,6 +484,24 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
     <div class="fg"><label class="fl">Nama Produk</label><input class="fc" id="ep-nama" type="text"></div>
     <div class="fg"><label class="fl">Harga (Rp)</label><input class="fc" id="ep-harga" type="number" min="0"></div>
     <button class="btn btn-p" onclick="simpanEditProduk()">✅ Simpan</button>
+  </div>
+</div>
+
+<!-- MODAL TAMBAH PRODUK BARU -->
+<div class="mbg" id="m-add-produk">
+  <div class="modal">
+    <div class="mtitle">➕ Produk Baru <button class="mclose" onclick="closeM('m-add-produk')">✕</button></div>
+    <div class="fg">
+      <label class="fl">Kategori</label>
+      <select class="fc" id="ap-bisnis">
+        <option value="kucing">🐾 Pet Shop</option>
+        <option value="laundry">👕 Laundry</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">Nama Produk</label><input class="fc" id="ap-nama" type="text" placeholder="cth: Royal Canin Kitten"></div>
+    <div class="fg"><label class="fl">Harga (Rp)</label><input class="fc" id="ap-harga" type="number" min="0" placeholder="0"></div>
+    <div class="fg"><label class="fl">Stok Awal</label><input class="fc" id="ap-stok" type="number" min="0" placeholder="0"></div>
+    <button class="btn btn-p" onclick="simpanProdukBaru()">✅ Tambah Produk</button>
   </div>
 </div>
 
@@ -1225,6 +1244,25 @@ async function simpanEditProduk(){
   closeM('m-edit-produk');renderStok();renderProdGrid();
   await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(katalog[_editRi]))});
   _editRi=null;
+}
+
+async function simpanProdukBaru(){
+  var nama=document.getElementById('ap-nama').value.trim();
+  var harga=parseInt(document.getElementById('ap-harga').value)||0;
+  var stok=parseInt(document.getElementById('ap-stok').value)||0;
+  var bisnis=document.getElementById('ap-bisnis').value;
+  if(!nama){alert('Nama produk tidak boleh kosong');return;}
+  var newId=(bisnis==='kucing'?'k':'l')+'_'+Date.now();
+  var prod={id:newId,bisnis:bisnis,nama_produk:nama,harga:harga,satuan:'pcs',stok:stok,aktif:true};
+  katalog.push(prod);
+  sd('kat_v3',katalog);
+  closeM('m-add-produk');
+  document.getElementById('ap-nama').value='';
+  document.getElementById('ap-harga').value='';
+  document.getElementById('ap-stok').value='';
+  renderStok();renderProdGrid();
+  await cAction({action:'add_produk',data:encodeURIComponent(JSON.stringify(prod))});
+  alert('✅ Produk "'+nama+'" berhasil ditambahkan!');
 }
 
 // ══════════════════════════════════════════════
