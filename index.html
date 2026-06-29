@@ -1182,6 +1182,12 @@ var stokEditId=null;
 function fStok(v,el){stokFil=v;document.querySelectorAll('#tab-stok .pill').forEach(p=>{p.classList.remove('a-all','a-cat','a-lau');});el.classList.add(v==='semua'?'a-all':v==='kucing'?'a-cat':'a-lau');renderStok();}
 function renderStok(){
   var data=katalog.filter(x=>stokFil==='semua'||(stokFil==='kucing'&&x.bisnis==='kucing')||(stokFil==='laundry'&&x.bisnis==='laundry'));
+  // Sort: stok paling sedikit di atas, layanan (null) paling bawah
+  data.sort(function(a,b){
+    var sa=a.stok!==null&&a.stok!==undefined?a.stok:99999;
+    var sb=b.stok!==null&&b.stok!==undefined?b.stok:99999;
+    return sa-sb;
+  });
   var el=document.getElementById('stok-list');
   if(!data.length){el.innerHTML='<div class="empty"><div class="ei">📦</div><p>Belum ada item</p></div>';return;}
   el.innerHTML=data.map(p=>{
