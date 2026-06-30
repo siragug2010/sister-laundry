@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monitor — Sister Laundry & Pet Shop</title>
+<style>
+:root{--cat:#F59E0B;--laundry:#06B6D4;--primary:#4F46E5;--income:#10B981;--expense:#EF4444;--bg:#0F172A;--card:#1E293B;--card2:#273549;--text:#F1F5F9;--muted:#94A3B8;--border:#334155;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+body{background:var(--bg);color:var(--text);min-height:100vh;padding:20px;}
+.hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.hdr h1{font-size:22px;font-weight:800;}
+.hdr .right{text-align:right;}.hdr .right .time{font-size:13px;color:var(--muted);}
+.status{display:flex;align-items:center;gap:8px;margin-top:4px;justify-content:flex-end;}
+.dot{width:8px;height:8px;border-radius:50%;background:#EF4444;}
+.dot.ok{background:#10B981;animation:pulse 2s infinite;}
+.dot.loading{background:#F59E0B;animation:pulse .8s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.status-txt{font-size:12px;color:var(--muted);}
+/* SETUP */
+.setup-card{background:var(--card);border-radius:16px;padding:32px;max-width:560px;margin:60px auto;}
+.setup-card h2{font-size:20px;font-weight:700;margin-bottom:8px;}
+.setup-card p{font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.6;}
+.inp{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);background:var(--card2);outline:none;margin-bottom:12px;}
+.inp:focus{border-color:var(--primary);}
+.btn-p{width:100%;padding:13px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;border:none;background:var(--primary);color:#fff;}
+/* MAIN */
+.main{display:none;}
+/* SUMMARY */
+.sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+@media(max-width:700px){.sum-grid{grid-template-columns:1fr 1fr;}}
+.sc{background:var(--card);border-radius:14px;padding:16px 20px;border-left:4px solid transparent;}
+.sc.inc{border-color:var(--income);}.sc.exp{border-color:var(--expense);}.sc.laba{border-color:var(--primary);}
+.sc .lbl{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px;}
+.sc .val{font-size:22px;font-weight:800;}
+.sc.inc .val{color:var(--income);}.sc.exp .val{color:var(--expense);}.sc.laba .val{color:#93C5FD;}
+.sc .sub{font-size:11px;color:var(--muted);margin-top:4px;}
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:800px){.grid2{grid-template-columns:1fr;}}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:900px){.grid3{grid-template-columns:1fr;}}
+/* CARD */
+.card{background:var(--card);border-radius:14px;padding:18px;}
+.card h3{font-size:14px;font-weight:700;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px;}
+/* TRX */
+.ti{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.ti:last-child{border-bottom:none;}
+.tic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.tic.income{background:rgba(16,185,129,.15);}.tic.expense{background:rgba(239,68,68,.15);}
+.tii{flex:1;min-width:0;}.tii .k{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tii .m{font-size:11px;color:var(--muted);margin-top:2px;}
+.tam{font-weight:700;font-size:13px;white-space:nowrap;}.tam.income{color:var(--income);}.tam.expense{color:var(--expense);}
+.badge{display:inline-block;font-size:10px;padding:1px 7px;border-radius:8px;font-weight:600;}
+.badge.kucing{background:rgba(245,158,11,.2);color:#FCD34D;}.badge.laundry{background:rgba(6,182,212,.2);color:#67E8F9;}
+/* UTANG */
+.ui{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.ui:last-child{border-bottom:none;}
+.ui .un{font-size:13px;font-weight:600;}.ui .uk{font-size:11px;color:var(--muted);}
+.ui .unom{font-weight:700;font-size:14px;color:var(--expense);}
+/* STOK */
+.si{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.si:last-child{border-bottom:none;}
+.si .sn{font-size:13px;font-weight:600;}
+.si .sk{font-size:11px;color:var(--muted);}
+.stk-badge{font-size:12px;font-weight:800;padding:3px 10px;border-radius:8px;}
+.stk-lo{background:rgba(239,68,68,.2);color:#FCA5A5;}
+.stk-mid{background:rgba(245,158,11,.2);color:#FCD34D;}
+.stk-hi{background:rgba(16,185,129,.2);color:#6EE7B7;}
+/* BAR CHART */
+.chart-wrap{display:flex;align-items:flex-end;gap:10px;height:120px;margin-bottom:6px;}
+.bw{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end;}
+.bar{width:100%;border-radius:5px 5px 0 0;min-height:2px;transition:height .5s;}
+.bar.income{background:linear-gradient(180deg,#34D399,#10B981);}
+.bar.expense{background:linear-gradient(180deg,#F87171,#EF4444);}
+.blbl{font-size:10px;color:var(--muted);margin-top:4px;}
+.chart-legend{display:flex;gap:16px;font-size:11px;margin-top:4px;}
+.chart-legend span{display:flex;align-items:center;gap:5px;color:var(--muted);}
+.chart-legend .dot-inc{width:10px;height:10px;border-radius:3px;background:var(--income);}
+.chart-legend .dot-exp{width:10px;height:10px;border-radius:3px;background:var(--expense);}
+/* SPLIT */
+.split{display:flex;gap:12px;margin-top:8px;}
+.split-item{flex:1;background:var(--card2);border-radius:10px;padding:12px;}
+.split-item .sl{font-size:11px;color:var(--muted);margin-bottom:4px;}
+.split-item .sv{font-size:16px;font-weight:700;}
+/* BTN */
+.refresh-btn{background:rgba(79,70,229,.2);color:#A5B4FC;border:1px solid rgba(79,70,229,.4);padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;}
+.refresh-btn:hover{background:rgba(79,70,229,.35);}
+.empty-m{color:var(--muted);font-size:13px;text-align:center;padding:20px 0;}
+.setup-link{font-size:12px;color:var(--muted);text-align:center;margin-top:14px;cursor:pointer;text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<!-- SETUP -->
+<div class="setup-card" id="setup">
+  <h2>📡 Monitor Sister Laundry &amp; Pet Shop</h2>
+  <p>Paste <strong>Web App URL</strong> dari Google Apps Script (sama dengan yang dipakai di aplikasi HP).</p>
+  <input class="inp" id="setup-url" placeholder="https://script.google.com/macros/s/...">
+  <button class="btn-p" onclick="saveSetup()">🔗 Hubungkan & Mulai Monitor</button>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+  <div class="hdr">
+    <div>
+      <h1>🐾 Sister Laundry &amp; Pet Shop</h1>
+      <div style="font-size:13px;color:var(--muted);margin-top:2px;">Dashboard Monitoring</div>
+    </div>
+    <div class="right">
+      <div class="time" id="clock"></div>
+      <div class="status"><div class="dot" id="dot"></div><div class="status-txt" id="status-txt">Menghubungkan...</div></div>
+      <button class="refresh-btn" style="margin-top:6px;" onclick="doRefresh()">🔄 Refresh</button>
+    </div>
+  </div>
+
+  <!-- SUMMARY HARI INI -->
+  <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;">📅 Hari Ini</div>
+  <div class="sum-grid">
+    <div class="sc inc"><div class="lbl">Total Pemasukan</div><div class="val" id="s-inc">Rp 0</div><div class="sub" id="s-inc-cnt">0 transaksi</div></div>
+    <div class="sc exp"><div class="lbl">Total Pengeluaran</div><div class="val" id="s-exp">Rp 0</div><div class="sub" id="s-exp-cnt">0 transaksi</div></div>
+    <div class="sc laba"><div class="lbl">Laba Bersih</div><div class="val" id="s-laba">Rp 0</div><div class="sub" id="s-margin">Margin: 0%</div></div>
+  </div>
+
+  <!-- SPLIT PER BISNIS -->
+  <div class="grid2" style="margin-bottom:14px;">
+    <div class="card">
+      <h3>🐾 Pet Shop — Hari Ini</h3>
+      <div class="split">
+        <div class="split-item"><div class="sl">Pemasukan</div><div class="sv" id="cat-inc" style="color:var(--income);">Rp 0</div></div>
+        <div class="split-item"><div class="sl">Pengeluaran</div><div class="sv" id="cat-exp" style="color:var(--expense);">Rp 0</div></div>
+        <div class="split-item"><div class="sl">Laba</div><div class="sv" id="cat-laba" style="color:#93C5FD;">Rp 0</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>👕 Laundry — Hari Ini</h3>
+      <div class="split">
+        <div class="split-item"><div class="sl">Pemasukan</div><div class="sv" id="lau-inc" style="color:var(--income);">Rp 0</div></div>
+        <div class="split-item"><div class="sl">Pengeluaran</div><div class="sv" id="lau-exp" style="color:var(--expense);">Rp 0</div></div>
+        <div class="split-item"><div class="sl">Laba</div><div class="sv" id="lau-laba" style="color:#93C5FD;">Rp 0</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHART + TRX + UTANG -->
+  <div class="grid3">
+    <div class="card">
+      <h3>📊 Grafik 7 Hari</h3>
+      <div class="chart-wrap" id="chart"></div>
+      <div class="chart-legend"><span><div class="dot-inc"></div>Pemasukan</span><span><div class="dot-exp"></div>Pengeluaran</span></div>
+    </div>
+    <div class="card">
+      <h3>⏱ Transaksi Terbaru</h3>
+      <div id="recent-trx"><div class="empty-m">Belum ada data</div></div>
+    </div>
+    <div class="card">
+      <h3>💳 Utang Aktif</h3>
+      <div style="font-size:20px;font-weight:800;color:var(--expense);margin-bottom:4px;" id="total-utang">Rp 0</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;" id="utang-cnt">0 pelanggan</div>
+      <div id="utang-list"><div class="empty-m">Tidak ada utang aktif 🎉</div></div>
+    </div>
+  </div>
+
+  <!-- STOK MENIPIS -->
+  <div class="grid2">
+    <div class="card">
+      <h3>⚠️ Stok Menipis (≤5)</h3>
+      <div id="stok-lo"><div class="empty-m">Semua stok aman ✅</div></div>
+    </div>
+    <div class="card">
+      <h3>📦 Semua Stok</h3>
+      <div id="stok-all"><div class="empty-m">Belum ada data stok</div></div>
+    </div>
+  </div>
+
+  <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:20px;">
+    Auto-refresh setiap 60 detik · <span class="setup-link" onclick="resetSetup()">Ganti URL</span>
+  </div>
+</div>
+
+<script>
+var SCRIPT_URL = localStorage.getItem('mon_script_url') || '';
+var allData = {transaksi:[], utang:[], produk:[]};
+var _refreshTimer = null;
+
+// ── HELPER ──
+function fmt(n){ var abs=Math.abs(n); if(abs>=1000000) return 'Rp '+(n/1000000).toFixed(1)+'jt'; return 'Rp '+Number(n).toLocaleString('id-ID'); }
+function fmtFull(n){ return 'Rp '+Number(n).toLocaleString('id-ID'); }
+
+// Timezone-safe: pakai waktu lokal bukan UTC
+function today(){
+  var d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function localDate(v){
+  if(!v) return '';
+  var s=String(v);
+  if(s.length===10) return s;
+  var d=new Date(v);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function localDateOffset(offsetDays){
+  var d=new Date();
+  d.setDate(d.getDate()+offsetDays);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function fmtDate(d){
+  var days=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+  var mons=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  if(!d) return '-';
+  var s=localDate(d);
+  var dt=new Date(s+'T00:00:00');
+  if(isNaN(dt.getTime())) return String(d).slice(0,10)||'-';
+  return days[dt.getDay()]+' '+dt.getDate()+' '+mons[dt.getMonth()];
+}
+
+// ── CLOCK ──
+setInterval(function(){
+  var now=new Date();
+  document.getElementById('clock').textContent=now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' · '+now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+},1000);
+
+// ── SETUP ──
+function saveSetup(){
+  var url=document.getElementById('setup-url').value.trim();
+  if(!url){ alert('Paste URL Apps Script dulu!'); return; }
+  SCRIPT_URL=url;
+  localStorage.setItem('mon_script_url',url);
+  showMain(); doRefresh();
+}
+function showMain(){
+  document.getElementById('setup').style.display='none';
+  document.getElementById('main').style.display='block';
+  if(_refreshTimer) clearInterval(_refreshTimer);
+  _refreshTimer=setInterval(doRefresh,60000);
+}
+function resetSetup(){
+  if(_refreshTimer) clearInterval(_refreshTimer);
+  document.getElementById('setup').style.display='block';
+  document.getElementById('main').style.display='none';
+  document.getElementById('setup-url').value=SCRIPT_URL;
+}
+
+// ── FETCH ──
+async function doRefresh(){
+  setStatus('loading');
+  try{
+    var r=await fetch(SCRIPT_URL+'?action=read&t='+Date.now());
+    var d=await r.json();
+    if(d.success){
+      // Normalisasi tanggal (Sheets UTC ISO → local YYYY-MM-DD)
+      if(d.transaksi) d.transaksi.forEach(function(t){t.tanggal=localDate(t.tanggal);});
+      if(d.utang) d.utang.forEach(function(t){t.tanggal=localDate(t.tanggal);});
+      allData=d; setStatus('ok'); renderAll();
+    } else { setStatus('err'); }
+  } catch(e){ setStatus('err'); }
+}
+function setStatus(s){
+  var dot=document.getElementById('dot'); var txt=document.getElementById('status-txt');
+  if(s==='ok'){ dot.className='dot ok'; txt.textContent='Terhubung · Data terbaru'; }
+  else if(s==='loading'){ dot.className='dot loading'; txt.textContent='Memperbarui data...'; }
+  else { dot.className='dot'; txt.textContent='Gagal terhubung'; }
+}
+
+// ── RENDER ──
+function renderAll(){
+  var t=today();
+  var trx=allData.transaksi||[];
+  var utang=allData.utang||[];
+  var produk=allData.produk||[];
+
+  // Summary hari ini
+  var todayTrx=trx.filter(function(x){return x.tanggal===t;});
+  var todayInc=todayTrx.filter(function(x){return x.tipe==='income';}).reduce(function(a,b){return a+Number(b.nominal);},0);
+  var todayExp=todayTrx.filter(function(x){return x.tipe==='expense';}).reduce(function(a,b){return a+Number(b.nominal);},0);
+  var todayLaba=todayInc-todayExp;
+
+  document.getElementById('s-inc').textContent=fmt(todayInc);
+  document.getElementById('s-exp').textContent=fmt(todayExp);
+  document.getElementById('s-inc-cnt').textContent=todayTrx.filter(function(x){return x.tipe==='income';}).length+' transaksi';
+  document.getElementById('s-exp-cnt').textContent=todayTrx.filter(function(x){return x.tipe==='expense';}).length+' transaksi';
+  var labaEl=document.getElementById('s-laba');
+  labaEl.textContent=fmt(todayLaba);
+  labaEl.style.color=todayLaba>=0?'#93C5FD':'var(--expense)';
+  document.getElementById('s-margin').textContent='Margin: '+(todayInc>0?Math.round(todayLaba/todayInc*100):0)+'%';
+
+  // Per bisnis
+  ['kucing','laundry'].forEach(function(bis){
+    var pre=bis==='kucing'?'cat':'lau';
+    var bt=todayTrx.filter(function(x){return x.bisnis===bis;});
+    var bi=bt.filter(function(x){return x.tipe==='income';}).reduce(function(a,b){return a+Number(b.nominal);},0);
+    var be=bt.filter(function(x){return x.tipe==='expense';}).reduce(function(a,b){return a+Number(b.nominal);},0);
+    document.getElementById(pre+'-inc').textContent=fmt(bi);
+    document.getElementById(pre+'-exp').textContent=fmt(be);
+    document.getElementById(pre+'-laba').textContent=fmt(bi-be);
+  });
+
+  // Chart 7 hari (timezone-safe)
+  var days7=[];
+  for(var i=6;i>=0;i--) days7.push(localDateOffset(-i));
+  var cd=days7.map(function(date){
+    var dt=trx.filter(function(x){return x.tanggal===date;});
+    return {date:date,inc:dt.filter(function(x){return x.tipe==='income';}).reduce(function(a,b){return a+Number(b.nominal);},0),exp:dt.filter(function(x){return x.tipe==='expense';}).reduce(function(a,b){return a+Number(b.nominal);},0)};
+  });
+  var mx=Math.max.apply(null,cd.map(function(x){return Math.max(x.inc,x.exp);}));
+  if(mx===0) mx=1;
+  var dnames=['M','S','S','R','K','J','S'];
+  document.getElementById('chart').innerHTML=cd.map(function(d){
+    var dt=new Date(d.date+'T00:00:00');
+    return '<div class="bw">'+
+      '<div class="bar income" style="height:'+Math.round(d.inc/mx*100)+'px;" title="Masuk: '+fmtFull(d.inc)+'"></div>'+
+      '<div class="bar expense" style="height:'+Math.round(d.exp/mx*100)+'px;" title="Keluar: '+fmtFull(d.exp)+'"></div>'+
+      '<div class="blbl">'+dnames[dt.getDay()]+'</div></div>';
+  }).join('');
+
+  // Recent transaksi
+  var recent=[].concat(trx).sort(function(a,b){return a.tanggal<b.tanggal?1:a.tanggal>b.tanggal?-1:0;}).slice(0,8);
+  var rEl=document.getElementById('recent-trx');
+  rEl.innerHTML=recent.length?recent.map(function(x){
+    var isCat=x.bisnis==='kucing';
+    return '<div class="ti">'+
+      '<div class="tic '+x.tipe+'">'+(x.tipe==='income'?'💰':'💸')+'</div>'+
+      '<div class="tii">'+
+        '<div class="k">'+x.keterangan+'</div>'+
+        '<div class="m"><span class="badge '+(isCat?'kucing':'laundry')+'">'+(isCat?'Pet Shop':'Laundry')+'</span> · '+fmtDate(x.tanggal)+'</div>'+
+      '</div>'+
+      '<div class="tam '+x.tipe+'">'+(x.tipe==='income'?'+':'-')+fmt(Number(x.nominal))+'</div>'+
+    '</div>';
+  }).join(''):'<div class="empty-m">Belum ada transaksi</div>';
+
+  // Utang
+  var activeUtang=utang.filter(function(x){return !x.lunas;});
+  document.getElementById('total-utang').textContent=fmtFull(activeUtang.reduce(function(a,b){return a+Number(b.nominal);},0));
+  document.getElementById('utang-cnt').textContent=activeUtang.length+' pelanggan';
+  var uEl=document.getElementById('utang-list');
+  uEl.innerHTML=activeUtang.length?activeUtang.slice(0,6).map(function(x){
+    return '<div class="ui"><div><div class="un">'+x.nama+'</div><div class="uk">'+x.keterangan+'</div></div><div class="unom">'+fmtFull(Number(x.nominal))+'</div></div>';
+  }).join(''):'<div class="empty-m">Tidak ada utang aktif 🎉</div>';
+
+  // Stok
+  var stokItems=produk.filter(function(p){return p.stok!==null&&p.stok!==undefined&&p.stok!=='';});
+  stokItems.sort(function(a,b){return Number(a.stok)-Number(b.stok);});
+
+  var loItems=stokItems.filter(function(p){return Number(p.stok)<=5;});
+  var loEl=document.getElementById('stok-lo');
+  loEl.innerHTML=loItems.length?loItems.map(function(p){
+    var s=Number(p.stok);
+    var cls=s===0?'stk-lo':s<=3?'stk-lo':'stk-mid';
+    return '<div class="si"><div><div class="sn">'+p.nama_produk+'</div><div class="sk">'+(p.bisnis==='kucing'?'🐾 Pet Shop':'👕 Laundry')+'</div></div><span class="stk-badge '+cls+'">'+s+' sisa</span></div>';
+  }).join(''):'<div class="empty-m">Semua stok aman ✅</div>';
+
+  var allEl=document.getElementById('stok-all');
+  allEl.innerHTML=stokItems.length?stokItems.map(function(p){
+    var s=Number(p.stok);
+    var cls=s<=5?'stk-lo':s<=10?'stk-mid':'stk-hi';
+    return '<div class="si"><div><div class="sn">'+p.nama_produk+'</div><div class="sk">'+(p.bisnis==='kucing'?'🐾 Pet Shop':'👕 Laundry')+'</div></div><span class="stk-badge '+cls+'">'+s+'</span></div>';
+  }).join(''):'<div class="empty-m">Belum ada data stok</div>';
+}
+
+// ── INIT ──
+if(SCRIPT_URL){
+  document.getElementById('setup-url').value=SCRIPT_URL;
+  showMain(); doRefresh();
+}
+</script>
+</body>
+</html>
