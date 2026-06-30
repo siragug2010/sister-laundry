@@ -224,6 +224,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
     <div style="font-size:11px;opacity:.85;" id="hdr-date"></div>
     <div class="sync-badge sy-off" id="sync-badge" onclick="manualSync()">⚠️ Offline</div>
     <div id="role-badge" style="display:none;"></div>
+    <div id="logout-btn" onclick="logoutApp()" style="display:none;font-size:10px;color:rgba(255,255,255,.6);cursor:pointer;margin-top:4px;">🔓 Ganti Akun</div>
   </div>
 </div>
 <div class="sync-bar hidden" id="sync-bar">
@@ -625,8 +626,8 @@ if(!katalog.length){
 // ══════════════════════════════════════════════
 // KONFIGURASI — GANTI PIN DI SINI
 // ══════════════════════════════════════════════
-var APP_PIN    = '4305'; // ← PIN PEMILIK (akses penuh) — GANTI!
-var KASIR_PIN  = '1234'; // ← PIN KASIR (jualan saja) — GANTI!
+var APP_PIN    = '140107'; // ← PIN PEMILIK (akses penuh) — GANTI!
+var KASIR_PIN  = '123456'; // ← PIN KASIR (jualan saja) — GANTI!
 var SCRIPT_URL_FIXED = 'https://script.google.com/macros/s/AKfycbwpn-HwknJOq99vFV833x4qDg-Fv2vEG9gDl5gR-RruxnKxURSb6SFlCjY1fC3kbmowvg/exec';
 var AUTH_DURATION_MS = 24 * 60 * 60 * 1000; // 24 jam
 var _isOwner = false; // set saat login
@@ -724,6 +725,11 @@ async function manualSync(){
 async function cAction(p){if(CFG.URL)await cloudGet(p);}
 
 // Init: dipanggil setelah PIN benar
+function logoutApp(){
+  localStorage.removeItem('auth_ts');
+  localStorage.removeItem('auth_role');
+  location.reload();
+}
 function applyRole(){
   var adminPanel=document.getElementById('stok-admin-panel');
   if(adminPanel){
@@ -766,6 +772,9 @@ function applyRole(){
     }
     badge.style.display='block';
   }
+  // Tombol Ganti Akun — selalu tampil
+  var lb=document.getElementById('logout-btn');
+  if(lb) lb.style.display='block';
 }
 function appInit(){
   applyRole();
