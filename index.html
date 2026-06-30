@@ -634,7 +634,7 @@ if(!katalog.length){
 // ══════════════════════════════════════════════
 // KONFIGURASI — GANTI PIN DI SINI
 // ══════════════════════════════════════════════
-var APP_PIN = '4305'; // ← GANTI DENGAN PIN KAMU
+var APP_PIN = '1234'; // ← GANTI DENGAN PIN KAMU
 var SCRIPT_URL_FIXED = 'https://script.google.com/macros/s/AKfycbwpn-HwknJOq99vFV833x4qDg-Fv2vEG9gDl5gR-RruxnKxURSb6SFlCjY1fC3kbmowvg/exec';
 var AUTH_DURATION_MS = 24 * 60 * 60 * 1000; // 24 jam
 
@@ -1092,6 +1092,17 @@ async function catatTrx(){
   setSyncBadge('ing');
   await cAction({action:'add_trx',data:encodeURIComponent(JSON.stringify(item))});
   setSyncBadge('ok');
+  // ── Reset form bon setelah tercatat ──
+  setTimeout(function(){
+    bkSel=[]; blSvcId=null; blSatSel=[];
+    document.getElementById('bk-nama').value='';
+    document.getElementById('bl-nama').value='';
+    var beratEl=document.getElementById('bl-berat'); if(beratEl) beratEl.value='';
+    document.getElementById('bon-result').style.display='none';
+    document.getElementById('catat-info').style.display='none';
+    btn.textContent='📒 Catat ke Transaksi'; btn.disabled=false;
+    renderBonForms();
+  }, 1500);
 }
 function copyBon(){
   var t=document.getElementById('bon-text').textContent;
