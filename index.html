@@ -627,13 +627,17 @@ if(!katalog.length){
 // KONFIGURASI — GANTI PIN DI SINI
 // ══════════════════════════════════════════════
 var APP_PIN    = '4305'; // ← PIN PEMILIK (akses penuh) — GANTI!
-var KASIR_PIN  = '1234'; // ← PIN KASIR (jualan saja) — GANTI!
+var KASIR_PIN  = '1701'; // ← PIN KASIR (jualan saja) — GANTI!
 var SCRIPT_URL_FIXED = 'https://script.google.com/macros/s/AKfycbwpn-HwknJOq99vFV833x4qDg-Fv2vEG9gDl5gR-RruxnKxURSb6SFlCjY1fC3kbmowvg/exec';
 var AUTH_DURATION_MS = 24 * 60 * 60 * 1000; // 24 jam
-var _isOwner = false; // set saat login
+var LOCKOUT_DURATION_MS = 5 * 60 * 1000;     // 5 menit blokir
+var MAX_ATTEMPTS = 3;
+var _isOwner = false;
 
 // ── PIN LOGIC ──
 var _pin = '';
+var _pinAttempts = parseInt(localStorage.getItem('pin_attempts')||'0');
+
 function pinKey(k){
   if(_pin.length>=4) return;
   _pin+=k;
@@ -648,18 +652,56 @@ function pinDel(){
 function updatePinDots(){
   for(var i=0;i<4;i++) document.getElementById('pd'+i).classList.toggle('filled',i<_pin.length);
 }
+function setNumpadDisabled(dis){
+  document.querySelectorAll('.nk').forEach(function(b){b.disabled=dis;});
+}
+function showLockout(ms){
+  setNumpadDisabled(true);
+  var endTime=Date.now()+ms;
+  localStorage.setItem('pin_lockout',endTime);
+  function tick(){
+    var rem=Math.ceil((endTime-Date.now())/1000);
+    if(rem<=0){
+      localStorage.removeItem('pin_lockout');
+      localStorage.setItem('pin_attempts','0');
+      _pinAttempts=0;
+      document.getElementById('pin-err').textContent='';
+      document.getElementById('pin-sub').textContent='Masukkan PIN untuk melanjutkan';
+      setNumpadDisabled(false);
+    } else {
+      var m=Math.floor(rem/60),s=rem%60;
+      document.getElementById('pin-err').textContent='🔒 Terlalu banyak percobaan. Coba lagi dalam '+m+':'+String(s).padStart(2,'0');
+      document.getElementById('pin-sub').textContent='Akses sementara diblokir';
+      setTimeout(tick,1000);
+    }
+  }
+  tick();
+}
 function checkPin(){
+  // Cek apakah masih dalam masa blokir
+  var lockUntil=parseInt(localStorage.getItem('pin_lockout')||'0');
+  if(Date.now()<lockUntil){showLockout(lockUntil-Date.now());_pin='';updatePinDots();return;}
+
   if(_pin===APP_PIN||_pin===KASIR_PIN){
     _isOwner=(_pin===APP_PIN);
     localStorage.setItem('auth_ts',Date.now());
     localStorage.setItem('auth_role',_isOwner?'owner':'kasir');
+    localStorage.setItem('pin_attempts','0');
     document.getElementById('pin-screen').style.display='none';
     appInit();
   } else {
-    document.getElementById('pin-err').textContent='PIN salah, coba lagi';
-    document.getElementById('pin-dots').classList.add('pin-shake');
-    setTimeout(function(){document.getElementById('pin-dots').classList.remove('pin-shake');},400);
-    _pin=''; updatePinDots();
+    _pinAttempts++;
+    localStorage.setItem('pin_attempts',_pinAttempts);
+    var sisaPercobaan=MAX_ATTEMPTS-_pinAttempts;
+    if(_pinAttempts>=MAX_ATTEMPTS){
+      _pin=''; updatePinDots();
+      showLockout(LOCKOUT_DURATION_MS);
+    } else {
+      document.getElementById('pin-err').textContent='PIN salah! Sisa percobaan: '+sisaPercobaan+'x';
+      document.getElementById('pin-dots').classList.add('pin-shake');
+      setTimeout(function(){document.getElementById('pin-dots').classList.remove('pin-shake');},400);
+      _pin=''; updatePinDots();
+    }
   }
 }
 var CFG = {URL: localStorage.getItem('wk_url') || SCRIPT_URL_FIXED};
@@ -831,7 +873,8 @@ function renderTrx(){
 function trxHTML(x,idx){
   var isI=x.tipe==='income';
   var delBtn=_isOwner?'<button class="tag-del" onclick="hapusTrx('+idx+')">🗑</button>':'';
-  return '<div class="ti"><div class="tic '+x.tipe+'">'+(isI?'💰':'💸')+'</div><div class="tii"><div class="k">'+x.keterangan+'</div><div class="m"><span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span> · '+x.kategori+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="tam '+x.tipe+'">'+(isI?'+':'-')+fmt(Number(x.nominal))+'</div>'+delBtn+'</div></div>';
+  var jamStr=x.jam?'<span style="font-size:10px;color:var(--muted);margin-left:4px;">⏰ '+x.jam+'</span>':'';
+  return '<div class="ti"><div class="tic '+x.tipe+'">'+(isI?'💰':'💸')+'</div><div class="tii"><div class="k">'+x.keterangan+'</div><div class="m"><span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span> · '+x.kategori+jamStr+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="tam '+x.tipe+'">'+(isI?'+':'-')+fmt(Number(x.nominal))+'</div>'+delBtn+'</div></div>';
 }
 async function hapusTrx(idx){
   if(!confirm('Hapus?'))return;
@@ -846,7 +889,8 @@ async function simpanTrx(){
       k=document.getElementById('trx-kat').value,ke=document.getElementById('trx-ket').value.trim(),
       n=parseFloat(document.getElementById('trx-nom').value),tg=document.getElementById('trx-tgl').value;
   if(!ke||!n||n<=0){alert('Isi keterangan dan nominal!');return;}
-  var item={id:uid(),bisnis:b,tipe:tp,kategori:k,keterangan:ke,nominal:n,tanggal:tg||today()};
+  var _n0=new Date(),_j0=String(_n0.getHours()).padStart(2,'0')+':'+String(_n0.getMinutes()).padStart(2,'0');
+  var item={id:uid(),bisnis:b,tipe:tp,kategori:k,keterangan:ke,nominal:n,tanggal:tg||today(),jam:_j0};
   transaksi.push(item);sd('trx_data',transaksi);
   document.getElementById('trx-ket').value='';document.getElementById('trx-nom').value='';
   closeM('m-trx');renderTrx();setSyncBadge('ing');
@@ -1110,7 +1154,8 @@ async function catatTrx(){
     ket='Laundry '+nama+(svc?' - '+svc.nama_produk+(berat?' '+berat+'kg':''):'');
   }
   if(!total||total<=0){alert('Total 0, tidak ada yang dicatat.');return;}
-  var item={id:uid(),bisnis,tipe:'income',kategori:bisnis==='kucing'?'Penjualan':'Laundry',keterangan:ket,nominal:total,tanggal:today()};
+  var _nc=new Date(),_jc=String(_nc.getHours()).padStart(2,'0')+':'+String(_nc.getMinutes()).padStart(2,'0');
+  var item={id:uid(),bisnis,tipe:'income',kategori:bisnis==='kucing'?'Penjualan':'Laundry',keterangan:ket,nominal:total,tanggal:today(),jam:_jc};
   transaksi.push(item);sd('trx_data',transaksi);
 
   // ── Auto-kurangi stok untuk item pet shop ─────────────────────────────
@@ -1265,7 +1310,7 @@ function renderLap(){
   document.getElementById('l-exp').textContent=fmt(exp);
   var lb=inc-exp;var le=document.getElementById('l-laba');le.textContent=fmt(lb);le.style.color=lb>=0?'var(--primary)':'var(--expense)';
   var ll=document.getElementById('l-list');
-  ll.innerHTML=fil.length?[...fil].sort((a,b)=>b.tanggal>a.tanggal?1:-1).map(x=>'<div class="lrow"><div><div style="font-size:13px;font-weight:600;">'+x.keterangan+'</div><div class="ld">'+fmtD(x.tanggal)+' · <span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span></div></div><div class="ln '+x.tipe+'">'+(x.tipe==='income'?'+':'-')+fmt(Number(x.nominal))+'</div></div>').join(''):'<div class="empty"><div class="ei">📊</div><p>Belum ada data</p></div>';
+  ll.innerHTML=fil.length?[...fil].sort((a,b)=>b.tanggal>a.tanggal?1:-1).map(x=>'<div class="lrow"><div><div style="font-size:13px;font-weight:600;">'+x.keterangan+'</div><div class="ld">'+fmtD(x.tanggal)+(x.jam?' ⏰ '+x.jam:'')+' · <span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span></div></div><div class="ln '+x.tipe+'">'+(x.tipe==='income'?'+':'-')+fmt(Number(x.nominal))+'</div></div>').join(''):'<div class="empty"><div class="ei">📊</div><p>Belum ada data</p></div>';
   // chart
   var d7=[];for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);d7.push(d.toISOString().slice(0,10));}
   var cd=d7.map(date=>{var dt=transaksi.filter(x=>x.tanggal===date&&(lapBis==='semua'||x.bisnis===lapBis));return{date,inc:dt.filter(x=>x.tipe==='income').reduce((a,b)=>a+Number(b.nominal),0),exp:dt.filter(x=>x.tipe==='expense').reduce((a,b)=>a+Number(b.nominal),0)};});
