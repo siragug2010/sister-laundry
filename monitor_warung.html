@@ -179,9 +179,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:20px;}
 </div>
 
 <script>
-// Ambil URL dari mon_script_url, fallback ke wk_url (key yang dipakai app utama)
-var SCRIPT_URL_FIXED_MON = 'https://script.google.com/macros/s/AKfycbwpn-HwknJOq99vFV833x4qDg-Fv2vEG9gDl5gR-RruxnKxURSb6SFlCjY1fC3kbmowvg/exec';
-var SCRIPT_URL = localStorage.getItem('mon_script_url') || localStorage.getItem('wk_url') || SCRIPT_URL_FIXED_MON;
+// URL dikunci langsung — tidak bergantung localStorage
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwpn-HwknJOq99vFV833x4qDg-Fv2vEG9gDl5gR-RruxnKxURSb6SFlCjY1fC3kbmowvg/exec';
+localStorage.removeItem('mon_script_url'); // bersihkan cache lama yang salah
 var allData = {transaksi:[], utang:[], produk:[]};
 var _refreshTimer = null;
 
@@ -247,7 +247,7 @@ function resetSetup(){
 async function doRefresh(){
   setStatus('loading');
   try{
-    var r=await fetch(SCRIPT_URL+'?action=read&t='+Date.now());
+    var r=await fetch(SCRIPT_URL+'?action=read');
     var d=await r.json();
     if(d.success){
       // Normalisasi tanggal (Sheets UTC ISO → local YYYY-MM-DD)
