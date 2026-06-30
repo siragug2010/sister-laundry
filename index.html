@@ -168,9 +168,52 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
 .total-row{background:#F0FDF4;border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
 .total-row .tl{font-size:13px;font-weight:700;color:var(--muted);}
 .total-row .tv{font-size:18px;font-weight:800;color:var(--income);}
+/* ── PIN SCREEN ── */
+#pin-screen{position:fixed;inset:0;background:#4F46E5;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;}
+#pin-screen .pin-logo{font-size:48px;margin-bottom:12px;}
+#pin-screen .pin-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px;}
+#pin-screen .pin-sub{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:32px;}
+#pin-screen .pin-dots{display:flex;gap:14px;margin-bottom:28px;}
+#pin-screen .pin-dot{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.3);transition:background .15s;}
+#pin-screen .pin-dot.filled{background:#fff;}
+#pin-screen .pin-err{font-size:13px;color:#FCA5A5;height:18px;margin-bottom:16px;font-weight:600;}
+#pin-screen .numpad{display:grid;grid-template-columns:repeat(3,72px);gap:12px;}
+#pin-screen .nk{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:22px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .1s;}
+#pin-screen .nk:active{background:rgba(255,255,255,.35);}
+#pin-screen .nk.del{font-size:18px;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);}}
+.pin-shake{animation:shake .35s ease;}
 </style>
 </head>
 <body>
+
+<!-- PIN SCREEN -->
+<div id="pin-screen">
+  <div class="pin-logo">🐾</div>
+  <div class="pin-title">Sister Laundry & Pet Shop</div>
+  <div class="pin-sub">Masukkan PIN untuk melanjutkan</div>
+  <div class="pin-dots" id="pin-dots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+  </div>
+  <div class="pin-err" id="pin-err"></div>
+  <div class="numpad">
+    <button class="nk" onclick="pinKey('1')">1</button>
+    <button class="nk" onclick="pinKey('2')">2</button>
+    <button class="nk" onclick="pinKey('3')">3</button>
+    <button class="nk" onclick="pinKey('4')">4</button>
+    <button class="nk" onclick="pinKey('5')">5</button>
+    <button class="nk" onclick="pinKey('6')">6</button>
+    <button class="nk" onclick="pinKey('7')">7</button>
+    <button class="nk" onclick="pinKey('8')">8</button>
+    <button class="nk" onclick="pinKey('9')">9</button>
+    <button class="nk" style="background:transparent;"></button>
+    <button class="nk" onclick="pinKey('0')">0</button>
+    <button class="nk del" onclick="pinDel()">⌫</button>
+  </div>
+</div>
 
 <div class="hdr">
   <div>
@@ -588,7 +631,50 @@ if(!katalog.length){
   if(changed) sd('kat_v3',katalog);
 }
 
-var CFG = {URL: localStorage.getItem('wk_url')||''};
+// ══════════════════════════════════════════════
+// KONFIGURASI — GANTI PIN DI SINI
+// ══════════════════════════════════════════════
+var APP_PIN = '4305'; // ← GANTI DENGAN PIN KAMU
+var SCRIPT_URL_FIXED = 'https://script.google.com/macros/s/AKfycbwpn-HwknJOq99vFV833x4qDg-Fv2vEG9gDl5gR-RruxnKxURSb6SFlCjY1fC3kbmowvg/exec';
+var AUTH_DURATION_MS = 24 * 60 * 60 * 1000; // 24 jam
+
+// ── PIN LOGIC ──
+var _pin = '';
+function pinKey(k){
+  if(_pin.length>=4) return;
+  _pin+=k;
+  updatePinDots();
+  if(_pin.length===4) setTimeout(checkPin,100);
+}
+function pinDel(){
+  _pin=_pin.slice(0,-1);
+  updatePinDots();
+  document.getElementById('pin-err').textContent='';
+}
+function updatePinDots(){
+  for(var i=0;i<4;i++) document.getElementById('pd'+i).classList.toggle('filled',i<_pin.length);
+}
+function checkPin(){
+  if(_pin===APP_PIN){
+    localStorage.setItem('auth_ts',Date.now());
+    document.getElementById('pin-screen').style.display='none';
+    appInit();
+  } else {
+    document.getElementById('pin-err').textContent='PIN salah, coba lagi';
+    document.getElementById('pin-dots').classList.add('pin-shake');
+    setTimeout(function(){document.getElementById('pin-dots').classList.remove('pin-shake');},400);
+    _pin=''; updatePinDots();
+  }
+}
+(function initAuth(){
+  var ts=parseInt(localStorage.getItem('auth_ts')||'0');
+  if(Date.now()-ts < AUTH_DURATION_MS){
+    document.getElementById('pin-screen').style.display='none';
+    appInit();
+  }
+})();
+
+var CFG = {URL: localStorage.getItem('wk_url') || SCRIPT_URL_FIXED};
 
 // ══════════════════════════════════════════════
 // UTILS
@@ -650,12 +736,15 @@ async function manualSync(){
 }
 async function cAction(p){if(CFG.URL)await cloudGet(p);}
 
-// Init: check URL
-(function(){
+// Init: dipanggil setelah PIN benar
+function appInit(){
   if(CFG.URL){setSyncBadge('ing');manualSync();}
-  else if(!localStorage.getItem('wk_skip')){document.getElementById('m-setup').classList.add('open');}
   else setSyncBadge('off');
-})();
+  renderAll();
+  document.querySelectorAll('.mbg').forEach(b=>{b.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});});
+  document.getElementById('fab-btn').style.display='flex';
+  setInterval(()=>{if(CFG.URL)manualSync();},5*60*1000);
+}
 
 // ══════════════════════════════════════════════
 // TAB NAV
@@ -1311,17 +1400,24 @@ async function pushStokKeCloud(){
   }
 }
 
+function adminAction(fn){
+  var p=prompt('🔒 Masukkan PIN untuk akses admin:');
+  if(p===APP_PIN){fn();}
+  else{alert('❌ PIN salah.');}
+}
 function bukaGantiURL(){
-  // Isi input dengan URL yang sudah ada, lalu buka modal setup
-  document.getElementById('setup-url').value=CFG.URL||'';
-  localStorage.removeItem('wk_skip');
-  document.getElementById('m-setup').classList.add('open');
+  adminAction(function(){
+    document.getElementById('setup-url').value=CFG.URL||'';
+    document.getElementById('m-setup').classList.add('open');
+  });
 }
 function resetTotal(){
-  if(!confirm('💀 RESET TOTAL?\n\nSemua data + URL Google Sheets akan dihapus.\nApp kembali seperti pertama kali dipasang.\n\nLanjut?')) return;
-  if(!confirm('Yakin? Ini BENAR-BENAR tidak bisa dibatalkan.')) return;
-  localStorage.clear();
-  location.reload();
+  adminAction(function(){
+    if(!confirm('💀 RESET TOTAL?\n\nSemua data + URL Google Sheets akan dihapus.\nApp kembali seperti pertama kali dipasang.\n\nLanjut?')) return;
+    if(!confirm('Yakin? Ini BENAR-BENAR tidak bisa dibatalkan.')) return;
+    localStorage.clear();
+    location.reload();
+  });
 }
 
 function resetStokSaja(){
@@ -1350,10 +1446,7 @@ function resetSemuaData(){
   showTab('stok');
   alert('✅ Semua data direset. Silakan isi stok sebenarnya via tombol SET di tab Stok.');
 }
-renderAll();
-document.querySelectorAll('.mbg').forEach(b=>{b.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});});
-document.getElementById('fab-btn').style.display='flex';
-setInterval(()=>{if(CFG.URL)manualSync();},5*60*1000);
+// Init dijalankan via appInit() setelah PIN
 </script>
 </body>
 </html>
