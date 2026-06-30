@@ -179,7 +179,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:20px;}
 </div>
 
 <script>
-var SCRIPT_URL = localStorage.getItem('mon_script_url') || '';
+// Ambil URL dari mon_script_url, fallback ke wk_url (key yang dipakai app utama)
+var SCRIPT_URL_FIXED_MON = 'https://script.google.com/macros/s/AKfycbwpn-HwknJOq99vFV833x4qDg-Fv2vEG9gDl5gR-RruxnKxURSb6SFlCjY1fC3kbmowvg/exec';
+var SCRIPT_URL = localStorage.getItem('mon_script_url') || localStorage.getItem('wk_url') || SCRIPT_URL_FIXED_MON;
 var allData = {transaksi:[], utang:[], produk:[]};
 var _refreshTimer = null;
 
@@ -358,10 +360,9 @@ function renderAll(){
 }
 
 // ── INIT ──
-if(SCRIPT_URL){
-  document.getElementById('setup-url').value=SCRIPT_URL;
-  showMain(); doRefresh();
-}
+// Selalu langsung connect pakai URL yang sudah ada (hardcoded fallback)
+document.getElementById('setup-url').value=SCRIPT_URL;
+showMain(); doRefresh();
 </script>
 </body>
 </html>
