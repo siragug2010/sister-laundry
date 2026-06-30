@@ -666,14 +666,6 @@ function checkPin(){
     _pin=''; updatePinDots();
   }
 }
-(function initAuth(){
-  var ts=parseInt(localStorage.getItem('auth_ts')||'0');
-  if(Date.now()-ts < AUTH_DURATION_MS){
-    document.getElementById('pin-screen').style.display='none';
-    appInit();
-  }
-})();
-
 var CFG = {URL: localStorage.getItem('wk_url') || SCRIPT_URL_FIXED};
 
 // ══════════════════════════════════════════════
@@ -1446,7 +1438,15 @@ function resetSemuaData(){
   showTab('stok');
   alert('✅ Semua data direset. Silakan isi stok sebenarnya via tombol SET di tab Stok.');
 }
-// Init dijalankan via appInit() setelah PIN
+// ── AUTH CHECK: jalan setelah semua fungsi & variabel siap ──
+(function(){
+  var ts=parseInt(localStorage.getItem('auth_ts')||'0');
+  if(Date.now()-ts < AUTH_DURATION_MS){
+    document.getElementById('pin-screen').style.display='none';
+    appInit();
+  }
+  // Kalau belum auth, pin-screen tetap tampil — user input PIN → checkPin() → appInit()
+})();
 </script>
 </body>
 </html>
