@@ -223,6 +223,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
   <div style="text-align:right;">
     <div style="font-size:11px;opacity:.85;" id="hdr-date"></div>
     <div class="sync-badge sy-off" id="sync-badge" onclick="manualSync()">⚠️ Offline</div>
+    <div id="role-badge" style="display:none;"></div>
   </div>
 </div>
 <div class="sync-bar hidden" id="sync-bar">
@@ -440,18 +441,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
     <div class="pill" onclick="fStok('laundry',this)">👕 Laundry</div>
   </div>
   <div class="card" style="background:#FEF3C7;border-left:3px solid var(--cat);">
-    <div style="font-size:12px;font-weight:600;color:#92400E;margin-bottom:10px;">📦 Update stok via tombol ± atau SET. Otomatis berkurang saat catat transaksi.</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <button onclick="resetStokSaja()" style="padding:9px;border-radius:9px;border:none;background:#FDE68A;color:#92400E;font-size:11px;font-weight:700;cursor:pointer;">🔄 Reset Stok ke 0</button>
-      <button onclick="resetSemuaData()" style="padding:9px;border-radius:9px;border:none;background:#FEE2E2;color:#991B1B;font-size:11px;font-weight:700;cursor:pointer;">⚠️ Reset Semua Data</button>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <button onclick="bukaGantiURL()" style="padding:9px;border-radius:9px;border:none;background:#EDE9FE;color:#5B21B6;font-size:11px;font-weight:700;cursor:pointer;">⚙️ Ganti URL Script</button>
-      <button onclick="resetTotal()" style="padding:9px;border-radius:9px;border:none;background:#FEE2E2;color:#7F1D1D;font-size:11px;font-weight:700;cursor:pointer;">💀 Reset Total + URL</button>
-    </div>
-    <button id="btn-push-cloud" onclick="pushStokKeCloud()" style="width:100%;padding:10px;border-radius:9px;border:none;background:#DBEAFE;color:#1E40AF;font-size:12px;font-weight:700;cursor:pointer;">☁️ Upload Stok ke Cloud (sync HP lain)</button>
-    <div id="push-cloud-info" style="display:none;font-size:11px;color:#166534;margin-top:6px;text-align:center;"></div>
-    <button onclick="document.getElementById('m-add-produk').classList.add('open')" style="width:100%;padding:10px;border-radius:9px;border:none;background:#D1FAE5;color:#065F46;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;">➕ Tambah Produk Baru</button>
+    <div style="font-size:12px;font-weight:600;color:#92400E;margin-bottom:10px;">📦 Stok otomatis berkurang saat catat transaksi.</div>
+    <div id="stok-admin-panel"></div>
   </div>
   <div class="card"><div id="stok-list"></div></div>
 </div>
@@ -634,9 +625,11 @@ if(!katalog.length){
 // ══════════════════════════════════════════════
 // KONFIGURASI — GANTI PIN DI SINI
 // ══════════════════════════════════════════════
-var APP_PIN = '1234'; // ← GANTI DENGAN PIN KAMU
+var APP_PIN    = '4305'; // ← PIN PEMILIK (akses penuh) — GANTI!
+var KASIR_PIN  = '1234'; // ← PIN KASIR (jualan saja) — GANTI!
 var SCRIPT_URL_FIXED = 'https://script.google.com/macros/s/AKfycbwpn-HwknJOq99vFV833x4qDg-Fv2vEG9gDl5gR-RruxnKxURSb6SFlCjY1fC3kbmowvg/exec';
 var AUTH_DURATION_MS = 24 * 60 * 60 * 1000; // 24 jam
+var _isOwner = false; // set saat login
 
 // ── PIN LOGIC ──
 var _pin = '';
@@ -655,8 +648,10 @@ function updatePinDots(){
   for(var i=0;i<4;i++) document.getElementById('pd'+i).classList.toggle('filled',i<_pin.length);
 }
 function checkPin(){
-  if(_pin===APP_PIN){
+  if(_pin===APP_PIN||_pin===KASIR_PIN){
+    _isOwner=(_pin===APP_PIN);
     localStorage.setItem('auth_ts',Date.now());
+    localStorage.setItem('auth_role',_isOwner?'owner':'kasir');
     document.getElementById('pin-screen').style.display='none';
     appInit();
   } else {
@@ -729,12 +724,55 @@ async function manualSync(){
 async function cAction(p){if(CFG.URL)await cloudGet(p);}
 
 // Init: dipanggil setelah PIN benar
+function applyRole(){
+  var adminPanel=document.getElementById('stok-admin-panel');
+  if(adminPanel){
+    if(_isOwner){
+      adminPanel.innerHTML=
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'+
+          '<button onclick="resetStokSaja()" style="padding:9px;border-radius:9px;border:none;background:#FDE68A;color:#92400E;font-size:11px;font-weight:700;cursor:pointer;">🔄 Reset Stok ke 0</button>'+
+          '<button onclick="resetSemuaData()" style="padding:9px;border-radius:9px;border:none;background:#FEE2E2;color:#991B1B;font-size:11px;font-weight:700;cursor:pointer;">⚠️ Reset Semua Data</button>'+
+        '</div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'+
+          '<button onclick="bukaGantiURL()" style="padding:9px;border-radius:9px;border:none;background:#EDE9FE;color:#5B21B6;font-size:11px;font-weight:700;cursor:pointer;">⚙️ Ganti URL Script</button>'+
+          '<button onclick="resetTotal()" style="padding:9px;border-radius:9px;border:none;background:#FEE2E2;color:#7F1D1D;font-size:11px;font-weight:700;cursor:pointer;">💀 Reset Total + URL</button>'+
+        '</div>'+
+        '<button id="btn-push-cloud" onclick="pushStokKeCloud()" style="width:100%;padding:10px;border-radius:9px;border:none;background:#DBEAFE;color:#1E40AF;font-size:12px;font-weight:700;cursor:pointer;">☁️ Upload Stok ke Cloud (sync HP lain)</button>'+
+        '<div id="push-cloud-info" style="display:none;font-size:11px;color:#166534;margin-top:6px;text-align:center;"></div>'+
+        '<button onclick="document.getElementById(\'m-add-produk\').classList.add(\'open\')" style="width:100%;padding:10px;border-radius:9px;border:none;background:#D1FAE5;color:#065F46;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;">➕ Tambah Produk Baru</button>';
+    } else {
+      adminPanel.innerHTML='';
+    }
+  }
+
+  // Sembunyikan tab Stok/Laporan/Utang & FAB untuk kasir
+  var ownerOnlyTabs=['nav-laporan','nav-utang','nav-stok'];
+  ownerOnlyTabs.forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.style.display=_isOwner?'':'none';
+  });
+  var fab=document.getElementById('fab-btn');
+  if(fab) fab.style.display=_isOwner?'flex':'none';
+
+  // Role badge di header
+  var badge=document.getElementById('role-badge');
+  if(badge){
+    if(_isOwner){
+      badge.textContent='👑 Pemilik';
+      badge.style.cssText='font-size:10px;font-weight:700;color:#FCD34D;margin-top:2px;';
+    } else {
+      badge.textContent='🛒 Mode Kasir';
+      badge.style.cssText='font-size:10px;font-weight:700;color:rgba(255,255,255,.8);margin-top:2px;background:rgba(255,255,255,.15);padding:2px 7px;border-radius:8px;';
+    }
+    badge.style.display='block';
+  }
+}
 function appInit(){
+  applyRole();
   if(CFG.URL){setSyncBadge('ing');manualSync();}
   else setSyncBadge('off');
   renderAll();
   document.querySelectorAll('.mbg').forEach(b=>{b.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});});
-  document.getElementById('fab-btn').style.display='flex';
   setInterval(()=>{if(CFG.URL)manualSync();},5*60*1000);
 }
 
@@ -783,7 +821,8 @@ function renderTrx(){
 }
 function trxHTML(x,idx){
   var isI=x.tipe==='income';
-  return '<div class="ti"><div class="tic '+x.tipe+'">'+(isI?'💰':'💸')+'</div><div class="tii"><div class="k">'+x.keterangan+'</div><div class="m"><span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span> · '+x.kategori+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="tam '+x.tipe+'">'+(isI?'+':'-')+fmt(Number(x.nominal))+'</div><button class="tag-del" onclick="hapusTrx('+idx+')">🗑</button></div></div>';
+  var delBtn=_isOwner?'<button class="tag-del" onclick="hapusTrx('+idx+')">🗑</button>':'';
+  return '<div class="ti"><div class="tic '+x.tipe+'">'+(isI?'💰':'💸')+'</div><div class="tii"><div class="k">'+x.keterangan+'</div><div class="m"><span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span> · '+x.kategori+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="tam '+x.tipe+'">'+(isI?'+':'-')+fmt(Number(x.nominal))+'</div>'+delBtn+'</div></div>';
 }
 async function hapusTrx(idx){
   if(!confirm('Hapus?'))return;
@@ -1289,16 +1328,21 @@ function renderStok(){
     var icon=p.bisnis==='kucing'?'🐾':'👕';
     return '<div class="kat-item">'+
       '<div style="width:32px;height:32px;border-radius:9px;background:'+(p.bisnis==='kucing'?'#FEF3C7':'#CFFAFE')+';display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">'+icon+'</div>'+
-      '<div class="kat-info" onclick="openEditProduk('+ri+')" style="cursor:pointer;flex:1;">'+
-        '<div class="kn">'+p.nama_produk.replace('✏️ ','')+'</div>'+
-        '<div class="kh">'+fmtF(p.harga)+' <span style="font-size:10px;color:var(--muted);">✏️</span></div>'+
-      '</div>'+
+      (_isOwner?
+        '<div class="kat-info" onclick="openEditProduk('+ri+')" style="cursor:pointer;flex:1;">'+
+          '<div class="kn">'+p.nama_produk.replace('✏️ ','')+'</div>'+
+          '<div class="kh">'+fmtF(p.harga)+' <span style="font-size:10px;color:var(--muted);">✏️</span></div>'+
+        '</div>':
+        '<div class="kat-info" style="flex:1;">'+
+          '<div class="kn">'+p.nama_produk.replace('✏️ ','')+'</div>'+
+          '<div class="kh">'+fmtF(p.harga)+'</div>'+
+        '</div>')+
       (hasStok?
         '<div class="stk-box">'+
-          '<button class="stk-btn" onclick="adjustStok('+ri+',-1)">−</button>'+
+          (_isOwner?'<button class="stk-btn" onclick="adjustStok('+ri+',-1)">−</button>':'')+
           '<div class="stk-num '+stokCls+'">'+p.stok+'</div>'+
-          '<button class="stk-btn" onclick="adjustStok('+ri+',1)">+</button>'+
-          '<button class="stk-set" onclick="openSetStok('+ri+')">SET</button>'+
+          (_isOwner?'<button class="stk-btn" onclick="adjustStok('+ri+',1)">+</button>':'')+
+          (_isOwner?'<button class="stk-set" onclick="openSetStok('+ri+')">SET</button>':'')+
         '</div>':
         '<span style="font-size:11px;color:var(--muted);">Layanan</span>')+
       '</div>';
@@ -1453,6 +1497,7 @@ function resetSemuaData(){
 (function(){
   var ts=parseInt(localStorage.getItem('auth_ts')||'0');
   if(Date.now()-ts < AUTH_DURATION_MS){
+    _isOwner=(localStorage.getItem('auth_role')==='owner');
     document.getElementById('pin-screen').style.display='none';
     appInit();
   }
