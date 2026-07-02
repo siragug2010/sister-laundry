@@ -156,6 +156,12 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
 .stk-num.hi{color:var(--income);}.stk-num.mid{color:var(--cat);}.stk-num.lo{color:var(--expense);}
 .stk-btn{width:26px;height:26px;border-radius:7px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;}
 .stk-set{font-size:10px;padding:3px 7px;border-radius:6px;background:#F1F5F9;border:1px solid var(--border);cursor:pointer;color:var(--muted);font-weight:600;}
+.antrian-item{background:#F8FAFC;border:1.5px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;transition:border-color .2s;}
+.antrian-item:hover,.antrian-item:active{border-color:var(--primary);background:#F5F3FF;}
+.antrian-item .ai-nama{font-size:14px;font-weight:700;color:var(--text);}
+.antrian-item .ai-detail{font-size:11px;color:var(--muted);margin-top:2px;}
+.antrian-item .ai-total{font-size:15px;font-weight:800;color:var(--income);margin-top:4px;}
+.antrian-item .ai-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:8px;background:#FEF3C7;color:#92400E;font-weight:700;margin-top:4px;}
 /* EMPTY */
 .empty{text-align:center;padding:32px 20px;color:var(--muted);}
 .empty .ei{font-size:44px;margin-bottom:8px;}.empty p{font-size:13px;}
@@ -250,9 +256,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
 
 <!-- ═══ BON WA ═══ -->
 <div id="tab-bon" class="tab">
-  <div class="bon-type">
+  <div class="bon-type" style="grid-template-columns:1fr 1fr 1fr;">
     <div class="bbt ac" id="bbt-cat" onclick="setBonType('kucing')"><div class="bi">🐾</div><div class="bn">Pet Shop</div></div>
-    <div class="bbt" id="bbt-lau" onclick="setBonType('laundry')"><div class="bi">👕</div><div class="bn">Laundry</div></div>
+    <div class="bbt" id="bbt-lau" onclick="setBonType('laundry')"><div class="bi">👕</div><div class="bn">Laundry Masuk</div></div>
+    <div class="bbt" id="bbt-laukeluar" onclick="setBonType('laundry_keluar')"><div class="bi">✅</div><div class="bn">Laundry Keluar <span id="antrian-badge" style="display:none;background:#EF4444;color:#fff;font-size:10px;font-weight:700;border-radius:8px;padding:1px 5px;vertical-align:middle;"></span></div></div>
   </div>
 
   <!-- BON KUCING -->
@@ -274,6 +281,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
       <div class="section-hdr">Item Dipilih <span id="bk-total-lbl" style="color:var(--income);font-size:12px;font-weight:700;"></span></div>
       <div class="sel-box" id="bk-sel"></div>
       <div class="fg"><label class="fl">Catatan (opsional)</label><input class="fc" id="bk-catatan" placeholder="Contoh: Titip kirim ya"></div>
+      <div id="bon-kat-err" style="display:none;background:#FEE2E2;color:#991B1B;border-radius:9px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:10px;"></div>
       <button class="btn btn-p" onclick="generateBon()" style="margin-top:4px;">🧾 Generate Bon</button>
     </div>
   </div>
@@ -310,7 +318,16 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
         </div>
       </div>
       <div class="fg"><label class="fl">Catatan</label><input class="fc" id="bl-catatan" placeholder="Contoh: Jangan dicampur"></div>
+      <div id="bon-lau-err" style="display:none;background:#FEE2E2;color:#991B1B;border-radius:9px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:10px;"></div>
       <button class="btn btn-p" onclick="generateBon()">🧾 Generate Bon</button>
+    </div>
+  </div>
+
+  <!-- BON LAUNDRY KELUAR -->
+  <div id="bon-laundry-keluar" style="display:none;">
+    <div class="card">
+      <div class="ctitle" style="margin-bottom:12px;">✅ Daftar Laundry Menunggu Diambil</div>
+      <div id="antrian-list"><div class="empty"><div class="ei">👕</div><p>Belum ada laundry masuk</p></div></div>
     </div>
   </div>
 
@@ -505,10 +522,24 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
 <!-- MODAL SET STOK -->
 <div class="mbg" id="m-stok">
   <div class="modal">
-    <div class="mtitle">Set Jumlah Stok <button class="mclose" onclick="closeM('m-stok')">✕</button></div>
-    <div id="m-stok-nama" style="font-size:15px;font-weight:700;margin-bottom:14px;"></div>
-    <div class="fg"><label class="fl">Jumlah Stok Saat Ini</label><input class="fc" id="stok-val" type="number" min="0"></div>
-    <button class="btn btn-p" onclick="simpanStok()">✅ Update Stok</button>
+    <div class="mtitle">Kelola Stok <button class="mclose" onclick="closeM('m-stok')">✕</button></div>
+    <div id="m-stok-nama" style="font-size:15px;font-weight:700;margin-bottom:4px;"></div>
+    <div id="m-stok-sisa" style="font-size:12px;color:var(--muted);margin-bottom:14px;"></div>
+    <!-- Tab SET vs MASUK -->
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <button id="stok-tab-masuk" onclick="switchStokTab('masuk')" style="flex:1;padding:8px;border-radius:9px;border:2px solid var(--primary);background:var(--primary);color:#fff;font-weight:700;font-size:13px;cursor:pointer;">📦 Stok Masuk</button>
+      <button id="stok-tab-set" onclick="switchStokTab('set')" style="flex:1;padding:8px;border-radius:9px;border:2px solid var(--border);background:#fff;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;">🔧 Set Manual</button>
+    </div>
+    <div id="stok-panel-masuk">
+      <div class="fg"><label class="fl">Jumlah stok yang baru masuk</label><input class="fc" id="stok-masuk-val" type="number" min="1" placeholder="Contoh: 60"></div>
+      <div id="stok-masuk-preview" style="font-size:12px;color:#059669;font-weight:600;margin-bottom:10px;text-align:center;"></div>
+      <button class="btn btn-p" onclick="simpanStokMasuk()">📦 Tambah Stok Masuk</button>
+    </div>
+    <div id="stok-panel-set" style="display:none;">
+      <div class="fg"><label class="fl">Set jumlah stok (override total)</label><input class="fc" id="stok-val" type="number" min="0"></div>
+      <div style="font-size:11px;color:#EF4444;margin-bottom:10px;">⚠️ Ini akan mengganti stok, bukan menambah.</div>
+      <button class="btn" style="background:#EF4444;color:#fff;" onclick="simpanStok()">🔧 Override Stok</button>
+    </div>
   </div>
 </div>
 
@@ -820,6 +851,7 @@ function applyRole(){
 }
 function appInit(){
   applyRole();
+  loadAntrian();
   if(CFG.URL){setSyncBadge('ing');manualSync();}
   else setSyncBadge('off');
   renderAll();
@@ -905,15 +937,93 @@ var bonType='kucing';
 var bkSel=[]; // {id,nama,harga_def,harga_custom,satuan,qty,is_custom}
 var blSvcId=null;
 var blSatSel=[]; // {id,nama,qty,harga_custom,is_custom,custom_nama}
+var laundryAntrian=[]; // antrian laundry masuk belum diambil
+
+function loadAntrian(){ laundryAntrian=gd('laundry_antrian',[]); }
+function saveAntrian(){ sd('laundry_antrian',laundryAntrian); }
 
 function setBonType(t){
   bonType=t;
   document.getElementById('bon-kucing').style.display=t==='kucing'?'block':'none';
   document.getElementById('bon-laundry').style.display=t==='laundry'?'block':'none';
+  document.getElementById('bon-laundry-keluar').style.display=t==='laundry_keluar'?'block':'none';
   document.getElementById('bbt-cat').className='bbt'+(t==='kucing'?' ac':'');
   document.getElementById('bbt-lau').className='bbt'+(t==='laundry'?' al':'');
+  document.getElementById('bbt-laukeluar').className='bbt'+(t==='laundry_keluar'?' al':'');
   document.getElementById('bon-result').style.display='none';
+  if(t==='laundry_keluar'){loadAntrian();renderAntrian();}
   renderBonForms();
+}
+
+function renderAntrian(){
+  loadAntrian();
+  var pending=laundryAntrian.filter(function(x){return x.status==='pending';});
+  // Update badge
+  var bdg=document.getElementById('antrian-badge');
+  if(bdg){if(pending.length){bdg.textContent=pending.length;bdg.style.display='inline';}else{bdg.style.display='none';}}
+  var el=document.getElementById('antrian-list');
+  if(!el)return;
+  if(!pending.length){
+    el.innerHTML='<div class="empty"><div class="ei">👕</div><p>Belum ada laundry masuk yang menunggu</p></div>';
+    return;
+  }
+  el.innerHTML=pending.map(function(a){
+    var hariMasuk=a.tanggal_masuk?fmtD(a.tanggal_masuk):'?';
+    var detail=a.layanan+(a.berat?' '+a.berat+'kg':'')+(a.catatan?' · '+a.catatan:'');
+    return '<div class="antrian-item" onclick="pilihAntrian(\''+a.id+'\')">'
+      +'<div class="ai-nama">'+a.nama+'</div>'
+      +'<div class="ai-detail">'+detail+'</div>'
+      +'<div class="ai-total">'+fmtF(a.total)+'</div>'
+      +'<div class="ai-badge">📅 Masuk: '+hariMasuk+(a.jam_masuk?' ⏰ '+a.jam_masuk:'')+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function pilihAntrian(id){
+  loadAntrian();
+  var a=laundryAntrian.find(function(x){return x.id===id;});
+  if(!a)return;
+  if(!confirm('✅ Konfirmasi pengambilan laundry milik '+a.nama+'?\n\nTotal: '+fmtF(a.total)+'\n\nTransaksi akan tercatat sebagai pemasukan hari ini.'))return;
+  catatLaundryKeluar(a);
+}
+
+async function catatLaundryKeluar(a){
+  var now=new Date();
+  var jam=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  var ket='Laundry Keluar - '+a.nama+(a.layanan?' ('+a.layanan+(a.berat?' '+a.berat+'kg':'')+')':'');
+  var item={id:uid(),bisnis:'laundry',tipe:'income',kategori:'Laundry',keterangan:ket,nominal:a.total,tanggal:today(),jam:jam};
+  transaksi.push(item);sd('trx_data',transaksi);
+  // update status antrian
+  a.status='selesai'; a.tanggal_keluar=today(); a.jam_keluar=jam;
+  saveAntrian();
+  renderAntrian();renderTrx();
+  setSyncBadge('ing');
+  await cAction({action:'add_trx',data:encodeURIComponent(JSON.stringify(item))});
+  setSyncBadge('ok');
+  // Generate WA terima kasih
+  generateBonKeluar(a,item);
+}
+
+function generateBonKeluar(a,trx){
+  var M=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  var now=new Date();
+  var tglStr=now.getDate()+' '+M[now.getMonth()]+' '+now.getFullYear();
+  var txt='👕 *SISTER LAUNDRY*\n';
+  txt+='━━━━━━━━━━━━━━━━━\n';
+  txt+='✅ *Laundry Selesai & Siap Diambil*\n\n';
+  txt+='👤 Pelanggan: *'+a.nama+'*\n';
+  txt+='🧺 Layanan: '+a.layanan+(a.berat?' ('+a.berat+' kg)':'')+'\n';
+  if(a.catatan) txt+='📝 Catatan: '+a.catatan+'\n';
+  txt+='━━━━━━━━━━━━━━━━━\n';
+  txt+='💰 *Total: '+fmtF(a.total)+'*\n';
+  txt+='📅 Tanggal Ambil: '+tglStr+'\n\n';
+  txt+='🙏 Terima kasih sudah mempercayakan laundry ke *Sister Laundry*!\n\n';
+  txt+='✨ Pakaian sudah bersih, wangi, dan siap pakai.\n\n';
+  txt+='💬 _Puas dengan pelayanan kami? Ajak teman & keluarga ya!_\n';
+  txt+='📱 Sister Laundry & Pet Shop — Pelayanan Terbaik untuk Keluarga Anda 🐾';
+  document.getElementById('bon-text').textContent=txt;
+  document.getElementById('bon-result').style.display='block';
+  document.getElementById('bon-result').scrollIntoView({behavior:'smooth'});
 }
 
 // ─── KUCING BON ────────────────────────────────
@@ -1068,16 +1178,41 @@ function renderBonForms(){renderProdGrid();renderSelItems();renderSvcGrid();rend
 
 // ─── GENERATE BON ─────────────────────────────
 var _lastBon = null; // simpan data bon terakhir untuk "Catat ke Transaksi"
+function showLauErr(msg){
+  var el=document.getElementById('bon-lau-err');
+  if(!el)return;
+  el.textContent='⚠️ '+msg;
+  el.style.display='block';
+  el.scrollIntoView({behavior:'smooth'});
+}
+function hideLauErr(){
+  var el=document.getElementById('bon-lau-err');
+  if(el){el.style.display='none';el.textContent='';}
+}
+function showKatErr(msg){
+  var el=document.getElementById('bon-kat-err');
+  if(!el)return;
+  el.textContent='⚠️ '+msg;
+  el.style.display='block';
+  el.scrollIntoView({behavior:'smooth'});
+}
+function hideKatErr(){
+  var el=document.getElementById('bon-kat-err');
+  if(el){el.style.display='none';el.textContent='';}
+}
+
 function generateBon(){
+  try{
   var now=new Date();
   var M=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   var tgl=now.getDate()+' '+M[now.getMonth()]+' '+now.getFullYear();
   var txt='';
 
   if(bonType==='kucing'){
+    hideKatErr();
     var nama=document.getElementById('bk-nama').value||'Pelanggan';
     var cat=document.getElementById('bk-catatan').value;
-    if(!bkSel.length){alert('Pilih minimal 1 produk!');return;}
+    if(!bkSel.length){showKatErr('Pilih minimal 1 produk dulu!');return;}
     var total=bkSel.reduce((a,b)=>a+b.qty*(b.harga_custom||b.harga_def),0);
     txt='🐾 *SISTER LAUNDRY DAN PET SHOP*\n';
     txt+='📅 '+tgl+'\n\n';
@@ -1093,45 +1228,78 @@ function generateBon(){
     if(cat)txt+='\n📝 '+cat+'\n';
     txt+='\nTerima kasih sudah berbelanja! 🐱\n_Sister Laundry & Pet Shop_';
   } else {
-    var nama=document.getElementById('bl-nama').value||'Pelanggan';
-    var svc=blSvcId?katalog.find(x=>x.id===blSvcId):null;
+    // LAUNDRY MASUK — simpan ke antrian, tidak langsung income
+    hideLauErr();
+    var nama=document.getElementById('bl-nama').value.trim();
+    var svc=blSvcId?katalog.find(function(x){return x.id===blSvcId;}):null;
     var berat=parseFloat(document.getElementById('bl-berat').value)||0;
-    var tgMasuk=document.getElementById('bl-masuk').value;
+    var tgMasuk=document.getElementById('bl-masuk').value||today();
     var tgSelesai=document.getElementById('bl-selesai').value;
     var cat=document.getElementById('bl-catatan').value;
     var subKg=svc?berat*svc.harga:0;
-    var subSat=blSatSel.reduce((a,b)=>a+b.qty*(b.harga_custom||0),0);
+    var subSat=blSatSel.reduce(function(a,b){return a+b.qty*(b.harga_custom||0);},0);
     var total=subKg+subSat;
-    if(!svc&&!blSatSel.length){alert('Pilih layanan atau item!');return;}
+    if(!nama){showLauErr('Isi nama pelanggan dulu!');return;}
+    if(!svc&&!blSatSel.length){showLauErr('Pilih layanan laundry dulu!');return;}
+    if(!total){showLauErr('Total 0 — pilih layanan dan isi berat (kg)!');return;}
+
+    // Simpan ke antrian
+    var nowJam=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    var antrian={
+      id:uid(), nama:nama,
+      layanan:svc?svc.nama_produk:'',
+      berat:berat, harga_per_kg:svc?svc.harga:0,
+      satuan_items:blSatSel.slice(),
+      total:total, catatan:cat,
+      tanggal_masuk:tgMasuk, jam_masuk:nowJam,
+      estimasi_selesai:tgSelesai, status:'pending'
+    };
+    loadAntrian(); laundryAntrian.push(antrian); saveAntrian();
+
+    // Generate WA konfirmasi masuk
     txt='👕 *SISTER LAUNDRY DAN PET SHOP*\n';
-    txt+='📅 '+tgl+'\n\n';
-    txt+='👤 Pelanggan: *'+nama+'*\n';
+    txt+='📥 *Konfirmasi Laundry Masuk*\n';
     txt+='━━━━━━━━━━━━━━━━━━━━\n';
+    txt+='👤 Pelanggan: *'+nama+'*\n';
+    txt+='📅 Tanggal Masuk: '+fmtD(tgMasuk)+'\n';
     if(svc&&berat>0){
-      txt+='🧺 *'+svc.nama_produk+'*\n';
+      txt+='\n🧺 *'+svc.nama_produk+'*\n';
       txt+='⚖️ '+berat+' kg × '+fmtF(svc.harga)+'/kg = *'+fmtF(subKg)+'*\n';
     }
     if(blSatSel.length){
-      if(svc)txt+='\n📦 Item Satuan:\n';
-      blSatSel.forEach(s=>{
+      txt+='\n📦 Item Satuan:\n';
+      blSatSel.forEach(function(s){
         var nm=s.is_custom?(s.custom_nama||'Lainnya'):s.nama;
         txt+='• '+nm+' x'+s.qty+' = *'+fmtF(s.qty*(s.harga_custom||0))+'*\n';
       });
     }
     txt+='━━━━━━━━━━━━━━━━━━━━\n';
     txt+='💰 *TOTAL: '+fmtF(total)+'*\n';
-    if(tgMasuk)txt+='\n📥 Masuk   : '+fmtD(tgMasuk)+'\n';
-    if(tgSelesai)txt+='✅ Selesai : *'+fmtD(tgSelesai)+'*\n';
-    if(cat)txt+='\n📝 '+cat+'\n';
-    txt+='\nTerima kasih sudah mempercayakan laundry Anda! 🙏\n_Sister Laundry & Pet Shop_';
+    if(tgSelesai)txt+='\n⏳ Estimasi Selesai: *'+fmtD(tgSelesai)+'*\n';
+    if(cat)txt+='\n📝 Catatan: '+cat+'\n';
+    txt+='\nTerima kasih sudah mempercayakan laundry ke Sister! 🙏\n';
+    txt+='Kami akan kabari jika sudah selesai ya 😊\n_Sister Laundry & Pet Shop_';
+
+    // Sembunyikan tombol "Catat ke Transaksi" untuk laundry masuk
+    document.getElementById('btn-catat').style.display='none';
+    document.getElementById('catat-info').style.display='block';
+    document.getElementById('catat-info').innerHTML='✅ <b>Laundry '+nama+' sudah masuk antrian!</b><br>Pencatatan income saat laundry diambil (tab Laundry Keluar).';
   }
   document.getElementById('bon-text').textContent=txt;
   document.getElementById('bon-result').style.display='block';
   document.getElementById('bon-result').scrollIntoView({behavior:'smooth'});
-  // Reset tombol catat
-  document.getElementById('btn-catat').textContent='📒 Catat ke Transaksi';
-  document.getElementById('btn-catat').disabled=false;
-  document.getElementById('catat-info').style.display='none';
+  if(bonType==='kucing'){
+    document.getElementById('btn-catat').style.display='block';
+    document.getElementById('btn-catat').textContent='📒 Catat ke Transaksi';
+    document.getElementById('btn-catat').disabled=false;
+    document.getElementById('catat-info').style.display='none';
+  }
+  }catch(err){
+    // Tangkap error JS dan tampilkan ke user (berguna saat testing di file://)
+    var errTarget=bonType==='laundry'?document.getElementById('bon-lau-err'):document.getElementById('bon-kat-err');
+    if(errTarget){errTarget.textContent='⚠️ Error JS: '+err.message;errTarget.style.display='block';}
+    console.error('generateBon error:',err);
+  }
 }
 async function catatTrx(){
   var btn=document.getElementById('btn-catat');
@@ -1396,6 +1564,7 @@ function renderStok(){
           (_isOwner?'<button class="stk-btn" onclick="adjustStok('+ri+',-1)">−</button>':'')+
           '<div class="stk-num '+stokCls+'">'+p.stok+'</div>'+
           (_isOwner?'<button class="stk-btn" onclick="adjustStok('+ri+',1)">+</button>':'')+
+          (_isOwner?'<button class="stk-set" style="background:#D1FAE5;color:#065F46;border-color:#A7F3D0;" onclick="openStokMasuk('+ri+')">📦</button>':'')+
           (_isOwner?'<button class="stk-set" onclick="openSetStok('+ri+')">SET</button>':'')+
         '</div>':
         '<span style="font-size:11px;color:var(--muted);">Layanan</span>')+
@@ -1408,11 +1577,47 @@ async function adjustStok(ri,d){
   await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(p))});
 }
 var _stokRi=null;
-function openSetStok(ri){
-  _stokRi=ri;var p=katalog[ri];
+function switchStokTab(tab){
+  var isMasuk=(tab==='masuk');
+  document.getElementById('stok-panel-masuk').style.display=isMasuk?'':'none';
+  document.getElementById('stok-panel-set').style.display=isMasuk?'none':'';
+  document.getElementById('stok-tab-masuk').style.cssText=isMasuk?'flex:1;padding:8px;border-radius:9px;border:2px solid var(--primary);background:var(--primary);color:#fff;font-weight:700;font-size:13px;cursor:pointer;':'flex:1;padding:8px;border-radius:9px;border:2px solid var(--border);background:#fff;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;';
+  document.getElementById('stok-tab-set').style.cssText=!isMasuk?'flex:1;padding:8px;border-radius:9px;border:2px solid #EF4444;background:#EF4444;color:#fff;font-weight:700;font-size:13px;cursor:pointer;':'flex:1;padding:8px;border-radius:9px;border:2px solid var(--border);background:#fff;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;';
+}
+function openStokMasuk(ri){
+  _stokRi=ri; var p=katalog[ri];
   document.getElementById('m-stok-nama').textContent='📦 '+p.nama_produk.replace('✏️ ','');
+  document.getElementById('m-stok-sisa').textContent='Stok saat ini: '+p.stok+' '+p.satuan;
+  document.getElementById('stok-masuk-val').value='';
+  document.getElementById('stok-masuk-preview').textContent='';
   document.getElementById('stok-val').value=p.stok||0;
+  switchStokTab('masuk');
   document.getElementById('m-stok').classList.add('open');
+  document.getElementById('stok-masuk-val').oninput=function(){
+    var tambah=parseInt(this.value)||0;
+    var sisa=katalog[_stokRi]?katalog[_stokRi].stok||0:0;
+    document.getElementById('stok-masuk-preview').textContent=tambah>0?'Stok baru: '+sisa+' + '+tambah+' = '+(sisa+tambah):'';
+  };
+}
+function openSetStok(ri){
+  _stokRi=ri; var p=katalog[ri];
+  document.getElementById('m-stok-nama').textContent='📦 '+p.nama_produk.replace('✏️ ','');
+  document.getElementById('m-stok-sisa').textContent='Stok saat ini: '+p.stok+' '+p.satuan;
+  document.getElementById('stok-val').value=p.stok||0;
+  document.getElementById('stok-masuk-val').value='';
+  document.getElementById('stok-masuk-preview').textContent='';
+  switchStokTab('set');
+  document.getElementById('m-stok').classList.add('open');
+}
+async function simpanStokMasuk(){
+  var tambah=parseInt(document.getElementById('stok-masuk-val').value)||0;
+  if(!tambah||tambah<=0){alert('Isi jumlah stok yang masuk!');return;}
+  if(_stokRi===null)return;
+  katalog[_stokRi].stok=(katalog[_stokRi].stok||0)+tambah;
+  sd('kat_v3',katalog);
+  closeM('m-stok');renderStok();renderProdGrid();
+  await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(katalog[_stokRi]))});
+  _stokRi=null;
 }
 async function simpanStok(){
   var val=parseInt(document.getElementById('stok-val').value)||0;
@@ -1464,7 +1669,7 @@ async function simpanProdukBaru(){
 // ══════════════════════════════════════════════
 // RENDER ALL + INIT
 // ══════════════════════════════════════════════
-function renderAll(){renderTrx();renderLap();renderUtang();renderStok();renderBonForms();}
+function renderAll(){renderTrx();renderLap();renderUtang();renderStok();renderBonForms();renderAntrian();}
 
 // ══════════════════════════════════════════════
 // RESET
@@ -1549,6 +1754,10 @@ function resetSemuaData(){
 }
 // ── AUTH CHECK: jalan setelah semua fungsi & variabel siap ──
 (function(){
+  // Cek lockout aktif saat buka app
+  var lockUntil=parseInt(localStorage.getItem('pin_lockout')||'0');
+  if(Date.now()<lockUntil){showLockout(lockUntil-Date.now());return;}
+
   var ts=parseInt(localStorage.getItem('auth_ts')||'0');
   if(Date.now()-ts < AUTH_DURATION_MS){
     _isOwner=(localStorage.getItem('auth_role')==='owner');
