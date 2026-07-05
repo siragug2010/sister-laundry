@@ -586,6 +586,25 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
   </div>
 </div>
 
+<!-- MODAL OPNAME MINGGUAN -->
+<div class="mbg" id="m-opname">
+  <div class="modal">
+    <div class="mtitle">📋 Opname Mingguan <button class="mclose" onclick="closeM('m-opname')">✕</button></div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Input stok fisik sekarang. Selisih negatif = barang hilang / tidak tercatat.</p>
+    <div id="opname-list" style="overflow-y:auto;max-height:55vh;"></div>
+    <div id="opname-summary" style="display:none;margin-top:10px;padding:10px;border-radius:9px;font-size:12px;font-weight:700;"></div>
+    <button class="btn btn-p" onclick="simpanOpname()" style="margin-top:12px;width:100%;">✅ Simpan Opname</button>
+  </div>
+</div>
+
+<!-- MODAL LOG STOK MASUK -->
+<div class="mbg" id="m-log-stok">
+  <div class="modal">
+    <div class="mtitle">📦 Riwayat Stok Masuk <button class="mclose" onclick="closeM('m-log-stok')">✕</button></div>
+    <div id="log-stok-list" style="overflow-y:auto;max-height:65vh;font-size:12px;"></div>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════════
 // DEFAULT KATALOG
@@ -818,6 +837,10 @@ function applyRole(){
         '</div>'+
         '<button id="btn-push-cloud" onclick="pushStokKeCloud()" style="width:100%;padding:10px;border-radius:9px;border:none;background:#DBEAFE;color:#1E40AF;font-size:12px;font-weight:700;cursor:pointer;">☁️ Upload Stok ke Cloud (sync HP lain)</button>'+
         '<div id="push-cloud-info" style="display:none;font-size:11px;color:#166534;margin-top:6px;text-align:center;"></div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">'+
+          '<button onclick="bukaOpname()" style="padding:10px;border-radius:9px;border:none;background:#FEF3C7;color:#92400E;font-size:12px;font-weight:700;cursor:pointer;">📋 Opname Mingguan</button>'+
+          '<button onclick="bukaLogStok()" style="padding:10px;border-radius:9px;border:none;background:#E0E7FF;color:#3730A3;font-size:12px;font-weight:700;cursor:pointer;">📦 Riwayat Stok Masuk</button>'+
+        '</div>'+
         '<button onclick="document.getElementById(\'m-add-produk\').classList.add(\'open\')" style="width:100%;padding:10px;border-radius:9px;border:none;background:#D1FAE5;color:#065F46;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;">➕ Tambah Produk Baru</button>';
     } else {
       adminPanel.innerHTML='';
@@ -1613,10 +1636,33 @@ async function simpanStokMasuk(){
   var tambah=parseInt(document.getElementById('stok-masuk-val').value)||0;
   if(!tambah||tambah<=0){alert('Isi jumlah stok yang masuk!');return;}
   if(_stokRi===null)return;
-  katalog[_stokRi].stok=(katalog[_stokRi].stok||0)+tambah;
+  // PIN pemilik wajib untuk stok masuk
+  var pin=prompt('🔒 PIN Pemilik untuk konfirmasi stok masuk:');
+  if(pin!==APP_PIN){alert('❌ PIN salah. Stok masuk dibatalkan.');return;}
+  var p=katalog[_stokRi];
+  var stokBefore=p.stok||0;
+  var stokAfter=stokBefore+tambah;
+  katalog[_stokRi].stok=stokAfter;
   sd('kat_v3',katalog);
+  // Log ke localStorage
+  var logEntry={
+    id:'sm'+Date.now(),
+    tanggal:today(),
+    jam:new Date().toTimeString().slice(0,5),
+    id_produk:p.id,
+    nama_produk:p.nama_produk,
+    bisnis:p.bisnis,
+    stok_sebelum:stokBefore,
+    jumlah_masuk:tambah,
+    stok_sesudah:stokAfter
+  };
+  var logArr=gd('stok_log',[]);
+  logArr.push(logEntry);
+  sd('stok_log',logArr);
   closeM('m-stok');renderStok();renderProdGrid();
   await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(katalog[_stokRi]))});
+  await cAction({action:'log_stok_masuk',data:encodeURIComponent(JSON.stringify(logEntry))});
+  alert('✅ Stok '+p.nama_produk+' bertambah '+tambah+' → total: '+stokAfter);
   _stokRi=null;
 }
 async function simpanStok(){
@@ -1627,6 +1673,114 @@ async function simpanStok(){
   await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(katalog[_stokRi]))});
   _stokRi=null;
 }
+
+// ══════════════════════════════════════════════
+// OPNAME MINGGUAN
+// ══════════════════════════════════════════════
+var _opnameData={};
+function bukaOpname(){
+  adminAction(function(){
+    _opnameData={};
+    var items=katalog.filter(function(p){return p.stok!==null&&p.stok!==undefined&&p.aktif;});
+    if(!items.length){alert('Tidak ada produk dengan stok.');return;}
+    var html='';
+    items.forEach(function(p){
+      var badge=p.bisnis==='kucing'?'🐱':'🧺';
+      html+='<div style="border-bottom:1px solid var(--border);padding:10px 0;">'+
+        '<div style="font-weight:700;font-size:13px;">'+badge+' '+p.nama_produk+'</div>'+
+        '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Stok sistem: <strong>'+p.stok+'</strong> '+p.satuan+'</div>'+
+        '<input type="number" min="0" placeholder="Stok fisik (isi jika berbeda)" '+
+        'data-prodid="'+p.id+'" data-sistem="'+(p.stok||0)+'" '+
+        'style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:13px;box-sizing:border-box;" '+
+        'oninput="updateOpnamePreview(this)">'+
+        '<div id="opname-preview-'+p.id+'" style="font-size:11px;margin-top:4px;min-height:16px;"></div>'+
+      '</div>';
+    });
+    document.getElementById('opname-list').innerHTML=html;
+    document.getElementById('opname-summary').style.display='none';
+    document.getElementById('m-opname').classList.add('open');
+  });
+}
+function updateOpnamePreview(el){
+  var raw=el.value.trim();
+  if(raw===''){
+    var id=el.getAttribute('data-prodid');
+    document.getElementById('opname-preview-'+id).innerHTML='';
+    delete _opnameData[id];
+    return;
+  }
+  var fisik=parseInt(raw)||0;
+  var sistem=parseInt(el.getAttribute('data-sistem'))||0;
+  var id=el.getAttribute('data-prodid');
+  var selisih=fisik-sistem;
+  var color=selisih<0?'#EF4444':selisih===0?'#059669':'#F59E0B';
+  var ikon=selisih<0?'❌':selisih===0?'✅':'⚠️';
+  var msg=selisih===0?'Sesuai':(selisih<0?'Kurang '+Math.abs(selisih)+' dari sistem':'Lebih '+selisih+' dari sistem');
+  document.getElementById('opname-preview-'+id).innerHTML='<span style="color:'+color+';font-weight:700;">'+ikon+' '+msg+'</span>';
+  _opnameData[id]={fisik:fisik,sistem:sistem,selisih:selisih};
+}
+async function simpanOpname(){
+  var keys=Object.keys(_opnameData);
+  if(!keys.length){alert('Belum ada stok fisik yang diisi!');return;}
+  var tgl=today();
+  var jam=new Date().toTimeString().slice(0,5);
+  var entries=[];
+  keys.forEach(function(id){
+    var p=katalog.find(function(x){return x.id===id;});
+    if(!p)return;
+    entries.push({
+      id:'op'+Date.now()+'_'+id,
+      tanggal_opname:tgl,
+      jam:jam,
+      id_produk:id,
+      nama_produk:p.nama_produk,
+      bisnis:p.bisnis,
+      stok_sistem:_opnameData[id].sistem,
+      stok_fisik:_opnameData[id].fisik,
+      selisih:_opnameData[id].selisih
+    });
+  });
+  // Simpan ke localStorage
+  var log=gd('opname_log',[]);
+  entries.forEach(function(e){log.push(e);});
+  sd('opname_log',log);
+  closeM('m-opname');
+  // Sync ke Sheets
+  await cAction({action:'log_opname',data:encodeURIComponent(JSON.stringify(entries))});
+  // Summary alert
+  var kurang=entries.filter(function(e){return e.selisih<0;});
+  var lebih=entries.filter(function(e){return e.selisih>0;});
+  var sesuai=entries.filter(function(e){return e.selisih===0;});
+  var msg='✅ Opname tersimpan! ('+tgl+')\n\n';
+  msg+='📊 Hasil:\n';
+  msg+='• Sesuai: '+sesuai.length+' produk\n';
+  if(lebih.length) msg+='• Lebih: '+lebih.length+' produk\n';
+  if(kurang.length){
+    msg+='• ❌ KURANG: '+kurang.length+' produk\n\n';
+    msg+='Detail selisih minus:\n';
+    kurang.forEach(function(e){msg+='  • '+e.nama_produk+': '+Math.abs(e.selisih)+' pcs\n';});
+  }
+  alert(msg);
+}
+
+// ── Riwayat stok masuk ──────────────────────────────────────────
+function bukaLogStok(){
+  var log=gd('stok_log',[]).slice().reverse();
+  var html=log.length?log.map(function(e){
+    return '<div style="border-bottom:1px solid var(--border);padding:8px 0;">'+
+      '<div style="font-weight:700;font-size:13px;">'+e.nama_produk+'</div>'+
+      '<div style="font-size:11px;color:var(--muted);">'+e.tanggal+' '+e.jam+'</div>'+
+      '<div style="font-size:12px;margin-top:3px;">'+
+        'Sebelum: <b>'+e.stok_sebelum+'</b> → +'+e.jumlah_masuk+' → '+
+        'Sesudah: <b style="color:#059669;">'+e.stok_sesudah+'</b>'+
+      '</div>'+
+    '</div>';
+  }).join(''):
+  '<div class="empty"><div class="ei">📦</div><p>Belum ada log stok masuk</p></div>';
+  document.getElementById('log-stok-list').innerHTML=html;
+  document.getElementById('m-log-stok').classList.add('open');
+}
+
 var _editRi=null;
 function openEditProduk(ri){
   _editRi=ri;var p=katalog[ri];
