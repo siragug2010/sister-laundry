@@ -174,7 +174,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
 .total-row{background:#F0FDF4;border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
 .total-row .tl{font-size:13px;font-weight:700;color:var(--muted);}
 .total-row .tv{font-size:18px;font-weight:800;color:var(--income);}
-/* ── PIN SCREEN ── */
+/* ââ PIN SCREEN ââ */
 #pin-screen{position:fixed;inset:0;background:#4F46E5;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;}
 #pin-screen .pin-logo{font-size:48px;margin-bottom:12px;}
 #pin-screen .pin-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px;}
@@ -195,7 +195,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
 
 <!-- PIN SCREEN -->
 <div id="pin-screen">
-  <div class="pin-logo">🐾</div>
+  <div class="pin-logo">ð¾</div>
   <div class="pin-title">Sister Laundry & Pet Shop</div>
   <div class="pin-sub">Masukkan PIN untuk melanjutkan</div>
   <div class="pin-dots" id="pin-dots">
@@ -217,33 +217,33 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
     <button class="nk" onclick="pinKey('9')">9</button>
     <button class="nk" style="background:transparent;"></button>
     <button class="nk" onclick="pinKey('0')">0</button>
-    <button class="nk del" onclick="pinDel()">⌫</button>
+    <button class="nk del" onclick="pinDel()">â«</button>
   </div>
 </div>
 
 <div class="hdr">
   <div>
-    <h1>🐾 Sister Laundry &amp; Pet Shop</h1>
+    <h1>ð¾ Sister Laundry &amp; Pet Shop</h1>
     <div class="sub" id="hdr-sub">Laporan Keuangan Harian</div>
   </div>
   <div style="text-align:right;">
     <div style="font-size:11px;opacity:.85;" id="hdr-date"></div>
-    <div class="sync-badge sy-off" id="sync-badge" onclick="manualSync()">⚠️ Offline</div>
+    <div class="sync-badge sy-off" id="sync-badge" onclick="manualSync()">â ï¸ Offline</div>
     <div id="role-badge" style="display:none;"></div>
-    <div id="logout-btn" onclick="logoutApp()" style="display:none;font-size:10px;color:rgba(255,255,255,.6);cursor:pointer;margin-top:4px;">🔓 Ganti Akun</div>
+    <div id="logout-btn" onclick="logoutApp()" style="display:none;font-size:10px;color:rgba(255,255,255,.6);cursor:pointer;margin-top:4px;">ð Ganti Akun</div>
   </div>
 </div>
 <div class="sync-bar hidden" id="sync-bar">
-  <span id="sync-msg">☁️ Menyinkronkan...</span>
-  <button onclick="manualSync()" style="font-size:10px;background:#6D28D9;color:#fff;border:none;padding:2px 8px;border-radius:8px;cursor:pointer;">🔄</button>
+  <span id="sync-msg">âï¸ Menyinkronkan...</span>
+  <button onclick="manualSync()" style="font-size:10px;background:#6D28D9;color:#fff;border:none;padding:2px 8px;border-radius:8px;cursor:pointer;">ð</button>
 </div>
 
-<!-- ═══ TRANSAKSI ═══ -->
+<!-- âââ TRANSAKSI âââ -->
 <div id="tab-transaksi" class="tab active">
   <div class="pills">
     <div class="pill a-all" onclick="fBisnis('semua',this)">Semua</div>
-    <div class="pill" onclick="fBisnis('kucing',this)">🐾 Pet Shop</div>
-    <div class="pill" onclick="fBisnis('laundry',this)">👕 Laundry</div>
+    <div class="pill" onclick="fBisnis('kucing',this)">ð¾ Pet Shop</div>
+    <div class="pill" onclick="fBisnis('laundry',this)">ð Laundry</div>
   </div>
   <div class="srow">
     <div class="sc inc"><div class="lbl">Masuk</div><div class="val" id="s-inc">Rp 0</div></div>
@@ -254,12 +254,12 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
   <div class="card"><div class="ctitle">7 Hari Terakhir</div><div id="trx-week"></div></div>
 </div>
 
-<!-- ═══ BON WA ═══ -->
+<!-- âââ BON WA âââ -->
 <div id="tab-bon" class="tab">
   <div class="bon-type" style="grid-template-columns:1fr 1fr 1fr;">
-    <div class="bbt ac" id="bbt-cat" onclick="setBonType('kucing')"><div class="bi">🐾</div><div class="bn">Pet Shop</div></div>
-    <div class="bbt" id="bbt-lau" onclick="setBonType('laundry')"><div class="bi">👕</div><div class="bn">Laundry Masuk</div></div>
-    <div class="bbt" id="bbt-laukeluar" onclick="setBonType('laundry_keluar')"><div class="bi">✅</div><div class="bn">Laundry Keluar <span id="antrian-badge" style="display:none;background:#EF4444;color:#fff;font-size:10px;font-weight:700;border-radius:8px;padding:1px 5px;vertical-align:middle;"></span></div></div>
+    <div class="bbt ac" id="bbt-cat" onclick="setBonType('kucing')"><div class="bi">ð¾</div><div class="bn">Pet Shop</div></div>
+    <div class="bbt" id="bbt-lau" onclick="setBonType('laundry')"><div class="bi">ð</div><div class="bn">Laundry Masuk</div></div>
+    <div class="bbt" id="bbt-laukeluar" onclick="setBonType('laundry_keluar')"><div class="bi">â</div><div class="bn">Laundry Keluar <span id="antrian-badge" style="display:none;background:#EF4444;color:#fff;font-size:10px;font-weight:700;border-radius:8px;padding:1px 5px;vertical-align:middle;"></span></div></div>
   </div>
 
   <!-- BON KUCING -->
@@ -270,7 +270,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
       <div class="prod-grid" id="prod-grid"></div>
       <!-- Lainnya custom row -->
       <div id="bk-custom-row" style="display:none;background:#F5F3FF;border-radius:10px;padding:10px;margin-bottom:10px;">
-        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:7px;">✏️ Produk Lainnya</div>
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:7px;">âï¸ Produk Lainnya</div>
         <div class="fr">
           <div class="fg"><label class="fl">Nama</label><input class="fc" id="bk-cust-nama" placeholder="Nama produk"></div>
           <div class="fg"><label class="fl">Harga (Rp)</label><input class="fc" id="bk-cust-harga" type="number" placeholder="0"></div>
@@ -282,7 +282,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
       <div class="sel-box" id="bk-sel"></div>
       <div class="fg"><label class="fl">Catatan (opsional)</label><input class="fc" id="bk-catatan" placeholder="Contoh: Titip kirim ya"></div>
       <div id="bon-kat-err" style="display:none;background:#FEE2E2;color:#991B1B;border-radius:9px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:10px;"></div>
-      <button class="btn btn-p" onclick="generateBon()" style="margin-top:4px;">🧾 Generate Bon</button>
+      <button class="btn btn-p" onclick="generateBon()" style="margin-top:4px;">ð§¾ Generate Bon</button>
     </div>
   </div>
 
@@ -290,18 +290,30 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
   <div id="bon-laundry" style="display:none;">
     <div class="card">
       <div class="fg"><label class="fl">Nama Pelanggan</label><input class="fc" id="bl-nama" placeholder="Contoh: Pak Budi"></div>
+      <div style="display:flex;gap:6px;margin-bottom:4px;">
+        <button id="bl-mode-kg-btn" onclick="setLauMode('kiloan')" style="flex:1;padding:8px 4px;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;background:var(--primary);color:#fff;">âï¸ Mode Kiloan</button>
+        <button id="bl-mode-ls-btn" onclick="setLauMode('langsung')" style="flex:1;padding:8px 4px;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;background:#E2E8F0;color:#374151;">ðµ Harga Langsung</button>
+      </div>
 
       <div class="svc-section">
-        <div class="svc-label">Layanan Utama (per kg)</div>
+        <div class="svc-label" id="bl-svc-label">Layanan Utama (per kg)</div>
         <div class="svc-grid" id="svc-grid"></div>
       </div>
       <div class="berat-box" id="bl-berat-box" style="display:none;">
         <div class="bbl" id="bl-svc-name">Cuci Gosok Biasa</div>
         <div class="brow">
           <input id="bl-berat" type="number" placeholder="0" min="0" step="0.5" oninput="updateBeratSubtotal()">
-          <span style="font-size:13px;color:var(--muted);">kg × <span id="bl-hpkg" style="font-weight:700;">Rp 7.000</span></span>
+          <span style="font-size:13px;color:var(--muted);">kg Ã <span id="bl-hpkg" style="font-weight:700;">Rp 7.000</span></span>
           <span class="bsub" id="bl-sub-kg">= Rp 0</span>
         </div>
+      </div>
+      <div id="bl-langsung-box" style="display:none;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:10px;padding:12px;margin-bottom:8px;">
+        <div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:6px;">ðµ Total Harga Langsung</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:13px;color:var(--muted);font-weight:600;">Rp</span>
+          <input id="bl-harga-langsung" type="number" class="fc" placeholder="Contoh: 15000" min="0" step="500" style="flex:1;">
+        </div>
+        <div style="font-size:11px;color:#16a34a;margin-top:5px;">Masukkan total harga, bebas dari hitungan per kg</div>
       </div>
 
       <div class="svc-section">
@@ -319,15 +331,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
       </div>
       <div class="fg"><label class="fl">Catatan</label><input class="fc" id="bl-catatan" placeholder="Contoh: Jangan dicampur"></div>
       <div id="bon-lau-err" style="display:none;background:#FEE2E2;color:#991B1B;border-radius:9px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:10px;"></div>
-      <button class="btn btn-p" onclick="generateBon()">🧾 Generate Bon</button>
+      <button class="btn btn-p" onclick="generateBon()">ð§¾ Generate Bon</button>
     </div>
   </div>
 
   <!-- BON LAUNDRY KELUAR -->
   <div id="bon-laundry-keluar" style="display:none;">
     <div class="card">
-      <div class="ctitle" style="margin-bottom:12px;">✅ Daftar Laundry Menunggu Diambil</div>
-      <div id="antrian-list"><div class="empty"><div class="ei">👕</div><p>Belum ada laundry masuk</p></div></div>
+      <div class="ctitle" style="margin-bottom:12px;">â Daftar Laundry Menunggu Diambil</div>
+      <div id="antrian-list"><div class="empty"><div class="ei">ð</div><p>Belum ada laundry masuk</p></div></div>
     </div>
   </div>
 
@@ -335,10 +347,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
   <div class="card" id="bon-result" style="display:none;">
     <div class="ctitle">Preview Bon WhatsApp</div>
     <div class="bon-prev" id="bon-text"></div>
-    <button class="btn btn-c" onclick="copyBon()">📋 Copy Teks</button>
-    <button class="btn btn-g" onclick="kirimWA()">💬 Kirim ke WhatsApp</button>
-    <button class="btn" style="background:#0EA5E9;color:#fff;margin-top:6px;" onclick="openBonVisual()">📸 Bon Visual + QRIS</button>
-    <button class="btn" id="btn-catat" onclick="catatTrx()" style="background:var(--primary);color:#fff;margin-top:6px;">📒 Catat ke Transaksi</button>
+    <button class="btn btn-c" onclick="copyBon()">ð Copy Teks</button>
+    <button class="btn btn-g" onclick="kirimWA()">ð¬ Kirim ke WhatsApp</button>
+    <button class="btn" style="background:#0EA5E9;color:#fff;margin-top:6px;" onclick="openBonVisual()">ð¸ Bon Visual + QRIS</button>
+    <button class="btn" id="btn-catat" onclick="catatTrx()" style="background:var(--primary);color:#fff;margin-top:6px;">ð Catat ke Transaksi</button>
     <div id="catat-info" style="display:none;background:#D1FAE5;border-radius:8px;padding:9px 12px;margin-top:8px;font-size:12px;color:#065F46;font-weight:600;"></div>
   </div>
 </div>
@@ -348,14 +360,14 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
   <div class="modal" style="padding:0;border-radius:20px 20px 0 0;overflow:hidden;">
     <!-- Header modal -->
     <div style="background:var(--primary);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
-      <div style="font-size:14px;font-weight:700;">📸 Bon Visual + QRIS</div>
-      <button class="mclose" style="color:#fff;" onclick="closeM('m-bon-visual')">✕</button>
+      <div style="font-size:14px;font-weight:700;">ð¸ Bon Visual + QRIS</div>
+      <button class="mclose" style="color:#fff;" onclick="closeM('m-bon-visual')">â</button>
     </div>
     <div style="padding:16px;overflow-y:auto;max-height:80vh;">
 
       <!-- Setup QRIS (tampil kalau belum ada QRIS) -->
       <div id="qris-setup" style="display:none;background:#FEF3C7;border-radius:10px;padding:12px;margin-bottom:12px;">
-        <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:8px;">📤 Upload Gambar QRIS kamu</div>
+        <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:8px;">ð¤ Upload Gambar QRIS kamu</div>
         <div style="font-size:11px;color:#92400E;margin-bottom:8px;">Foto/screenshot QRIS dari aplikasi bank atau dompet digital. Disimpan di HP, tidak dikirim ke mana-mana.</div>
         <input type="file" id="qris-file" accept="image/*" onchange="uploadQRIS(this)" style="font-size:12px;width:100%;">
       </div>
@@ -364,7 +376,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
       <div id="bon-visual-card" style="background:#fff;border-radius:14px;overflow:hidden;border:1px solid #E2E8F0;margin-bottom:12px;">
         <!-- Struk Header -->
         <div style="background:linear-gradient(135deg,#7C3AED,#4F46E5);color:#fff;padding:16px;text-align:center;">
-          <div style="font-size:18px;font-weight:900;letter-spacing:.5px;">🐾 SISTER LAUNDRY</div>
+          <div style="font-size:18px;font-weight:900;letter-spacing:.5px;">ð¾ SISTER LAUNDRY</div>
           <div style="font-size:13px;font-weight:700;letter-spacing:.5px;">& PET SHOP</div>
           <div style="font-size:10px;opacity:.8;margin-top:4px;" id="bv-tanggal"></div>
         </div>
@@ -386,16 +398,16 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
         <div id="bv-qris-section" style="padding:14px;text-align:center;display:none;">
           <div style="font-size:11px;font-weight:700;color:#64748B;margin-bottom:8px;letter-spacing:.5px;">SCAN UNTUK BAYAR</div>
           <img id="bv-qris-img" src="" style="max-width:200px;width:100%;border-radius:8px;border:1px solid #E2E8F0;">
-          <div style="font-size:10px;color:#94A3B8;margin-top:6px;">QRIS • Semua Aplikasi Pembayaran</div>
+          <div style="font-size:10px;color:#94A3B8;margin-top:6px;">QRIS â¢ Semua Aplikasi Pembayaran</div>
         </div>
         <!-- No QRIS placeholder -->
         <div id="bv-qris-placeholder" style="padding:14px;text-align:center;">
-          <div style="font-size:11px;color:#94A3B8;margin-bottom:4px;">💳 Belum ada QRIS</div>
+          <div style="font-size:11px;color:#94A3B8;margin-bottom:4px;">ð³ Belum ada QRIS</div>
           <div style="font-size:10px;color:#CBD5E1;">Upload QRIS di atas untuk ditampilkan di sini</div>
         </div>
         <!-- Footer struk -->
         <div style="padding:12px;text-align:center;background:#F8FAFC;">
-          <div style="font-size:10px;color:#94A3B8;">Terima kasih sudah berbelanja! 🙏</div>
+          <div style="font-size:10px;color:#94A3B8;">Terima kasih sudah berbelanja! ð</div>
           <div style="font-size:10px;color:#CBD5E1;margin-top:2px;">Sister Laundry & Pet Shop</div>
         </div>
       </div>
@@ -403,17 +415,17 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
       <!-- Tombol aksi -->
       <div id="qris-change-row" style="display:none;margin-bottom:10px;">
         <input type="file" id="qris-file2" accept="image/*" onchange="uploadQRIS(this)" style="display:none;">
-        <button onclick="document.getElementById('qris-file2').click()" style="width:100%;padding:9px;border-radius:8px;border:1.5px dashed #CBD5E1;background:#fff;color:#64748B;font-size:12px;font-weight:600;cursor:pointer;">🔄 Ganti Gambar QRIS</button>
+        <button onclick="document.getElementById('qris-file2').click()" style="width:100%;padding:9px;border-radius:8px;border:1.5px dashed #CBD5E1;background:#fff;color:#64748B;font-size:12px;font-weight:600;cursor:pointer;">ð Ganti Gambar QRIS</button>
       </div>
       <div style="background:#EFF6FF;border-radius:10px;padding:10px 12px;margin-bottom:10px;">
-        <div style="font-size:11px;font-weight:700;color:#1D4ED8;margin-bottom:3px;">📱 Cara kirim ke pelanggan:</div>
-        <div style="font-size:11px;color:#3B82F6;line-height:1.6;">Screenshot halaman ini → kirim gambarnya ke WhatsApp pelanggan</div>
+        <div style="font-size:11px;font-weight:700;color:#1D4ED8;margin-bottom:3px;">ð± Cara kirim ke pelanggan:</div>
+        <div style="font-size:11px;color:#3B82F6;line-height:1.6;">Screenshot halaman ini â kirim gambarnya ke WhatsApp pelanggan</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ LAPORAN ═══ -->
+<!-- âââ LAPORAN âââ -->
 <div id="tab-laporan" class="tab">
   <div class="pper">
     <div class="pp active" onclick="setPeriod('hari',this)">Hari Ini</div>
@@ -423,8 +435,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
   </div>
   <div class="pills">
     <div class="pill a-all" onclick="fLap('semua',this)">Semua</div>
-    <div class="pill" onclick="fLap('kucing',this)">🐾 Pet Shop</div>
-    <div class="pill" onclick="fLap('laundry',this)">👕 Laundry</div>
+    <div class="pill" onclick="fLap('kucing',this)">ð¾ Pet Shop</div>
+    <div class="pill" onclick="fLap('laundry',this)">ð Laundry</div>
   </div>
   <div class="srow">
     <div class="sc inc"><div class="lbl">Masuk</div><div class="val" id="l-inc">Rp 0</div></div>
@@ -432,12 +444,12 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
     <div class="sc laba"><div class="lbl">Laba</div><div class="val" id="l-laba">Rp 0</div></div>
   </div>
   <div class="card"><div class="ctitle">Grafik 7 Hari</div><div class="bch" id="bch"></div>
-    <div style="display:flex;gap:14px;margin-top:5px;font-size:10px;"><span style="color:var(--income);">■ Masuk</span><span style="color:var(--expense);">■ Keluar</span></div>
+    <div style="display:flex;gap:14px;margin-top:5px;font-size:10px;"><span style="color:var(--income);">â  Masuk</span><span style="color:var(--expense);">â  Keluar</span></div>
   </div>
   <div class="card"><div class="ctitle">Rincian</div><div id="l-list"></div></div>
 </div>
 
-<!-- ═══ UTANG ═══ -->
+<!-- âââ UTANG âââ -->
 <div id="tab-utang" class="tab">
   <div class="pills">
     <div class="pill a-all" onclick="fUtang('aktif',this)">Belum Lunas</div>
@@ -451,15 +463,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
   <div class="card"><div id="utang-list"></div></div>
 </div>
 
-<!-- ═══ STOK ═══ -->
+<!-- âââ STOK âââ -->
 <div id="tab-stok" class="tab">
   <div class="pills">
     <div class="pill a-all" onclick="fStok('semua',this)">Semua</div>
-    <div class="pill" onclick="fStok('kucing',this)">🐾 Pet Shop</div>
-    <div class="pill" onclick="fStok('laundry',this)">👕 Laundry</div>
+    <div class="pill" onclick="fStok('kucing',this)">ð¾ Pet Shop</div>
+    <div class="pill" onclick="fStok('laundry',this)">ð Laundry</div>
   </div>
   <div class="card" style="background:#FEF3C7;border-left:3px solid var(--cat);">
-    <div style="font-size:12px;font-weight:600;color:#92400E;margin-bottom:10px;">📦 Stok otomatis berkurang saat catat transaksi.</div>
+    <div style="font-size:12px;font-weight:600;color:#92400E;margin-bottom:10px;">ð¦ Stok otomatis berkurang saat catat transaksi.</div>
     <div id="stok-admin-panel"></div>
   </div>
   <div class="card"><div id="stok-list"></div></div>
@@ -484,16 +496,16 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
     <span>Stok</span></button>
 </nav>
 
-<button class="fab" id="fab-btn" onclick="openTrxModal()">＋</button>
+<button class="fab" id="fab-btn" onclick="openTrxModal()">ï¼</button>
 
 <!-- MODAL TRANSAKSI -->
 <div class="mbg" id="m-trx">
   <div class="modal">
-    <div class="mtitle">Tambah Transaksi <button class="mclose" onclick="closeM('m-trx')">✕</button></div>
+    <div class="mtitle">Tambah Transaksi <button class="mclose" onclick="closeM('m-trx')">â</button></div>
     <div class="fg"><label class="fl">Bisnis</label>
-      <select class="fc" id="trx-bisnis"><option value="kucing">🐾 Pet Shop</option><option value="laundry">👕 Laundry</option></select></div>
+      <select class="fc" id="trx-bisnis"><option value="kucing">ð¾ Pet Shop</option><option value="laundry">ð Laundry</option></select></div>
     <div class="fg"><label class="fl">Tipe</label>
-      <select class="fc" id="trx-tipe"><option value="income">💚 Pemasukan</option><option value="expense">🔴 Pengeluaran</option></select></div>
+      <select class="fc" id="trx-tipe"><option value="income">ð Pemasukan</option><option value="expense">ð´ Pengeluaran</option></select></div>
     <div class="fg"><label class="fl">Kategori</label>
       <select class="fc" id="trx-kat"><option>Penjualan</option><option>Laundry</option><option>Pembelian Stok</option><option>Operasional</option><option>Gaji</option><option>Lainnya</option></select></div>
     <div class="fg"><label class="fl">Keterangan</label><input class="fc" id="trx-ket" placeholder="Contoh: Jual Royal Canin 1kg"></div>
@@ -501,44 +513,44 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
       <div class="fg"><label class="fl">Nominal (Rp)</label><input class="fc" id="trx-nom" type="number" placeholder="50000"></div>
       <div class="fg"><label class="fl">Tanggal</label><input class="fc" id="trx-tgl" type="date"></div>
     </div>
-    <button class="btn btn-p" onclick="simpanTrx()">✅ Simpan</button>
+    <button class="btn btn-p" onclick="simpanTrx()">â Simpan</button>
   </div>
 </div>
 
 <!-- MODAL UTANG -->
 <div class="mbg" id="m-utang">
   <div class="modal">
-    <div class="mtitle">Tambah Catatan Utang <button class="mclose" onclick="closeM('m-utang')">✕</button></div>
+    <div class="mtitle">Tambah Catatan Utang <button class="mclose" onclick="closeM('m-utang')">â</button></div>
     <div class="fg"><label class="fl">Nama Pelanggan</label><input class="fc" id="u-nama" placeholder="Nama pelanggan"></div>
     <div class="fg"><label class="fl">Bisnis</label>
-      <select class="fc" id="u-bisnis"><option value="kucing">🐾 Pet Shop</option><option value="laundry">👕 Laundry</option></select></div>
+      <select class="fc" id="u-bisnis"><option value="kucing">ð¾ Pet Shop</option><option value="laundry">ð Laundry</option></select></div>
     <div class="fg"><label class="fl">Nominal (Rp)</label><input class="fc" id="u-nom" type="number"></div>
     <div class="fg"><label class="fl">Keterangan</label><input class="fc" id="u-ket" placeholder="Contoh: Laundry 3kg"></div>
     <div class="fg"><label class="fl">Tanggal</label><input class="fc" id="u-tgl" type="date"></div>
-    <button class="btn btn-p" onclick="simpanUtang()">✅ Simpan</button>
+    <button class="btn btn-p" onclick="simpanUtang()">â Simpan</button>
   </div>
 </div>
 
 <!-- MODAL SET STOK -->
 <div class="mbg" id="m-stok">
   <div class="modal">
-    <div class="mtitle">Kelola Stok <button class="mclose" onclick="closeM('m-stok')">✕</button></div>
+    <div class="mtitle">Kelola Stok <button class="mclose" onclick="closeM('m-stok')">â</button></div>
     <div id="m-stok-nama" style="font-size:15px;font-weight:700;margin-bottom:4px;"></div>
     <div id="m-stok-sisa" style="font-size:12px;color:var(--muted);margin-bottom:14px;"></div>
     <!-- Tab SET vs MASUK -->
     <div style="display:flex;gap:8px;margin-bottom:14px;">
-      <button id="stok-tab-masuk" onclick="switchStokTab('masuk')" style="flex:1;padding:8px;border-radius:9px;border:2px solid var(--primary);background:var(--primary);color:#fff;font-weight:700;font-size:13px;cursor:pointer;">📦 Stok Masuk</button>
-      <button id="stok-tab-set" onclick="switchStokTab('set')" style="flex:1;padding:8px;border-radius:9px;border:2px solid var(--border);background:#fff;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;">🔧 Set Manual</button>
+      <button id="stok-tab-masuk" onclick="switchStokTab('masuk')" style="flex:1;padding:8px;border-radius:9px;border:2px solid var(--primary);background:var(--primary);color:#fff;font-weight:700;font-size:13px;cursor:pointer;">ð¦ Stok Masuk</button>
+      <button id="stok-tab-set" onclick="switchStokTab('set')" style="flex:1;padding:8px;border-radius:9px;border:2px solid var(--border);background:#fff;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;">ð§ Set Manual</button>
     </div>
     <div id="stok-panel-masuk">
       <div class="fg"><label class="fl">Jumlah stok yang baru masuk</label><input class="fc" id="stok-masuk-val" type="number" min="1" placeholder="Contoh: 60"></div>
       <div id="stok-masuk-preview" style="font-size:12px;color:#059669;font-weight:600;margin-bottom:10px;text-align:center;"></div>
-      <button class="btn btn-p" onclick="simpanStokMasuk()">📦 Tambah Stok Masuk</button>
+      <button class="btn btn-p" onclick="simpanStokMasuk()">ð¦ Tambah Stok Masuk</button>
     </div>
     <div id="stok-panel-set" style="display:none;">
       <div class="fg"><label class="fl">Set jumlah stok (override total)</label><input class="fc" id="stok-val" type="number" min="0"></div>
-      <div style="font-size:11px;color:#EF4444;margin-bottom:10px;">⚠️ Ini akan mengganti stok, bukan menambah.</div>
-      <button class="btn" style="background:#EF4444;color:#fff;" onclick="simpanStok()">🔧 Override Stok</button>
+      <div style="font-size:11px;color:#EF4444;margin-bottom:10px;">â ï¸ Ini akan mengganti stok, bukan menambah.</div>
+      <button class="btn" style="background:#EF4444;color:#fff;" onclick="simpanStok()">ð§ Override Stok</button>
     </div>
   </div>
 </div>
@@ -546,42 +558,42 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
 <!-- MODAL EDIT PRODUK -->
 <div class="mbg" id="m-edit-produk">
   <div class="modal">
-    <div class="mtitle">✏️ Edit Produk <button class="mclose" onclick="closeM('m-edit-produk')">✕</button></div>
+    <div class="mtitle">âï¸ Edit Produk <button class="mclose" onclick="closeM('m-edit-produk')">â</button></div>
     <div class="fg"><label class="fl">Nama Produk</label><input class="fc" id="ep-nama" type="text"></div>
     <div class="fg"><label class="fl">Harga (Rp)</label><input class="fc" id="ep-harga" type="number" min="0"></div>
-    <button class="btn btn-p" onclick="simpanEditProduk()">✅ Simpan</button>
+    <button class="btn btn-p" onclick="simpanEditProduk()">â Simpan</button>
   </div>
 </div>
 
 <!-- MODAL TAMBAH PRODUK BARU -->
 <div class="mbg" id="m-add-produk">
   <div class="modal">
-    <div class="mtitle">➕ Produk Baru <button class="mclose" onclick="closeM('m-add-produk')">✕</button></div>
+    <div class="mtitle">â Produk Baru <button class="mclose" onclick="closeM('m-add-produk')">â</button></div>
     <div class="fg">
       <label class="fl">Kategori</label>
       <select class="fc" id="ap-bisnis">
-        <option value="kucing">🐾 Pet Shop</option>
-        <option value="laundry">👕 Laundry</option>
+        <option value="kucing">ð¾ Pet Shop</option>
+        <option value="laundry">ð Laundry</option>
       </select>
     </div>
     <div class="fg"><label class="fl">Nama Produk</label><input class="fc" id="ap-nama" type="text" placeholder="cth: Royal Canin Kitten"></div>
     <div class="fg"><label class="fl">Harga (Rp)</label><input class="fc" id="ap-harga" type="number" min="0" placeholder="0"></div>
     <div class="fg"><label class="fl">Stok Awal</label><input class="fc" id="ap-stok" type="number" min="0" placeholder="0"></div>
-    <button class="btn btn-p" onclick="simpanProdukBaru()">✅ Tambah Produk</button>
+    <button class="btn btn-p" onclick="simpanProdukBaru()">â Tambah Produk</button>
   </div>
 </div>
 
 <!-- MODAL SETUP -->
 <div class="mbg" id="m-setup">
   <div class="modal">
-    <div class="mtitle">⚙️ Setup Google Sheets Sync</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Lakukan sekali untuk sinkronkan data ke Google Sheets — bisa dipantau dari HP/laptop manapun.</p>
-    <div class="setup-step"><div class="snum">1</div><div class="stxt">Buka <a href="https://sheets.google.com" target="_blank" style="color:var(--primary);">sheets.google.com</a> → buat spreadsheet baru → beri nama <em>"Sister Laundry & Pet Shop"</em></div></div>
-    <div class="setup-step"><div class="snum">2</div><div class="stxt">Klik menu <strong>Extensions → Apps Script</strong></div></div>
+    <div class="mtitle">âï¸ Setup Google Sheets Sync</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Lakukan sekali untuk sinkronkan data ke Google Sheets â bisa dipantau dari HP/laptop manapun.</p>
+    <div class="setup-step"><div class="snum">1</div><div class="stxt">Buka <a href="https://sheets.google.com" target="_blank" style="color:var(--primary);">sheets.google.com</a> â buat spreadsheet baru â beri nama <em>"Sister Laundry & Pet Shop"</em></div></div>
+    <div class="setup-step"><div class="snum">2</div><div class="stxt">Klik menu <strong>Extensions â Apps Script</strong></div></div>
     <div class="setup-step"><div class="snum">3</div><div class="stxt">Hapus semua kode, paste isi file <strong>apps_script_warung.gs</strong>, Save.</div></div>
-    <div class="setup-step"><div class="snum">4</div><div class="stxt"><strong>Deploy → New deployment → Web App</strong><br>Execute as: <em>Me</em> · Access: <em>Anyone</em> → Deploy → copy URL</div></div>
+    <div class="setup-step"><div class="snum">4</div><div class="stxt"><strong>Deploy â New deployment â Web App</strong><br>Execute as: <em>Me</em> Â· Access: <em>Anyone</em> â Deploy â copy URL</div></div>
     <div class="fg"><label class="fl">Web App URL</label><input class="fc" id="setup-url" placeholder="https://script.google.com/macros/s/..."></div>
-    <button class="btn btn-p" onclick="saveSetup()">✅ Hubungkan</button>
+    <button class="btn btn-p" onclick="saveSetup()">â Hubungkan</button>
     <button class="btn" style="background:#94A3B8;color:#fff;" onclick="closeM('m-setup');localStorage.setItem('wk_skip','1')">Lewati (offline saja)</button>
   </div>
 </div>
@@ -589,26 +601,26 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px
 <!-- MODAL OPNAME MINGGUAN -->
 <div class="mbg" id="m-opname">
   <div class="modal">
-    <div class="mtitle">📋 Opname Mingguan <button class="mclose" onclick="closeM('m-opname')">✕</button></div>
+    <div class="mtitle">ð Opname Mingguan <button class="mclose" onclick="closeM('m-opname')">â</button></div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Input stok fisik sekarang. Selisih negatif = barang hilang / tidak tercatat.</p>
     <div id="opname-list" style="overflow-y:auto;max-height:55vh;"></div>
     <div id="opname-summary" style="display:none;margin-top:10px;padding:10px;border-radius:9px;font-size:12px;font-weight:700;"></div>
-    <button class="btn btn-p" onclick="simpanOpname()" style="margin-top:12px;width:100%;">✅ Simpan Opname</button>
+    <button class="btn btn-p" onclick="simpanOpname()" style="margin-top:12px;width:100%;">â Simpan Opname</button>
   </div>
 </div>
 
 <!-- MODAL LOG STOK MASUK -->
 <div class="mbg" id="m-log-stok">
   <div class="modal">
-    <div class="mtitle">📦 Riwayat Stok Masuk <button class="mclose" onclick="closeM('m-log-stok')">✕</button></div>
+    <div class="mtitle">ð¦ Riwayat Stok Masuk <button class="mclose" onclick="closeM('m-log-stok')">â</button></div>
     <div id="log-stok-list" style="overflow-y:auto;max-height:65vh;font-size:12px;"></div>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // DEFAULT KATALOG
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 var DEFAULT_KATALOG = [
   // === PET SHOP (WARUNG KUCING) ===
   {id:'k1', bisnis:'kucing',nama_produk:'Cat Choize Adult',  harga:21000,satuan:'pcs',stok:20,aktif:true},
@@ -637,24 +649,24 @@ var DEFAULT_KATALOG = [
   {id:'k24',bisnis:'kucing',nama_produk:'Tasty Kitten',       harga:32000,satuan:'pcs',stok:20,aktif:true},
   {id:'k26',bisnis:'kucing',nama_produk:'Whiskas Sachet',      harga:7000, satuan:'pcs',stok:20,aktif:true},
   {id:'k27',bisnis:'kucing',nama_produk:'Bolt Curah Karungan',harga:600000,satuan:'karung',stok:1,aktif:true},
-  {id:'k25',bisnis:'kucing',nama_produk:'✏️ Lainnya',         harga:0,    satuan:'pcs',stok:null,aktif:true,is_custom:true},
-  // === LAUNDRY — Per Kg ===
+  {id:'k25',bisnis:'kucing',nama_produk:'âï¸ Lainnya',         harga:0,    satuan:'pcs',stok:null,aktif:true,is_custom:true},
+  // === LAUNDRY â Per Kg ===
   {id:'l1',bisnis:'laundry',nama_produk:'Cuci Gosok Biasa',  harga:7000,satuan:'kg',stok:null,aktif:true,tipe:'per_kg'},
   {id:'l2',bisnis:'laundry',nama_produk:'Cuci Gosok Express', harga:8000,satuan:'kg',stok:null,aktif:true,tipe:'per_kg'},
   {id:'l3',bisnis:'laundry',nama_produk:'Gosok Biasa',        harga:5000,satuan:'kg',stok:null,aktif:true,tipe:'per_kg'},
   {id:'l4',bisnis:'laundry',nama_produk:'Gosok Express',      harga:6000,satuan:'kg',stok:null,aktif:true,tipe:'per_kg'},
   {id:'l5',bisnis:'laundry',nama_produk:'Cuci Kering',        harga:5000,satuan:'kg',stok:null,aktif:true,tipe:'per_kg'},
-  // === LAUNDRY — Satuan ===
+  // === LAUNDRY â Satuan ===
   {id:'l6', bisnis:'laundry',nama_produk:'Karpet',  harga:0,satuan:'pcs',stok:null,aktif:true,tipe:'satuan'},
   {id:'l7', bisnis:'laundry',nama_produk:'Selimut', harga:0,satuan:'pcs',stok:null,aktif:true,tipe:'satuan'},
   {id:'l8', bisnis:'laundry',nama_produk:'Badcover',harga:0,satuan:'pcs',stok:null,aktif:true,tipe:'satuan'},
   {id:'l9', bisnis:'laundry',nama_produk:'Baju',    harga:0,satuan:'pcs',stok:null,aktif:true,tipe:'satuan'},
-  {id:'l10',bisnis:'laundry',nama_produk:'✏️ Lainnya',harga:0,satuan:'pcs',stok:null,aktif:true,tipe:'satuan',is_custom:true},
+  {id:'l10',bisnis:'laundry',nama_produk:'âï¸ Lainnya',harga:0,satuan:'pcs',stok:null,aktif:true,tipe:'satuan',is_custom:true},
 ];
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // STORAGE
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function gd(k,d){try{return JSON.parse(localStorage.getItem(k))||d;}catch(e){return d;}}
 function sd(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 
@@ -673,18 +685,18 @@ if(!katalog.length){
   if(changed) sd('kat_v3',katalog);
 }
 
-// ══════════════════════════════════════════════
-// KONFIGURASI — GANTI PIN DI SINI
-// ══════════════════════════════════════════════
-var APP_PIN    = '4305'; // ← PIN PEMILIK (akses penuh) — GANTI!
-var KASIR_PIN  = '1701'; // ← PIN KASIR (jualan saja) — GANTI!
+// ââââââââââââââââââââââââââââââââââââââââââââââ
+// KONFIGURASI â GANTI PIN DI SINI
+// ââââââââââââââââââââââââââââââââââââââââââââââ
+var APP_PIN    = '4305'; // â PIN PEMILIK (akses penuh) â GANTI!
+var KASIR_PIN  = '1701'; // â PIN KASIR (jualan saja) â GANTI!
 var SCRIPT_URL_FIXED = 'https://script.google.com/macros/s/AKfycbyBPX7A_zfGikJkAXxYwM7-qhLZzneHlyc1rGx-U56_LDbiOMRTcDLyBzSWmn2vRaQQTQ/exec';
 var AUTH_DURATION_MS = 24 * 60 * 60 * 1000; // 24 jam
 var LOCKOUT_DURATION_MS = 5 * 60 * 1000;     // 5 menit blokir
 var MAX_ATTEMPTS = 3;
 var _isOwner = false;
 
-// ── PIN LOGIC ──
+// ââ PIN LOGIC ââ
 var _pin = '';
 var _pinAttempts = parseInt(localStorage.getItem('pin_attempts')||'0');
 
@@ -720,7 +732,7 @@ function showLockout(ms){
       setNumpadDisabled(false);
     } else {
       var m=Math.floor(rem/60),s=rem%60;
-      document.getElementById('pin-err').textContent='🔒 Terlalu banyak percobaan. Coba lagi dalam '+m+':'+String(s).padStart(2,'0');
+      document.getElementById('pin-err').textContent='ð Terlalu banyak percobaan. Coba lagi dalam '+m+':'+String(s).padStart(2,'0');
       document.getElementById('pin-sub').textContent='Akses sementara diblokir';
       setTimeout(tick,1000);
     }
@@ -756,27 +768,27 @@ function checkPin(){
 }
 var CFG = {URL: localStorage.getItem('wk_url') || SCRIPT_URL_FIXED};
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // UTILS
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function fmt(n){var a=Math.abs(n);if(a>=1000000)return 'Rp '+(n/1000000).toFixed(1)+'jt';return 'Rp '+Number(n).toLocaleString('id-ID');}
 function fmtF(n){return 'Rp '+Number(n).toLocaleString('id-ID');}
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function localDate(v){if(!v)return '';var s=String(v);if(s.length===10)return s;var d=new Date(v);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function fmtD(d){var D=['Min','Sen','Sel','Rab','Kam','Jum','Sab'],M=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'],dt=new Date(d+'T00:00:00');return D[dt.getDay()]+' '+dt.getDate()+' '+M[dt.getMonth()];}
+function fmtD(d){var D=['Min','Sen','Sel','Rab','Kam','Jum','Sab'],M=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'],s=String(d||''),dt=s.includes('T')?new Date(s):new Date(s+'T00:00:00');return D[dt.getDay()]+' '+dt.getDate()+' '+M[dt.getMonth()];}
 function uid(){return Date.now().toString()+Math.floor(Math.random()*999);}
 
 // Header date
 (function(){var n=new Date(),M=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'],D=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];document.getElementById('hdr-date').textContent=D[n.getDay()]+', '+n.getDate()+' '+M[n.getMonth()]+' '+n.getFullYear();})();
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // SETUP & SYNC
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function setSyncBadge(s){
   var b=document.getElementById('sync-badge'),bar=document.getElementById('sync-bar');
-  if(s==='ok'){b.className='sync-badge sy-ok';b.textContent='✅ Tersinkron';bar.classList.add('hidden');}
-  else if(s==='ing'){b.className='sync-badge sy-ing';b.textContent='⏳ Sync...';bar.classList.remove('hidden');document.getElementById('sync-msg').textContent='☁️ Menyinkronkan...';}
-  else{b.className='sync-badge sy-off';b.textContent='⚠️ Offline';bar.classList.add('hidden');}
+  if(s==='ok'){b.className='sync-badge sy-ok';b.textContent='â Tersinkron';bar.classList.add('hidden');}
+  else if(s==='ing'){b.className='sync-badge sy-ing';b.textContent='â³ Sync...';bar.classList.remove('hidden');document.getElementById('sync-msg').textContent='âï¸ Menyinkronkan...';}
+  else{b.className='sync-badge sy-off';b.textContent='â ï¸ Offline';bar.classList.add('hidden');}
 }
 function saveSetup(){
   var u=document.getElementById('setup-url').value.trim();
@@ -793,7 +805,7 @@ async function manualSync(){
   setSyncBadge('ing');
   var res=await cloudGet({action:'read'});
   if(res&&res.success){
-    // Normalisasi tanggal dari Sheets (UTC ISO → local YYYY-MM-DD)
+    // Normalisasi tanggal dari Sheets (UTC ISO â local YYYY-MM-DD)
     if(res.transaksi) res.transaksi.forEach(function(t){t.tanggal=localDate(t.tanggal);});
     if(res.utang) res.utang.forEach(function(t){t.tanggal=localDate(t.tanggal);});
     // Merge transaksi: gabung lokal + cloud, deduplikasi by id
@@ -820,6 +832,8 @@ async function manualSync(){
     localA.forEach(function(a){antrianMap[a.id]=a;});
     (res.antrian||[]).forEach(function(a){
       if(typeof a.satuan_items_json==='string'){try{a.satuan_items=JSON.parse(a.satuan_items_json);}catch(e){a.satuan_items=[];}}
+      a.tanggal_masuk=localDate(a.tanggal_masuk);
+      a.estimasi_selesai=localDate(a.estimasi_selesai);
       antrianMap[a.id]=a;
     });
     laundryAntrian=Object.values(antrianMap);
@@ -846,20 +860,20 @@ function applyRole(){
     if(_isOwner){
       adminPanel.innerHTML=
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'+
-          '<button onclick="resetStokSaja()" style="padding:9px;border-radius:9px;border:none;background:#FDE68A;color:#92400E;font-size:11px;font-weight:700;cursor:pointer;">🔄 Reset Stok ke 0</button>'+
-          '<button onclick="resetSemuaData()" style="padding:9px;border-radius:9px;border:none;background:#FEE2E2;color:#991B1B;font-size:11px;font-weight:700;cursor:pointer;">⚠️ Reset Semua Data</button>'+
+          '<button onclick="resetStokSaja()" style="padding:9px;border-radius:9px;border:none;background:#FDDf8A;color:#92400E;font-size:11px;font-weight:700;cursor:pointer;">ð Reset Stok ke 0</button>'+
+          '<button onclick="resetSemuaData()" style="padding:9px;border-radius:9px;border:none;background:#FEE2E2;color:#991B1B;font-size:11px;font-weight:700;cursor:pointer;">â ï¸ Reset Semua Data</button>'+
         '</div>'+
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'+
-          '<button onclick="bukaGantiURL()" style="padding:9px;border-radius:9px;border:none;background:#EDE9FE;color:#5B21B6;font-size:11px;font-weight:700;cursor:pointer;">⚙️ Ganti URL Script</button>'+
-          '<button onclick="resetTotal()" style="padding:9px;border-radius:9px;border:none;background:#FEE2E2;color:#7F1D1D;font-size:11px;font-weight:700;cursor:pointer;">💀 Reset Total + URL</button>'+
+          '<button onclick="bukaGantiURL()" style="padding:9px;border-radius:9px;border:none;background:#EDE9FE;color:#5B21B6;font-size:11px;font-weight:700;cursor:pointer;">âï¸ Ganti URL Script</button>'+
+          '<button onclick="resetTotal()" style="padding:9px;border-radius:9px;border:none;background:#FEE2E2;color:#7F1D1D;font-size:11px;font-weight:700;cursor:pointer;">ð Reset Total + URL</button>'+
         '</div>'+
-        '<button id="btn-push-cloud" onclick="pushStokKeCloud()" style="width:100%;padding:10px;border-radius:9px;border:none;background:#DBEAFE;color:#1E40AF;font-size:12px;font-weight:700;cursor:pointer;">☁️ Upload Stok ke Cloud (sync HP lain)</button>'+
+        '<button id="btn-push-cloud" onclick="pushStokKeCloud()" style="width:100%;padding:10px;border-radius:9px;border:none;background:#DBEAFE;color:#1E40AF;font-size:12px;font-weight:700;cursor:pointer;">âï¸ Upload Stok ke Cloud (sync HP lain)</button>'+
         '<div id="push-cloud-info" style="display:none;font-size:11px;color:#166534;margin-top:6px;text-align:center;"></div>'+
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">'+
-          '<button onclick="bukaOpname()" style="padding:10px;border-radius:9px;border:none;background:#FEF3C7;color:#92400E;font-size:12px;font-weight:700;cursor:pointer;">📋 Opname Mingguan</button>'+
-          '<button onclick="bukaLogStok()" style="padding:10px;border-radius:9px;border:none;background:#E0E7FF;color:#3730A3;font-size:12px;font-weight:700;cursor:pointer;">📦 Riwayat Stok Masuk</button>'+
+          '<button onclick="bukaOpname()" style="padding:10px;border-radius:9px;border:none;background:#FEF3C7;color:#92400E;font-size:12px;font-weight:700;cursor:pointer;">ð Opname Mingguan</button>'+
+          '<button onclick="bukaLogStok()" style="padding:10px;border-radius:9px;border:none;background:#E0E7FF;color:#3730A3;font-size:12px;font-weight:700;cursor:pointer;">ð¦ Riwayat Stok Masuk</button>'+
         '</div>'+
-        '<button onclick="document.getElementById(\'m-add-produk\').classList.add(\'open\')" style="width:100%;padding:10px;border-radius:9px;border:none;background:#D1FAE5;color:#065F46;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;">➕ Tambah Produk Baru</button>';
+        '<button onclick="document.getElementById(\'m-add-produk\').classList.add(\'open\')" style="width:100%;padding:10px;border-radius:9px;border:none;background:#D1FAE5;color:#065F46;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;">â Tambah Produk Baru</button>';
     } else {
       adminPanel.innerHTML='';
     }
@@ -878,15 +892,15 @@ function applyRole(){
   var badge=document.getElementById('role-badge');
   if(badge){
     if(_isOwner){
-      badge.textContent='👑 Pemilik';
+      badge.textContent='ð Pemilik';
       badge.style.cssText='font-size:10px;font-weight:700;color:#FCD34D;margin-top:2px;';
     } else {
-      badge.textContent='🛒 Mode Kasir';
+      badge.textContent='ð Mode Kasir';
       badge.style.cssText='font-size:10px;font-weight:700;color:rgba(255,255,255,.8);margin-top:2px;background:rgba(255,255,255,.15);padding:2px 7px;border-radius:8px;';
     }
     badge.style.display='block';
   }
-  // Tombol Ganti Akun — selalu tampil
+  // Tombol Ganti Akun â selalu tampil
   var lb=document.getElementById('logout-btn');
   if(lb) lb.style.display='block';
 }
@@ -900,9 +914,9 @@ function appInit(){
   setInterval(()=>{if(CFG.URL)manualSync();},5*60*1000);
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // TAB NAV
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 var curTab='transaksi';
 function showTab(n){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -917,9 +931,9 @@ function showTab(n){
   renderAll();
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // TRANSAKSI
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 var bisFil='semua';
 function fBisnis(v,el){
   bisFil=v;
@@ -937,7 +951,7 @@ function renderTrx(){
   document.getElementById('s-exp').textContent=fmt(exp);
   var lb=inc-exp,le=document.getElementById('s-laba');le.textContent=fmt(lb);le.style.color=lb>=0?'var(--primary)':'var(--expense)';
   var el=document.getElementById('trx-today');
-  el.innerHTML=todT.length?todT.map(x=>trxHTML(x,transaksi.indexOf(x))).join(''):'<div class="empty"><div class="ei">📋</div><p>Belum ada transaksi hari ini</p></div>';
+  el.innerHTML=todT.length?todT.map(x=>trxHTML(x,transaksi.indexOf(x))).join(''):'<div class="empty"><div class="ei">ð</div><p>Belum ada transaksi hari ini</p></div>';
   var we=document.getElementById('trx-week');
   if(!wkT.length){we.innerHTML='<div style="color:var(--muted);font-size:13px;text-align:center;padding:14px;">Tidak ada transaksi minggu ini</div>';return;}
   var grp={};wkT.forEach(x=>{if(!grp[x.tanggal])grp[x.tanggal]=[];grp[x.tanggal].push(x);});
@@ -945,9 +959,9 @@ function renderTrx(){
 }
 function trxHTML(x,idx){
   var isI=x.tipe==='income';
-  var delBtn=_isOwner?'<button class="tag-del" onclick="hapusTrx('+idx+')">🗑</button>':'';
-  var jamStr=x.jam?'<span style="font-size:10px;color:var(--muted);margin-left:4px;">⏰ '+x.jam+'</span>':'';
-  return '<div class="ti"><div class="tic '+x.tipe+'">'+(isI?'💰':'💸')+'</div><div class="tii"><div class="k">'+x.keterangan+'</div><div class="m"><span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span> · '+x.kategori+jamStr+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="tam '+x.tipe+'">'+(isI?'+':'-')+fmt(Number(x.nominal))+'</div>'+delBtn+'</div></div>';
+  var delBtn=_isOwner?'<button class="tag-del" onclick="hapusTrx('+idx+')">ð</button>':'';
+  var jamStr=x.jam?'<span style="font-size:10px;color:var(--muted);margin-left:4px;">â° '+x.jam+'</span>':'';
+  return '<div class="ti"><div class="tic '+x.tipe+'">'+(isI?'ð°':'ð¸')+'</div><div class="tii"><div class="k">'+x.keterangan+'</div><div class="m"><span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span> Â· '+x.kategori+jamStr+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="tam '+x.tipe+'">'+(isI?'+':'-')+fmt(Number(x.nominal))+'</div>'+delBtn+'</div></div>';
 }
 async function hapusTrx(idx){
   if(!confirm('Hapus?'))return;
@@ -971,13 +985,14 @@ async function simpanTrx(){
   setSyncBadge('ok');
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // BON WA
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 var bonType='kucing';
 var bkSel=[]; // {id,nama,harga_def,harga_custom,satuan,qty,is_custom}
 var blSvcId=null;
 var blSatSel=[]; // {id,nama,qty,harga_custom,is_custom,custom_nama}
+var blModeHarga='kiloan'; // 'kiloan' | 'langsung'
 var laundryAntrian=[]; // antrian laundry masuk belum diambil
 
 function loadAntrian(){ laundryAntrian=gd('laundry_antrian',[]); }
@@ -1005,17 +1020,17 @@ function renderAntrian(){
   var el=document.getElementById('antrian-list');
   if(!el)return;
   if(!pending.length){
-    el.innerHTML='<div class="empty"><div class="ei">👕</div><p>Belum ada laundry masuk yang menunggu</p></div>';
+    el.innerHTML='<div class="empty"><div class="ei">ð</div><p>Belum ada laundry masuk yang menunggu</p></div>';
     return;
   }
   el.innerHTML=pending.map(function(a){
     var hariMasuk=a.tanggal_masuk?fmtD(a.tanggal_masuk):'?';
-    var detail=a.layanan+(a.berat?' '+a.berat+'kg':'')+(a.catatan?' · '+a.catatan:'');
+    var detail=a.layanan+(a.berat?' '+a.berat+'kg':'')+(a.catatan?' Â· '+a.catatan:'');
     return '<div class="antrian-item" onclick="pilihAntrian(\''+a.id+'\')">'
       +'<div class="ai-nama">'+a.nama+'</div>'
       +'<div class="ai-detail">'+detail+'</div>'
       +'<div class="ai-total">'+fmtF(a.total)+'</div>'
-      +'<div class="ai-badge">📅 Masuk: '+hariMasuk+(a.jam_masuk?' ⏰ '+a.jam_masuk:'')+'</div>'
+      +'<div class="ai-badge">ð Masuk: '+hariMasuk+(a.jam_masuk?' â° '+a.jam_masuk:'')+'</div>'
       +'</div>';
   }).join('');
 }
@@ -1024,7 +1039,7 @@ function pilihAntrian(id){
   loadAntrian();
   var a=laundryAntrian.find(function(x){return x.id===id;});
   if(!a)return;
-  if(!confirm('✅ Konfirmasi pengambilan laundry milik '+a.nama+'?\n\nTotal: '+fmtF(a.total)+'\n\nTransaksi akan tercatat sebagai pemasukan hari ini.'))return;
+  if(!confirm('â Konfirmasi pengambilan laundry milik '+a.nama+'?\n\nTotal: '+fmtF(a.total)+'\n\nTransaksi akan tercatat sebagai pemasukan hari ini.'))return;
   catatLaundryKeluar(a);
 }
 
@@ -1050,25 +1065,25 @@ function generateBonKeluar(a,trx){
   var M=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
   var now=new Date();
   var tglStr=now.getDate()+' '+M[now.getMonth()]+' '+now.getFullYear();
-  var txt='👕 *SISTER LAUNDRY*\n';
-  txt+='━━━━━━━━━━━━━━━━━\n';
-  txt+='✅ *Laundry Selesai & Siap Diambil*\n\n';
-  txt+='👤 Pelanggan: *'+a.nama+'*\n';
-  txt+='🧺 Layanan: '+a.layanan+(a.berat?' ('+a.berat+' kg)':'')+'\n';
-  if(a.catatan) txt+='📝 Catatan: '+a.catatan+'\n';
-  txt+='━━━━━━━━━━━━━━━━━\n';
-  txt+='💰 *Total: '+fmtF(a.total)+'*\n';
-  txt+='📅 Tanggal Ambil: '+tglStr+'\n\n';
-  txt+='🙏 Terima kasih sudah mempercayakan laundry ke *Sister Laundry*!\n\n';
-  txt+='✨ Pakaian sudah bersih, wangi, dan siap pakai.\n\n';
-  txt+='💬 _Puas dengan pelayanan kami? Ajak teman & keluarga ya!_\n';
-  txt+='📱 Sister Laundry & Pet Shop — Pelayanan Terbaik untuk Keluarga Anda 🐾';
-  document.getElementById('bon-text').textContent=txt;
+  var txt='ð *SISTER LAUNDRY*\n';
+  txt+='âââââââââââââââââ\n';
+  txt+='â *Laundry Selesai & Siap Diambil*\n\n';
+  txt+='ð¤ Pelanggan: *'+a.nama+'*\n';
+  txt+='ð§º Layanan: '+a.layanan+(a.berat?' ('+a.berat+' kg)':'')+'\n';
+  if(a.catatan) txt+='ð Catatan: '+a.catatan+'\n';
+  txt+='âââââââââââââââââ\n';
+  txt+='ð° *Total: '+fmtF(a.total)+'*\n';
+  txt+='ð Tanggal Ambil: '+tglStr+'\n\n';
+  txt+='ð Terima kasih sudah mempercayakan laundry ke *Sister Laundry*!\n\n';
+  txt+='â¨ Pakaian sudah bersih, wangi, dan siap pakai.\n\n';
+  txt+='ð¬ _Puas dengan pelayanan kami? Ajak teman & keluarga ya!_\n';
+  txt+='ð± Sister Laundry & Pet Shop â Pelayanan Terbaik untuk Keluarga Anda ð¾';
+  document.getElementById('bontext').textContent=txt;
   document.getElementById('bon-result').style.display='block';
   document.getElementById('bon-result').scrollIntoView({behavior:'smooth'});
 }
 
-// ─── KUCING BON ────────────────────────────────
+// âââ KUCING BON ââââââââââââââââââââââââââââââââ
 function renderProdGrid(){
   var prods=katalog.filter(p=>p.bisnis==='kucing'&&p.aktif);
   var g=document.getElementById('prod-grid');
@@ -1080,7 +1095,7 @@ function renderProdGrid(){
       var sc=p.stok>10?'stk-hi':p.stok>4?'stk-mid':'stk-lo';
       stk='<span class="stk-badge '+sc+'">'+p.stok+'</span>';
     }
-    if(p.is_custom) return '<div class="pc pc-custom'+(isSel?' sel':'')+'" onclick="toggleCustomCard()"><div class="pn">✏️ Lainnya</div><div class="ph">Harga custom</div></div>';
+    if(p.is_custom) return '<div class="pc pc-custom'+(isSel?' sel':'')+'" onclick="toggleCustomCard()"><div class="pn">âï¸ Lainnya</div><div class="ph">Harga custom</div></div>';
     return '<div class="pc'+(isSel?' sel':'')+'" onclick="toggleProd(\''+p.id+'\')">'+(stk)+'<div class="pn">'+p.nama_produk+'</div><div class="ph">'+fmtF(p.harga)+'</div></div>';
   }).join('');
 }
@@ -1121,23 +1136,23 @@ function applyPrice(id){
 function renderSelItems(){
   var el=document.getElementById('bk-sel');
   var total=bkSel.reduce((a,b)=>a+b.qty*(b.harga_custom||b.harga_def),0);
-  document.getElementById('bk-total-lbl').textContent=bkSel.length?'— Total: '+fmtF(total):'';
+  document.getElementById('bk-total-lbl').textContent=bkSel.length?'â Total: '+fmtF(total):'';
   if(!bkSel.length){el.innerHTML='<div style="color:var(--muted);font-size:12px;text-align:center;padding:8px;">Belum ada item dipilih</div>';return;}
   el.innerHTML=bkSel.map(s=>{
     var harga=s.harga_custom||s.harga_def;
     var sub=s.qty*harga;
     return '<div class="si" id="si-'+s.id+'">'+
       '<div class="sn">'+s.nama+'</div>'+
-      '<div class="qty-c"><button class="qbtn" onclick="changeQty(\''+s.id+'\',-1)">−</button><div class="qval">'+s.qty+'</div><button class="qbtn" onclick="changeQty(\''+s.id+'\',1)">+</button></div>'+
-      '<div id="pp-show-'+s.id+'" class="price-pill" onclick="startEditPrice(\''+s.id+'\')"><span class="pp-val">'+fmtF(harga)+'</span><span class="pp-edit">✏️</span></div>'+
+      '<div class="qty-c"><button class="qbtn" onclick="changeQty(\''+s.id+'\',-1)">â</button><div class="qval">'+s.qty+'</div><button class="qbtn" onclick="changeQty(\''+s.id+'\',1)">+</button></div>'+
+      '<div id="pp-show-'+s.id+'" class="price-pill" onclick="startEditPrice(\''+s.id+'\')"><span class="pp-val">'+fmtF(harga)+'</span><span class="pp-edit">âï¸</span></div>'+
       '<div id="pp-inp-'+s.id+'" class="price-input-wrap"><input id="pi-'+s.id+'" type="number" value="'+harga+'" onchange="applyPrice(\''+s.id+'\')" onblur="renderSelItems()"></div>'+
       '<div class="si-sub">'+fmtF(sub)+'</div>'+
-      '<button class="tag-del" onclick="removeSel(\''+s.id+'\')">✕</button></div>';
+      '<button class="tag-del" onclick="removeSel(\''+s.id+'\')">â</button></div>';
   }).join('');
 }
-function removeSel(id){bkSel=bkSel.filter(x=>x.id!==id);renderProdGrid();renderSelItems();}
+function removeSel(id){bkSel=bkSel.filter(x=>x.id!==id);renderProdGrrid();renderSelItems();}
 
-// ─── LAUNDRY BON ──────────────────────────────
+// âââ LAUNDRY BON ââââââââââââââââââââââââââââââ
 function renderSvcGrid(){
   var svcs=katalog.filter(x=>x.bisnis==='laundry'&&x.tipe==='per_kg'&&x.aktif);
   var g=document.getElementById('svc-grid');
@@ -1155,17 +1170,19 @@ function selectSvc(id){
   blSvcId=blSvcId===id?null:id;
   var svc=katalog.find(x=>x.id===id);
   var box=document.getElementById('bl-berat-box');
+  var lbox=document.getElementById('bl-langsung-box');
   if(blSvcId&&svc){
-    document.getElementById('bl-svc-name').textContent=svc.nama_produk+' — '+fmtF(svc.harga)+'/kg';
+    document.getElementById('bl-svc-name').textContent=svc.nama_produk+' â '+fmtF(svc.harga)+'/kg';
     document.getElementById('bl-hpkg').textContent=fmtF(svc.harga);
-    box.style.display='block'; updateBeratSubtotal();
+    if(blModeHarga==='kiloan'){box.style.display='block';updateBeratSubtotal();}
+    else{box.style.display='none';if(lbox)lbox.style.display='block';}
     // Auto-hitung estimasi selesai
     var est=EST_HARI[svc.nama_produk];
     var badge=document.getElementById('bl-est-badge');
     if(est){
       var d=new Date(); d.setDate(d.getDate()+est.hari);
       document.getElementById('bl-selesai').value=d.toISOString().slice(0,10);
-      badge.textContent='⚡ Auto '+est.label;
+      badge.textContent='â¡ Auto '+est.label;
       badge.style.background=est.color+'22';
       badge.style.color=est.color;
       badge.style.display='inline';
@@ -1188,7 +1205,7 @@ function renderSatGrid(){
   var g=document.getElementById('sat-grid');
   g.innerHTML=sats.map(s=>{
     var isSel=blSatSel.some(x=>x.id===s.id);
-    if(s.is_custom)return '<div class="sat-card'+(isSel?' sel':'')+'" onclick="toggleSat(\''+s.id+'\')"><div class="stn">✏️</div><div class="stp">Lainnya</div></div>';
+    if(s.is_custom)return '<div class="sat-card'+(isSel?' sel':'')+'" onclick="toggleSat(\''+s.id+'\')"><div class="stn">âï¸</div><div class="stp">Lainnya</div></div>';
     return '<div class="sat-card'+(isSel?' sel':'')+'" onclick="toggleSat(\''+s.id+'\')"><div class="stn">'+s.nama_produk+'</div><div class="stp">Harga custom</div></div>';
   }).join('');
 }
@@ -1205,10 +1222,10 @@ function renderSatSel(){
   el.style.display='block';
   el.innerHTML=blSatSel.map(s=>'<div class="sat-row">'+
     (s.is_custom?'<input style="flex:1;padding:5px 7px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;" placeholder="Nama item" value="'+s.custom_nama+'" oninput="updateSatNama(\''+s.id+'\',this.value)">':'<div class="satn">'+s.nama+'</div>')+
-    '<div class="qty-c"><button class="qbtn" onclick="changeSatQty(\''+s.id+'\',-1)">−</button><div class="qval">'+s.qty+'</div><button class="qbtn" onclick="changeSatQty(\''+s.id+'\',1)">+</button></div>'+
+    '<div class="qty-c"><button class="qbtn" onclick="changeSatQty(\''+s.id+'\',-1)">â</button><div class="qval">'+s.qty+'</div><button class="qbtn" onclick="changeSatQty(\''+s.id+'\',1)">+</button></div>'+
     '<input type="number" placeholder="Harga" value="'+(s.harga_custom||'')+'" oninput="updateSatHarga(\''+s.id+'\',this.value)" style="width:85px;padding:5px 7px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;text-align:right;">'+
     '<div class="si-sub">'+fmtF(s.qty*(s.harga_custom||0))+'</div>'+
-    '<button class="tag-del" onclick="removeSat(\''+s.id+'\')">✕</button></div>'
+    '<button class="tag-del" onclick="removeSat(\''+s.id+'\')">â</button></div>'
   ).join('');
 }
 function updateSatNama(id,v){var s=blSatSel.find(x=>x.id===id);if(s)s.custom_nama=v;}
@@ -1217,13 +1234,27 @@ function changeSatQty(id,d){var s=blSatSel.find(x=>x.id===id);if(s){s.qty=Math.m
 function removeSat(id){blSatSel=blSatSel.filter(x=>x.id!==id);renderSatGrid();renderSatSel();}
 
 function renderBonForms(){renderProdGrid();renderSelItems();renderSvcGrid();renderSatGrid();renderSatSel();}
+function setLauMode(mode){
+  blModeHarga=mode;
+  var isKg=mode==='kiloan';
+  var kgBtn=document.getElementById('bl-mode-kg-btn');
+  var lsBtn=document.getElementById('bl-mode-ls-btn');
+  if(kgBtn){kgBtn.style.background=isKg?'var(--primary)':'#E2E8F0';kgBtn.style.color=isKg?'#fff':'#374151';}
+  if(lsBtn){lsBtn.style.background=isKg?'#E2E8F0':'var(--primary)';lsBtn.style.color=isKg?'#374151':'#fff';}
+  var svcLabel=document.getElementById('bl-svc-label');
+  if(svcLabel)svcLabel.textContent=isKg?'Layanan Utama (per kg)':'Layanan (opsional â untuk info bon)';
+  var beratBox=document.getElementById('bl-berat-box');
+  var langsungBox=document.getElementById('bl-langsung-box');
+  if(beratBox) beratBox.style.display=(blSvcId&&isKg)?'block':'none';
+  if(langsungBox) langsungBox.style.display=isKg?'none':'block';
+}
 
-// ─── GENERATE BON ─────────────────────────────
+// âââ GENERATE BON âââââââââââââââââââââââââââââ
 var _lastBon = null; // simpan data bon terakhir untuk "Catat ke Transaksi"
 function showLauErr(msg){
   var el=document.getElementById('bon-lau-err');
   if(!el)return;
-  el.textContent='⚠️ '+msg;
+  el.textContent='â ï¸ '+msg;
   el.style.display='block';
   el.scrollIntoView({behavior:'smooth'});
 }
@@ -1234,7 +1265,7 @@ function hideLauErr(){
 function showKatErr(msg){
   var el=document.getElementById('bon-kat-err');
   if(!el)return;
-  el.textContent='⚠️ '+msg;
+  el.textContent='â ï¸ '+msg;
   el.style.display='block';
   el.scrollIntoView({behavior:'smooth'});
 }
@@ -1256,34 +1287,43 @@ function generateBon(){
     var cat=document.getElementById('bk-catatan').value;
     if(!bkSel.length){showKatErr('Pilih minimal 1 produk dulu!');return;}
     var total=bkSel.reduce((a,b)=>a+b.qty*(b.harga_custom||b.harga_def),0);
-    txt='🐾 *SISTER LAUNDRY DAN PET SHOP*\n';
-    txt+='📅 '+tgl+'\n\n';
-    txt+='👤 Pelanggan: *'+nama+'*\n';
-    txt+='━━━━━━━━━━━━━━━━━━━━\n';
+    txt='ð¾ *SISTER LAUNDRY DAN PET SHOP*\n';
+    txt+='ð '+tgl+'\n\n';
+    txt+='ð¤ Pelanggan: *'+nama+'*\n';
+    txt+='ââââââââââââââââââââ\n';
     bkSel.forEach(s=>{
       var h=s.harga_custom||s.harga_def;
-      txt+='• '+s.nama+'\n';
+      txt+='â¢ '+s.nama+'\n';
       txt+='  '+s.qty+' x '+fmtF(h)+' = *'+fmtF(s.qty*h)+'*\n';
     });
-    txt+='━━━━━━━━━━━━━━━━━━━━\n';
-    txt+='💰 *TOTAL: '+fmtF(total)+'*\n';
-    if(cat)txt+='\n📝 '+cat+'\n';
-    txt+='\nTerima kasih sudah berbelanja! 🐱\n_Sister Laundry & Pet Shop_';
+    txt+='ââââââââââââââââââââ\n';
+    txt+='ð° *TOTAL: '+fmtF(total)+'*\n';
+    if(cat)txt+='\nð '+cat+'\n';
+    txt+='\nTerima kasih sudah berbelanja! ð±\n_Sister Laundry & Pet Shop_';
   } else {
-    // LAUNDRY MASUK — simpan ke antrian, tidak langsung income
+    // LAUNDRY MASUK â simpan ke antrian, tidak langsung income
     hideLauErr();
     var nama=document.getElementById('bl-nama').value.trim();
     var svc=blSvcId?katalog.find(function(x){return x.id===blSvcId;}):null;
     var berat=parseFloat(document.getElementById('bl-berat').value)||0;
+    var hargaLangsung=parseFloat(document.getElementById('bl-harga-langsung').value)||0;
     var tgMasuk=document.getElementById('bl-masuk').value||today();
     var tgSelesai=document.getElementById('bl-selesai').value;
     var cat=document.getElementById('bl-catatan').value;
-    var subKg=svc?berat*svc.harga:0;
-    var subSat=blSatSel.reduce(function(a,b){return a+b.qty*(b.harga_custom||0);},0);
-    var total=subKg+subSat;
+    var subKg=0, subSat=blSatSel.reduce(function(a,b){return a+b.qty*(b.harga_custom||0);},0), total=0;
+    if(blModeHarga==='langsung'){
+      total=hargaLangsung+subSat;
+    } else {
+      subKg=svc?berat*svc.harga:0;
+      total=subKg+subSat;
+    }
     if(!nama){showLauErr('Isi nama pelanggan dulu!');return;}
-    if(!svc&&!blSatSel.length){showLauErr('Pilih layanan laundry dulu!');return;}
-    if(!total){showLauErr('Total 0 — pilih layanan dan isi berat (kg)!');return;}
+    if(blModeHarga==='langsung'){
+      if(!total){showLauErr('Isi total harga langsung dulu!');return;}
+    } else {
+      if(!svc&&!blSatSel.length){showLauErr('Pilih layanan laundry dulu!');return;}
+      if(!total){showLauErr('Total 0 â pilih layanan dan isi berat (kg)!');return;}
+    }
 
     // Simpan ke antrian
     var nowJam=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
@@ -1301,47 +1341,50 @@ function generateBon(){
     cAction({action:'add_antrian',data:encodeURIComponent(JSON.stringify(Object.assign({},antrian,{satuan_items_json:JSON.stringify(antrian.satuan_items)})))});
 
     // Generate WA konfirmasi masuk
-    txt='👕 *SISTER LAUNDRY DAN PET SHOP*\n';
-    txt+='📥 *Konfirmasi Laundry Masuk*\n';
-    txt+='━━━━━━━━━━━━━━━━━━━━\n';
-    txt+='👤 Pelanggan: *'+nama+'*\n';
-    txt+='📅 Tanggal Masuk: '+fmtD(tgMasuk)+'\n';
-    if(svc&&berat>0){
-      txt+='\n🧺 *'+svc.nama_produk+'*\n';
-      txt+='⚖️ '+berat+' kg × '+fmtF(svc.harga)+'/kg = *'+fmtF(subKg)+'*\n';
+    txt='ð *SISTER LAUNDRY DAN PET SHOP*\n';
+    txt+='ð¥ *Konfirmasi Laundry Masuk*\n';
+    txt+='ââââââââââââââââââââ\n';
+    txt+='ð¤ Pelanggan: *'+nama+'*\n';
+    txt+='ð Tanggal Masuk: '+fmtD(tgMasuk)+'\n';
+    if(blModeHarga==='langsung'&&hargaLangsung>0){
+      txt+='\nð§º *'+(svc?svc.nama_produk:'Laundry')+'* (harga langsung)\n';
+      txt+='ðµ Total: *'+fmtF(hargaLangsung)+'*\n';
+    } else if(svc&&berat>0){
+      txt+='\nð§º *'+svc.nama_produk+'*\n';
+      txt+='âï¸ '+berat+' kg Ã '+fmtF(svc.harga)+'/kg = *'+fmtF(subKg)+'*\n';
     }
     if(blSatSel.length){
-      txt+='\n📦 Item Satuan:\n';
+      txt+='\nð¦ Item Satuan:\n';
       blSatSel.forEach(function(s){
         var nm=s.is_custom?(s.custom_nama||'Lainnya'):s.nama;
-        txt+='• '+nm+' x'+s.qty+' = *'+fmtF(s.qty*(s.harga_custom||0))+'*\n';
+        txt+='â¢ '+nm+' x'+s.qty+' = *'+fmtF(s.qty*(s.harga_custom||0))+'*\n';
       });
     }
-    txt+='━━━━━━━━━━━━━━━━━━━━\n';
-    txt+='💰 *TOTAL: '+fmtF(total)+'*\n';
-    if(tgSelesai)txt+='\n⏳ Estimasi Selesai: *'+fmtD(tgSelesai)+'*\n';
-    if(cat)txt+='\n📝 Catatan: '+cat+'\n';
-    txt+='\nTerima kasih sudah mempercayakan laundry ke Sister! 🙏\n';
-    txt+='Kami akan kabari jika sudah selesai ya 😊\n_Sister Laundry & Pet Shop_';
+    txt+='ââââââââââââââââââââ\n';
+    txt+='ð° *TOTAL: '+fmtF(total)+'*\n';
+    if(tgSelesai)txt+='\nâ³ Estimasi Selesai: *'+fmtD(tgSelesai)+'*\n';
+    if(cat)txt+='\nð Catatan: '+cat+'\n';
+    txt+='\nTerima kasih sudah mempercayakan laundry ke Sister! ð\n';
+    txt+='Kami akan kabari jika sudah selesai ya ð\n_Sister Laundry & Pet Shop_';
 
     // Sembunyikan tombol "Catat ke Transaksi" untuk laundry masuk
     document.getElementById('btn-catat').style.display='none';
     document.getElementById('catat-info').style.display='block';
-    document.getElementById('catat-info').innerHTML='✅ <b>Laundry '+nama+' sudah masuk antrian!</b><br>Pencatatan income saat laundry diambil (tab Laundry Keluar).';
+    document.getElementById('catat-info').innerHTML='â <b>Laundry '+nama+' sudah masuk antrian!</b><br>Pencatatan income saat laundry diambil (tab Laundry Keluar).';
   }
   document.getElementById('bon-text').textContent=txt;
   document.getElementById('bon-result').style.display='block';
   document.getElementById('bon-result').scrollIntoView({behavior:'smooth'});
   if(bonType==='kucing'){
     document.getElementById('btn-catat').style.display='block';
-    document.getElementById('btn-catat').textContent='📒 Catat ke Transaksi';
+    document.getElementById('btn-catat').textContent='ð Catat ke Transaksi';
     document.getElementById('btn-catat').disabled=false;
     document.getElementById('catat-info').style.display='none';
   }
   }catch(err){
     // Tangkap error JS dan tampilkan ke user (berguna saat testing di file://)
     var errTarget=bonType==='laundry'?document.getElementById('bon-lau-err'):document.getElementById('bon-kat-err');
-    if(errTarget){errTarget.textContent='⚠️ Error JS: '+err.message;errTarget.style.display='block';}
+    if(errTarget){errTarget.textContent='â ï¸ Error JS: '+err.message;errTarget.style.display='block';}
     console.error('generateBon error:',err);
   }
 }
@@ -1370,7 +1413,7 @@ async function catatTrx(){
   var item={id:uid(),bisnis,tipe:'income',kategori:bisnis==='kucing'?'Penjualan':'Laundry',keterangan:ket,nominal:total,tanggal:today(),jam:_jc};
   transaksi.push(item);sd('trx_data',transaksi);
 
-  // ── Auto-kurangi stok untuk item pet shop ─────────────────────────────
+  // ââ Auto-kurangi stok untuk item pet shop âââââââââââââââââââââââââââââ
   if(bisnis==='kucing'){
     var stokBerubah=[];
     bkSel.forEach(function(s){
@@ -1391,36 +1434,38 @@ async function catatTrx(){
     }
   }
 
-  btn.textContent='✅ Tercatat!';btn.disabled=true;
+  btn.textContent='â Tercatat!';btn.disabled=true;
   document.getElementById('catat-info').style.display='block';
-  document.getElementById('catat-info').textContent='✅ Tercatat: '+fmtF(total)+' – '+ket.substring(0,50)+(ket.length>50?'...':'');
+  document.getElementById('catat-info').textContent='â Tercatat: '+fmtF(total)+' â '+ket.substring(0,50)+(ket.length>50?'...':'');
   setSyncBadge('ing');
   await cAction({action:'add_trx',data:encodeURIComponent(JSON.stringify(item))});
   setSyncBadge('ok');
-  // ── Reset form bon setelah tercatat ──
+  // ââ Reset form bon setelah tercatat ââ
   setTimeout(function(){
-    bkSel=[]; blSvcId=null; blSatSel=[];
+    bkSel=[]; blSvcId=null; blSatSel=[]; blModeHarga='kiloan';
     document.getElementById('bk-nama').value='';
     document.getElementById('bl-nama').value='';
     var beratEl=document.getElementById('bl-berat'); if(beratEl) beratEl.value='';
+    var hlEl=document.getElementById('bl-harga-langsung'); if(hlEl) hlEl.value='';
     document.getElementById('bon-result').style.display='none';
     document.getElementById('catat-info').style.display='none';
-    btn.textContent='📒 Catat ke Transaksi'; btn.disabled=false;
+    btn.textContent='ð Catat ke Transaksi'; btn.disabled=false;
+    setLauMode('kiloan');
     renderBonForms();
   }, 1500);
 }
 function copyBon(){
   var t=document.getElementById('bon-text').textContent;
   navigator.clipboard.writeText(t).then(()=>{
-    var b=document.querySelector('#bon-result .btn-c');b.textContent='✅ Tersalin!';
-    setTimeout(()=>{b.textContent='📋 Copy Teks';},2000);
+    var b=document.querySelector('#bon-result .btn-c');b.textContent='â Tersalin!';
+    setTimeout(()=>{b.textContent='ð Copy Teks';},2000);
   }).catch(()=>{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);alert('Tersalin!');});
 }
 function kirimWA(){window.open('https://wa.me/?text='+encodeURIComponent(document.getElementById('bon-text').textContent),'_blank');}
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // BON VISUAL + QRIS
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function uploadQRIS(inp){
   var file=inp.files[0]; if(!file)return;
   var reader=new FileReader();
@@ -1459,7 +1504,7 @@ function openBonVisual(){
       var h=s.harga_custom||s.harga_def, sub=s.qty*h;total+=sub;
       return '<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;border-bottom:1px solid #F1F5F9;">'
         +'<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:600;color:#1E293B;">'+s.nama+'</div>'
-        +'<div style="font-size:11px;color:#64748B;">'+s.qty+' × '+fmtF(h)+'</div></div>'
+        +'<div style="font-size:11px;color:#64748B;">'+s.qty+' Ã '+fmtF(h)+'</div></div>'
         +'<div style="font-size:13px;font-weight:700;color:#1E293B;flex-shrink:0;">'+fmtF(sub)+'</div></div>';
     }).join('');
   } else {
@@ -1470,7 +1515,7 @@ function openBonVisual(){
       var subKg=berat*svc.harga; total+=subKg;
       itemsHtml+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #F1F5F9;">'
         +'<div><div style="font-size:12px;font-weight:600;color:#1E293B;">'+svc.nama_produk+'</div>'
-        +'<div style="font-size:11px;color:#64748B;">'+berat+' kg × '+fmtF(svc.harga)+'/kg</div></div>'
+        +'<div style="font-size:11px;color:#64748B;">'+berat+' kg Ã '+fmtF(svc.harga)+'/kg</div></div>'
         +'<div style="font-size:13px;font-weight:700;">'+fmtF(subKg)+'</div></div>';
     }
     blSatSel.forEach(function(s){
@@ -1500,9 +1545,9 @@ function openBonVisual(){
   document.getElementById('bl-selesai').value=tmr.toISOString().slice(0,10);
 })();
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // LAPORAN
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 var lapPeriod='hari',lapBis='semua';
 function setPeriod(v,el){lapPeriod=v;document.querySelectorAll('.pp').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderLap();}
 function fLap(v,el){lapBis=v;document.querySelectorAll('#tab-laporan .pill').forEach(p=>{p.classList.remove('a-all','a-cat','a-lau');});el.classList.add(v==='semua'?'a-all':v==='kucing'?'a-cat':'a-lau');renderLap();}
@@ -1522,7 +1567,7 @@ function renderLap(){
   document.getElementById('l-exp').textContent=fmt(exp);
   var lb=inc-exp;var le=document.getElementById('l-laba');le.textContent=fmt(lb);le.style.color=lb>=0?'var(--primary)':'var(--expense)';
   var ll=document.getElementById('l-list');
-  ll.innerHTML=fil.length?[...fil].sort((a,b)=>b.tanggal>a.tanggal?1:-1).map(x=>'<div class="lrow"><div><div style="font-size:13px;font-weight:600;">'+x.keterangan+'</div><div class="ld">'+fmtD(x.tanggal)+(x.jam?' ⏰ '+x.jam:'')+' · <span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span></div></div><div class="ln '+x.tipe+'">'+(x.tipe==='income'?'+':'-')+fmt(Number(x.nominal))+'</div></div>').join(''):'<div class="empty"><div class="ei">📊</div><p>Belum ada data</p></div>';
+  ll.innerHTML=fil.length?[...fil].sort((a,b)=>b.tanggal>a.tanggal?1:-1).map(x=>'<div class="lrow"><div><div style="font-size:13px;font-weight:600;">'+x.keterangan+'</div><div class="ld">'+fmtD(x.tanggal)+(x.jam?' â° '+x.jam:'')+' Â· <span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span></div></div><div class="ln '+x.tipe+'">'+(x.tipe==='income'?'+':'-')+fmt(Number(x.nominal))+'</div></div>').join(''):'<div class="empty"><div class="ei">ð</div><p>Belum ada data</p></div>';
   // chart
   var d7=[];for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);d7.push(d.toISOString().slice(0,10));}
   var cd=d7.map(date=>{var dt=transaksi.filter(x=>x.tanggal===date&&(lapBis==='semua'||x.bisnis===lapBis));return{date,inc:dt.filter(x=>x.tipe==='income').reduce((a,b)=>a+Number(b.nominal),0),exp:dt.filter(x=>x.tipe==='expense').reduce((a,b)=>a+Number(b.nominal),0)};});
@@ -1531,9 +1576,9 @@ function renderLap(){
   document.getElementById('bch').innerHTML=cd.map(d=>{var dt=new Date(d.date+'T00:00:00');return '<div class="bw"><div class="bar income" style="height:'+Math.round(d.inc/mx*68)+'px;"></div><div class="bar expense" style="height:'+Math.round(d.exp/mx*68)+'px;"></div><div class="blbl">'+dn[dt.getDay()]+'</div></div>';}).join('');
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // UTANG
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 var utangFil='aktif';
 function fUtang(v,el){utangFil=v;document.querySelectorAll('#tab-utang .pill').forEach(p=>{p.classList.remove('a-all');});el.classList.add('a-all');renderUtang();}
 function renderUtang(){
@@ -1542,10 +1587,10 @@ function renderUtang(){
   document.getElementById('utang-cnt').textContent=act.length+' pelanggan';
   var data=utangFil==='aktif'?act:utangData.filter(x=>x.lunas);
   var el=document.getElementById('utang-list');
-  if(!data.length){el.innerHTML='<div class="empty"><div class="ei">'+(utangFil==='aktif'?'🎉':'📋')+'</div><p>'+(utangFil==='aktif'?'Tidak ada utang aktif!':'Belum ada yang lunas')+'</p></div>';return;}
+  if(!data.length){el.innerHTML='<div class="empty"><div class="ei">'+(utangFil==='aktif'?'ð':'ð')+'</div><p>'+(utangFil==='aktif'?'Tidak ada utang aktif!':'Belum ada yang lunas')+'</p></div>';return;}
   el.innerHTML=data.map(x=>{
     var ri=utangData.indexOf(x);
-    return '<div class="ui"><div class="uav" style="background:'+(x.bisnis==='kucing'?'var(--cat)':'var(--laundry)')+'">'+x.nama.charAt(0).toUpperCase()+'</div><div class="uin"><div class="un">'+x.nama+' <span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span></div><div class="uk">'+x.keterangan+' · '+fmtD(x.tanggal)+'</div>'+(!x.lunas?'<button class="btn-lunas" onclick="lunaskan('+ri+')">✅ Lunas</button>':'<span style="font-size:10px;color:var(--income);font-weight:700;">✅ Lunas</span>')+'</div><div style="text-align:right;"><div class="unom">'+fmtF(Number(x.nominal))+'</div><button class="tag-del" onclick="hapusUtang('+ri+')">🗑</button></div></div>';
+    return '<div class="ui"><div class="uav" style="background:'+(x.bisnis==='kucing'?'var(--cat)':'var(--laundry)')+'">'+x.nama.charAt(0).toUpperCase()+'</div><div class="uin"><div class="un">'+x.nama+' <span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span></div><div class="uk">'+x.keterangan+' Â· '+fmtD(x.tanggal)+'</div>'+(!x.lunas?'<button class="btn-lunas" onclick="lunaskan('+ri+')">â Lunas</button>':'<span style="font-size:10px;color:var(--income);font-weight:700;">â Lunas</span>')+'</div><div style="text-align:right;"><div class="unom">'+fmtF(Number(x.nominal))+'</div><button class="tag-del" onclick="hapusUtang('+ri+')">ð</button></div></div>';
   }).join('');
 }
 function openUtangModal(){document.getElementById('u-tgl').value=today();document.getElementById('m-utang').classList.add('open');}
@@ -1571,9 +1616,9 @@ async function hapusUtang(idx){
   await cAction({action:'del_utang',id:id});
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // STOK / KATALOG
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 var stokFil='semua';
 var stokEditId=null;
 function fStok(v,el){stokFil=v;document.querySelectorAll('#tab-stok .pill').forEach(p=>{p.classList.remove('a-all','a-cat','a-lau');});el.classList.add(v==='semua'?'a-all':v==='kucing'?'a-cat':'a-lau');renderStok();}
@@ -1586,29 +1631,29 @@ function renderStok(){
     return sa-sb;
   });
   var el=document.getElementById('stok-list');
-  if(!data.length){el.innerHTML='<div class="empty"><div class="ei">📦</div><p>Belum ada item</p></div>';return;}
+  if(!data.length){el.innerHTML='<div class="empty"><div class="ei">ð¦</div><p>Belum ada item</p></div>';return;}
   el.innerHTML=data.map(p=>{
     var ri=katalog.indexOf(p);
     var hasStok=p.stok!==null&&p.stok!==undefined;
     var stokCls=!hasStok?'':p.stok>10?'hi':p.stok>4?'mid':'lo';
-    var icon=p.bisnis==='kucing'?'🐾':'👕';
+    var icon=p.bisnis==='kucing'?'ð¾':'ð';
     return '<div class="kat-item">'+
       '<div style="width:32px;height:32px;border-radius:9px;background:'+(p.bisnis==='kucing'?'#FEF3C7':'#CFFAFE')+';display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">'+icon+'</div>'+
       (_isOwner?
         '<div class="kat-info" onclick="openEditProduk('+ri+')" style="cursor:pointer;flex:1;">'+
-          '<div class="kn">'+p.nama_produk.replace('✏️ ','')+'</div>'+
-          '<div class="kh">'+fmtF(p.harga)+' <span style="font-size:10px;color:var(--muted);">✏️</span></div>'+
+          '<div class="kn">'+p.nama_produk.replace('âï¸ ','')+'</div>'+
+          '<div class="kh">'+fmtF(p.harga)+' <span style="font-size:10px;color:var(--muted);">âï¸</span></div>'+
         '</div>':
         '<div class="kat-info" style="flex:1;">'+
-          '<div class="kn">'+p.nama_produk.replace('✏️ ','')+'</div>'+
+          '<div class="kn">'+p.nama_produk.replace('âï¸ ','')+'</div>'+
           '<div class="kh">'+fmtF(p.harga)+'</div>'+
         '</div>')+
       (hasStok?
         '<div class="stk-box">'+
-          (_isOwner?'<button class="stk-btn" onclick="adjustStok('+ri+',-1)">−</button>':'')+
+          (_isOwner?'<button class="stk-btn" onclick="adjustStok('+ri+',-1)">â</button>':'')+
           '<div class="stk-num '+stokCls+'">'+p.stok+'</div>'+
           (_isOwner?'<button class="stk-btn" onclick="adjustStok('+ri+',1)">+</button>':'')+
-          (_isOwner?'<button class="stk-set" style="background:#D1FAE5;color:#065F46;border-color:#A7F3D0;" onclick="openStokMasuk('+ri+')">📦</button>':'')+
+          (_isOwner?'<button class="stk-set" style="background:#D1FAE5;color:#065F46;border-color:#A7F3D0;" onclick="openStokMasuk('+ri+')">ð¦</button>':'')+
           (_isOwner?'<button class="stk-set" onclick="openSetStok('+ri+')">SET</button>':'')+
         '</div>':
         '<span style="font-size:11px;color:var(--muted);">Layanan</span>')+
@@ -1630,7 +1675,7 @@ function switchStokTab(tab){
 }
 function openStokMasuk(ri){
   _stokRi=ri; var p=katalog[ri];
-  document.getElementById('m-stok-nama').textContent='📦 '+p.nama_produk.replace('✏️ ','');
+  document.getElementById('m-stok-nama').textContent='ð¦ '+p.nama_produk.replace('âï¸ ','');
   document.getElementById('m-stok-sisa').textContent='Stok saat ini: '+p.stok+' '+p.satuan;
   document.getElementById('stok-masuk-val').value='';
   document.getElementById('stok-masuk-preview').textContent='';
@@ -1645,7 +1690,7 @@ function openStokMasuk(ri){
 }
 function openSetStok(ri){
   _stokRi=ri; var p=katalog[ri];
-  document.getElementById('m-stok-nama').textContent='📦 '+p.nama_produk.replace('✏️ ','');
+  document.getElementById('m-stok-nama').textContent='ð¦ '+p.nama_produk.replace('âï¸ ','');
   document.getElementById('m-stok-sisa').textContent='Stok saat ini: '+p.stok+' '+p.satuan;
   document.getElementById('stok-val').value=p.stok||0;
   document.getElementById('stok-masuk-val').value='';
@@ -1658,8 +1703,8 @@ async function simpanStokMasuk(){
   if(!tambah||tambah<=0){alert('Isi jumlah stok yang masuk!');return;}
   if(_stokRi===null)return;
   // PIN pemilik wajib untuk stok masuk
-  var pin=prompt('🔒 PIN Pemilik untuk konfirmasi stok masuk:');
-  if(pin!==APP_PIN){alert('❌ PIN salah. Stok masuk dibatalkan.');return;}
+  var pin=prompt('ð PIN Pemilik untuk konfirmasi stok masuk:');
+  if(pin!==APP_PIN){alert('â PIN salah. Stok masuk dibatalkan.');return;}
   var p=katalog[_stokRi];
   var stokBefore=p.stok||0;
   var stokAfter=stokBefore+tambah;
@@ -1683,7 +1728,7 @@ async function simpanStokMasuk(){
   closeM('m-stok');renderStok();renderProdGrid();
   await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(katalog[_stokRi]))});
   await cAction({action:'log_stok_masuk',data:encodeURIComponent(JSON.stringify(logEntry))});
-  alert('✅ Stok '+p.nama_produk+' bertambah '+tambah+' → total: '+stokAfter);
+  alert('â Stok '+p.nama_produk+' bertambah '+tambah+' â total: '+stokAfter);
   _stokRi=null;
 }
 async function simpanStok(){
@@ -1695,9 +1740,9 @@ async function simpanStok(){
   _stokRi=null;
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // OPNAME MINGGUAN
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 var _opnameData={};
 function bukaOpname(){
   adminAction(function(){
@@ -1706,7 +1751,7 @@ function bukaOpname(){
     if(!items.length){alert('Tidak ada produk dengan stok.');return;}
     var html='';
     items.forEach(function(p){
-      var badge=p.bisnis==='kucing'?'🐱':'🧺';
+      var badge=p.bisnis==='kucing'?'ð±':'ð§º';
       html+='<div style="border-bottom:1px solid var(--border);padding:10px 0;">'+
         '<div style="font-weight:700;font-size:13px;">'+badge+' '+p.nama_produk+'</div>'+
         '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Stok sistem: <strong>'+p.stok+'</strong> '+p.satuan+'</div>'+
@@ -1735,9 +1780,9 @@ function updateOpnamePreview(el){
   var id=el.getAttribute('data-prodid');
   var selisih=fisik-sistem;
   var color=selisih<0?'#EF4444':selisih===0?'#059669':'#F59E0B';
-  var ikon=selisih<0?'❌':selisih===0?'✅':'⚠️';
+  var ikon=selisih<0?'â':selisih===0?'â':'â ï¸';
   var msg=selisih===0?'Sesuai':(selisih<0?'Kurang '+Math.abs(selisih)+' dari sistem':'Lebih '+selisih+' dari sistem');
-  document.getElementById('opname-preview-'+id).innerHTML='<span style="color:'+color+';font-weight:700;">'+ikon+' '+msg+'</span>';
+  document.getElementById('opname-preview-'+id).innerHTML='<span style="color:'+color+;font-weight:700;">'+ikon+' '+msg+'</span>';
   _opnameData[id]={fisik:fisik,sistem:sistem,selisih:selisih};
 }
 async function simpanOpname(){
@@ -1772,19 +1817,19 @@ async function simpanOpname(){
   var kurang=entries.filter(function(e){return e.selisih<0;});
   var lebih=entries.filter(function(e){return e.selisih>0;});
   var sesuai=entries.filter(function(e){return e.selisih===0;});
-  var msg='✅ Opname tersimpan! ('+tgl+')\n\n';
-  msg+='📊 Hasil:\n';
-  msg+='• Sesuai: '+sesuai.length+' produk\n';
-  if(lebih.length) msg+='• Lebih: '+lebih.length+' produk\n';
+  var msg='â Opname tersimpan! ('+tgl+')\n\n';
+  msg+='ð Hasil:\n';
+  msg+='â¢ Sesuai: '+sesuai.length+' produk\n';
+  if(lebih.length) msg+='â¢ Lebih: '+lebih.length+' produk\n';
   if(kurang.length){
-    msg+='• ❌ KURANG: '+kurang.length+' produk\n\n';
+    msg+='â¢ â KURANG: '+kurang.length+' produk\n\n';
     msg+='Detail selisih minus:\n';
-    kurang.forEach(function(e){msg+='  • '+e.nama_produk+': '+Math.abs(e.selisih)+' pcs\n';});
+    kurang.forEach(function(e){msg+='  â¢ '+e.nama_produk+': '+Math.abs(e.selisih)+' pcs\n';});
   }
   alert(msg);
 }
 
-// ── Riwayat stok masuk ──────────────────────────────────────────
+// ââ Riwayat stok masuk ââââââââââââââââââââââââââââââââââââââââââ
 function bukaLogStok(){
   var log=gd('stok_log',[]).slice().reverse();
   var html=log.length?log.map(function(e){
@@ -1792,12 +1837,12 @@ function bukaLogStok(){
       '<div style="font-weight:700;font-size:13px;">'+e.nama_produk+'</div>'+
       '<div style="font-size:11px;color:var(--muted);">'+e.tanggal+' '+e.jam+'</div>'+
       '<div style="font-size:12px;margin-top:3px;">'+
-        'Sebelum: <b>'+e.stok_sebelum+'</b> → +'+e.jumlah_masuk+' → '+
+        'Sebelum: <b>'+e.stok_sebelum+'</b> â +'+e.jumlah_masuk+' â '+
         'Sesudah: <b style="color:#059669;">'+e.stok_sesudah+'</b>'+
       '</div>'+
     '</div>';
   }).join(''):
-  '<div class="empty"><div class="ei">📦</div><p>Belum ada log stok masuk</p></div>';
+  '<div class="empty"><div class="ei">ð¦</div><p>Belum ada log stok masuk</p></div>';
   document.getElementById('log-stok-list').innerHTML=html;
   document.getElementById('m-log-stok').classList.add('open');
 }
@@ -1805,13 +1850,13 @@ function bukaLogStok(){
 var _editRi=null;
 function openEditProduk(ri){
   _editRi=ri;var p=katalog[ri];
-  document.getElementById('ep-nama').value=p.nama_produk.replace('✏️ ','');
+  document.getElementById('ep-name').value=p.nama_produk.replace('âï¸ ','');
   document.getElementById('ep-harga').value=p.harga||0;
   document.getElementById('m-edit-produk').classList.add('open');
 }
 async function simpanEditProduk(){
   if(_editRi===null)return;
-  var nama=document.getElementById('ep-nama').value.trim();
+  var nama=document.getElementById('ep-name').value.trim();
   var harga=parseInt(document.getElementById('ep-harga').value)||0;
   if(!nama){alert('Nama tidak boleh kosong');return;}
   katalog[_editRi].nama_produk=nama;
@@ -1838,22 +1883,22 @@ async function simpanProdukBaru(){
   document.getElementById('ap-stok').value='';
   renderStok();renderProdGrid();
   await cAction({action:'add_produk',data:encodeURIComponent(JSON.stringify(prod))});
-  alert('✅ Produk "'+nama+'" berhasil ditambahkan!');
+  alert('â Produk "'+nama+'" berhasil ditambahkan!');
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // RENDER ALL + INIT
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function renderAll(){renderTrx();renderLap();renderUtang();renderStok();renderBonForms();renderAntrian();}
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 // RESET
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 async function pushStokKeCloud(){
-  if(!CFG.URL){alert('URL Google Sheets belum diisi.\nTap icon ☁️ di atas untuk setup dulu.');return;}
+  if(!CFG.URL){alert('URL Google Sheets belum diisi.\nTap icon âï¸ di atas untuk setup dulu.');return;}
   var btn=document.getElementById('btn-push-cloud');
   var info=document.getElementById('push-cloud-info');
-  btn.textContent='⏳ Mempersiapkan...';btn.disabled=true;info.style.display='none';
+  btn.textContent='â³ Mempersiapkan...';btn.disabled=true;info.style.display='none';
   try{
     // Cek produk yang sudah ada di cloud
     var res=await cloudGet({action:'read'});
@@ -1862,29 +1907,29 @@ async function pushStokKeCloud(){
     for(var i=0;i<katalog.length;i++){
       var p=katalog[i];
       var act=cloudIds.indexOf(String(p.id))>=0?'update_produk':'add_produk';
-      btn.textContent='⏳ '+(i+1)+'/'+katalog.length+' produk...';
+      btn.textContent='â³ '+(i+1)+'/'+katalog.length+' produk...';
       var r=await cloudGet({action:act,data:encodeURIComponent(JSON.stringify(p))});
       if(r&&r.success) ok++; else fail++;
     }
     if(fail===0){
-      btn.textContent='✅ Upload Berhasil!';
-      info.textContent='✅ '+ok+' produk ter-upload. HP lain sync otomatis saat dibuka.';
+      btn.textContent='â Upload Berhasil!';
+      info.textContent='â '+ok+' produk ter-upload. HP lain sync otomatis saat dibuka.';
     } else {
-      btn.textContent='⚠️ Sebagian gagal ('+fail+')';
+      btn.textContent='â ï¸ Sebagian gagal ('+fail+')';
       info.textContent=ok+' berhasil, '+fail+' gagal. Coba ulangi.';
     }
     info.style.display='block';
-    setTimeout(function(){btn.textContent='☁️ Upload Stok ke Cloud (sync HP lain)';btn.disabled=false;},4000);
+    setTimeout(function(){btn.textContent='âï¸ Upload Stok ke Cloud (sync HP lain)';btn.disabled=false;},4000);
   }catch(e){
-    btn.textContent='❌ Error';btn.disabled=false;
+    btn.textContent='â Error';btn.disabled=false;
     info.textContent='Error: '+e.message;info.style.display='block';
   }
 }
 
 function adminAction(fn){
-  var p=prompt('🔒 Masukkan PIN untuk akses admin:');
+  var p=prompt('ð Masukkan PIN untuk akses admin:');
   if(p===APP_PIN){fn();}
-  else{alert('❌ PIN salah.');}
+  else{alert('â PIN salah.');}
 }
 function bukaGantiURL(){
   adminAction(function(){
@@ -1894,7 +1939,7 @@ function bukaGantiURL(){
 }
 function resetTotal(){
   adminAction(function(){
-    if(!confirm('💀 RESET TOTAL?\n\nSemua data + URL Google Sheets akan dihapus.\nApp kembali seperti pertama kali dipasang.\n\nLanjut?')) return;
+    if(!confirm('ð RESET TOTAL?\n\nSemua data + URL Google Sheets akan dihapus.\nApp kembali seperti pertama kali dipasang.\n\nLanjut?')) return;
     if(!confirm('Yakin? Ini BENAR-BENAR tidak bisa dibatalkan.')) return;
     localStorage.clear();
     location.reload();
@@ -1908,10 +1953,10 @@ function resetStokSaja(){
   });
   sd('kat_v3',katalog);
   renderStok();renderProdGrid();
-  alert('✅ Semua stok direset ke 0. Silakan isi ulang dengan tombol SET.');
+  alert('â Semua stok direset ke 0. Silakan isi ulang dengan tombol SET.');
 }
 function resetSemuaData(){
-  if(!confirm('⚠️ HAPUS SEMUA DATA?\n\nTransaksi, utang, dan stok akan dihapus.\nKatalog produk & harga tetap ada.\nURL Google Sheets tetap tersimpan.\n\nLanjut?')) return;
+  if(!confirm('â ï¸ HAPUS SEMUA DATA?\n\nTransaksi, utang, dan stok akan dihapus.\nKatalog produk & harga tetap ada.\nURL Google Sheets tetap tersimpan.\n\nLanjut?')) return;
   if(!confirm('Yakin? Ini tidak bisa dibatalkan.')) return;
   // Hapus transaksi & utang
   transaksi=[]; utangData=[];
@@ -1922,12 +1967,12 @@ function resetSemuaData(){
   });
   sd('kat_v3',katalog);
   // Reset selected bon
-  bkSel=[]; blSvcId=null; blSatSel=[];
+  bkSel=[]; blSvcId=null; blSatSel=[]; blModeHarga='kiloan';
   renderAll();
   showTab('stok');
-  alert('✅ Semua data direset. Silakan isi stok sebenarnya via tombol SET di tab Stok.');
+  alert('â Semua data direset. Silakan isi stok sebenarnya via tombol SET di tab Stok.');
 }
-// ── AUTH CHECK: jalan setelah semua fungsi & variabel siap ──
+// ââ AUTH CHECK: jalan setelah semua fungsi & variabel siap ââ
 (function(){
   // Cek lockout aktif saat buka app
   var lockUntil=parseInt(localStorage.getItem('pin_lockout')||'0');
@@ -1939,7 +1984,7 @@ function resetSemuaData(){
     document.getElementById('pin-screen').style.display='none';
     appInit();
   }
-  // Kalau belum auth, pin-screen tetap tampil — user input PIN → checkPin() → appInit()
+  // Kalau belum auth, pin-screen tetap tampil â user input PIN â checkPin() â appInit()
 })();
 </script>
 </body>
