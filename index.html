@@ -860,7 +860,7 @@ function applyRole(){
     if(_isOwner){
       adminPanel.innerHTML=
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'+
-          '<button onclick="resetStokSaja()" style="padding:9px;border-radius:9px;border:none;background:#FDDf8A;color:#92400E;font-size:11px;font-weight:700;cursor:pointer;">🔄 Reset Stok ke 0</button>'+
+          '<button onclick="resetStokSaja()" style="padding:9px;border-radius:9px;border:none;background:#FDE68A;color:#92400E;font-size:11px;font-weight:700;cursor:pointer;">🔄 Reset Stok ke 0</button>'+
           '<button onclick="resetSemuaData()" style="padding:9px;border-radius:9px;border:none;background:#FEE2E2;color:#991B1B;font-size:11px;font-weight:700;cursor:pointer;">⚠️ Reset Semua Data</button>'+
         '</div>'+
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'+
@@ -1245,7 +1245,7 @@ function setLauMode(mode){
   if(svcLabel)svcLabel.textContent=isKg?'Layanan Utama (per kg)':'Layanan (opsional — untuk info bon)';
   var beratBox=document.getElementById('bl-berat-box');
   var langsungBox=document.getElementById('bl-langsung-box');
-  if(beratBox) beratBox.style.display=(bnSvcId&&isKg)?'block':'none';
+  if(beratBox) beratBox.style.display=(blSvcId&&isKg)?'block':'none';
   if(langsungBox) langsungBox.style.display=isKg?'none':'block';
 }
 
@@ -1344,7 +1344,7 @@ function generateBon(){
     txt='👕 *SISTER LAUNDRY DAN PET SHOP*\n';
     txt+='📥 *Konfirmasi Laundry Masuk*\n';
     txt+='━━━━━━━━━━━━━━━━━━━━\n';
-    txt+='👤 Pelanggan: *'+name+'*\n';
+    txt+='👤 Pelanggan: *'+nama+'*\n';
     txt+='📅 Tanggal Masuk: '+fmtD(tgMasuk)+'\n';
     if(blModeHarga==='langsung'&&hargaLangsung>0){
       txt+='\n🧺 *'+(svc?svc.nama_produk:'Laundry')+'* (harga langsung)\n';
@@ -1856,7 +1856,7 @@ function openEditProduk(ri){
 }
 async function simpanEditProduk(){
   if(_editRi===null)return;
-  var nama=document.getElementById('ep-name').value.trim();
+  var nama=document.getElementById('ep-nama').value.trim();
   var harga=parseInt(document.getElementById('ep-harga').value)||0;
   if(!nama){alert('Nama tidak boleh kosong');return;}
   katalog[_editRi].nama_produk=nama;
@@ -1919,7 +1919,7 @@ async function pushStokKeCloud(){
       info.textContent=ok+' berhasil, '+fail+' gagal. Coba ulangi.';
     }
     info.style.display='block';
-    setTimeout(function(){btn.textContent='☁️ Upload Stok ke Cloud (sync HP lain)";btn.disabled=false;},4000);
+    setTimeout(function(){btn.textContent='☁️ Upload Stok ke Cloud (sync HP lain)';btn.disabled=false;},4000);
   }catch(e){
     btn.textContent='❌ Error';btn.disabled=false;
     info.textContent='Error: '+e.message;info.style.display='block';
