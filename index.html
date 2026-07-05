@@ -797,12 +797,15 @@ async function manualSync(){
     if(res.transaksi) res.transaksi.forEach(function(t){t.tanggal=localDate(t.tanggal);});
     if(res.utang) res.utang.forEach(function(t){t.tanggal=localDate(t.tanggal);});
     // Merge transaksi: gabung lokal + cloud, deduplikasi by id
-    if(res.transaksi&&res.transaksi.length){
-      var idMap={};
-      transaksi.forEach(function(t){idMap[t.id]=t;});
-      res.transaksi.forEach(function(t){idMap[t.id]=t;});
-      transaksi=Object.values(idMap).sort(function(a,b){return a.tanggal>b.tanggal?1:-1;});
-    }
+    var cloudTrxIds=new Set((res.transaksi||[]).map(function(t){return t.id;}));
+    var idMap={};
+    transaksi.forEach(function(t){idMap[t.id]=t;});
+    (res.transaksi||[]).forEach(function(t){idMap[t.id]=t;});
+    transaksi=Object.values(idMap).sort(function(a,b){return a.tanggal>b.tanggal?1:-1;});
+    // Backfill: push transaksi lokal yang belum ada di cloud
+    var trxToBackfill=transaksi.filter(function(t){return !cloudTrxIds.has(t.id);});
+    trxToBackfill.forEach(function(t){cAction({action:'add_trx',data:encodeURIComponent(JSON.stringify(t))});});
+
     if(res.utang&&res.utang.length){
       var idMapU={};
       utangData.forEach(function(t){idMapU[t.id]=t;});
@@ -810,18 +813,21 @@ async function manualSync(){
       utangData=Object.values(idMapU);
     }
     if(res.produk&&res.produk.length) katalog=res.produk;
-    // Merge antrian dari cloud (cloud = source of truth untuk pending)
-    if(res.antrian&&res.antrian.length){
-      var localA=gd('laundry_antrian',[]);
-      var antrianMap={};
-      localA.forEach(function(a){antrianMap[a.id]=a;});
-      res.antrian.forEach(function(a){
-        if(typeof a.satuan_items_json==='string'){try{a.satuan_items=JSON.parse(a.satuan_items_json);}catch(e){a.satuan_items=[];}}
-        antrianMap[a.id]=a;
-      });
-      laundryAntrian=Object.values(antrianMap);
-      sd('laundry_antrian',laundryAntrian);
-    }
+    // Merge antrian: gabung lokal + cloud, backfill yang belum ada di cloud
+    var cloudAntrianIds=new Set((res.antrian||[]).map(function(a){return a.id;}));
+    var localA=gd('laundry_antrian',[]);
+    var antrianMap={};
+    localA.forEach(function(a){antrianMap[a.id]=a;});
+    (res.antrian||[]).forEach(function(a){
+      if(typeof a.satuan_items_json==='string'){try{a.satuan_items=JSON.parse(a.satuan_items_json);}catch(e){a.satuan_items=[];}}
+      antrianMap[a.id]=a;
+    });
+    laundryAntrian=Object.values(antrianMap);
+    sd('laundry_antrian',laundryAntrian);
+    // Backfill: push antrian pending lokal yang belum ada di cloud
+    localA.filter(function(a){return a.status==='pending'&&!cloudAntrianIds.has(a.id);}).forEach(function(a){
+      cAction({action:'add_antrian',data:encodeURIComponent(JSON.stringify(Object.assign({},a,{satuan_items_json:JSON.stringify(a.satuan_items||[])})))});
+    });
     sd('trx_data',transaksi);sd('utang_data',utangData);sd('kat_v3',katalog);
     setSyncBadge('ok'); renderAll();
   }else setSyncBadge('off');
