@@ -810,6 +810,18 @@ async function manualSync(){
       utangData=Object.values(idMapU);
     }
     if(res.produk&&res.produk.length) katalog=res.produk;
+    // Merge antrian dari cloud (cloud = source of truth untuk pending)
+    if(res.antrian&&res.antrian.length){
+      var localA=gd('laundry_antrian',[]);
+      var antrianMap={};
+      localA.forEach(function(a){antrianMap[a.id]=a;});
+      res.antrian.forEach(function(a){
+        if(typeof a.satuan_items_json==='string'){try{a.satuan_items=JSON.parse(a.satuan_items_json);}catch(e){a.satuan_items=[];}}
+        antrianMap[a.id]=a;
+      });
+      laundryAntrian=Object.values(antrianMap);
+      sd('laundry_antrian',laundryAntrian);
+    }
     sd('trx_data',transaksi);sd('utang_data',utangData);sd('kat_v3',katalog);
     setSyncBadge('ok'); renderAll();
   }else setSyncBadge('off');
@@ -1022,6 +1034,7 @@ async function catatLaundryKeluar(a){
   renderAntrian();renderTrx();
   setSyncBadge('ing');
   await cAction({action:'add_trx',data:encodeURIComponent(JSON.stringify(item))});
+  await cAction({action:'update_antrian_status',id:a.id,status:'selesai',tanggal_keluar:a.tanggal_keluar,jam_keluar:jam});
   setSyncBadge('ok');
   // Generate WA terima kasih
   generateBonKeluar(a,item);
@@ -1278,6 +1291,8 @@ function generateBon(){
       estimasi_selesai:tgSelesai, status:'pending'
     };
     loadAntrian(); laundryAntrian.push(antrian); saveAntrian();
+    // Sync antrian ke cloud (fire-and-forget, tidak block UI)
+    cAction({action:'add_antrian',data:encodeURIComponent(JSON.stringify(Object.assign({},antrian,{satuan_items_json:JSON.stringify(antrian.satuan_items)})))});
 
     // Generate WA konfirmasi masuk
     txt='👕 *SISTER LAUNDRY DAN PET SHOP*\n';
