@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="theme-color" content="#4F46E5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sister">
+<title>Sister Laundry & Pet Shop</title>
+<style>
+:root{--cat:#F59E0B;--laundry:#06B6D4;--primary:#7C3AED;--income:#10B981;--expense:#EF4444;--bg:#F1F5F9;--card:#fff;--text:#1E293B;--muted:#64748B;--border:#E2E8F0;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px;}
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#7C3AED,#4F46E5);color:#fff;padding:14px 14px 10px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(124,58,237,.3);}
+.hdr h1{font-size:14px;font-weight:800;line-height:1.3;}
+.hdr .sub{font-size:10px;opacity:.8;margin-top:1px;}
+.sync-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;margin-top:3px;display:inline-block;cursor:pointer;}
+.sy-ok{background:#D1FAE5;color:#065F46;}.sy-ing{background:#FEF3C7;color:#92400E;}.sy-off{background:#FEE2E2;color:#991B1B;}
+.sync-bar{background:#4C1D95;color:#DDD6FE;font-size:11px;padding:4px 14px;display:flex;align-items:center;justify-content:space-between;}
+.sync-bar.hidden{display:none;}
+/* NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;z-index:100;box-shadow:0 -2px 8px rgba(0,0,0,.08);}
+.nbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px 10px;cursor:pointer;border:none;background:none;color:var(--muted);font-size:9px;gap:2px;transition:color .15s;}
+.nbtn.active{color:var(--primary);}.nbtn svg{width:20px;height:20px;}.nbtn span{font-weight:600;}
+/* TABS */
+.tab{display:none;padding:12px;}.tab.active{display:block;}
+/* CARD */
+.card{background:var(--card);border-radius:var(--r);padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:10px;}
+.ctitle{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px;}
+/* PILLS */
+.pills{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.pill{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:2px solid var(--border);background:#fff;color:var(--muted);transition:all .15s;}
+.pill.a-all{border-color:var(--primary);background:var(--primary);color:#fff;}
+.pill.a-cat{border-color:var(--cat);background:var(--cat);color:#fff;}
+.pill.a-lau{border-color:var(--laundry);background:var(--laundry);color:#fff;}
+/* SUMMARY */
+.srow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;}
+.sc{background:#fff;border-radius:var(--r);padding:10px 8px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.07);}
+.sc .lbl{font-size:9px;color:var(--muted);font-weight:600;margin-bottom:3px;text-transform:uppercase;}
+.sc .val{font-size:13px;font-weight:800;}
+.sc.inc .val{color:var(--income);}.sc.exp .val{color:var(--expense);}.sc.laba .val{color:var(--primary);}
+/* TRX */
+.ti{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.ti:last-child{border-bottom:none;}
+.tic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.tic.income{background:#D1FAE5;}.tic.expense{background:#FEE2E2;}
+.tii{flex:1;min-width:0;}.tii .k{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tii .m{font-size:10px;color:var(--muted);margin-top:2px;}
+.tam{font-weight:700;font-size:13px;}.tam.income{color:var(--income);}.tam.expense{color:var(--expense);}
+.badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600;}
+.badge.kucing{background:#FEF3C7;color:#92400E;}.badge.laundry{background:#CFFAFE;color:#164E63;}
+.tag-del{background:none;border:none;color:#CBD5E1;font-size:14px;cursor:pointer;padding:2px 4px;}
+/* FAB */
+.fab{position:fixed;bottom:82px;right:16px;width:50px;height:50px;border-radius:25px;background:var(--primary);color:#fff;font-size:24px;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(124,58,237,.4);display:flex;align-items:center;justify-content:center;z-index:90;}
+/* MODAL */
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;justify-content:center;}
+.mbg.open{display:flex;}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 32px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;}
+.mtitle{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.mclose{font-size:22px;cursor:pointer;color:var(--muted);background:none;border:none;}
+.fg{margin-bottom:11px;}.fl{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;display:block;}
+.fc{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;color:var(--text);background:#fff;outline:none;}
+.fc:focus{border-color:var(--primary);}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn{width:100%;padding:12px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:none;margin-top:6px;}
+.btn-p{background:var(--primary);color:#fff;}.btn-s{background:var(--income);color:#fff;}.btn-d{background:var(--expense);color:#fff;}
+.btn-o{background:transparent;border:2px solid var(--primary);color:var(--primary);}
+.btn-g{background:#25D366;color:#fff;}
+.btn-c{background:#22C55E;color:#fff;}
+/* BON */
+.bon-type{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.bbt{padding:14px 8px;border-radius:var(--r);border:2px solid var(--border);cursor:pointer;text-align:center;background:#fff;transition:all .15s;}
+.bbt.ac{border-color:var(--cat);background:#FFFBEB;}.bbt.al{border-color:var(--laundry);background:#ECFEFF;}
+.bbt .bi{font-size:26px;}.bbt .bn{font-size:12px;font-weight:700;margin-top:3px;}
+/* PRODUCT GRID */
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;}
+.pc{border:2px solid var(--border);border-radius:10px;padding:9px 8px;cursor:pointer;background:#fff;transition:all .15s;position:relative;}
+.pc.sel{border-color:var(--primary);background:#F5F3FF;}
+.pc .pn{font-size:11px;font-weight:700;color:var(--text);line-height:1.3;}
+.pc .ph{font-size:11px;color:var(--income);font-weight:600;margin-top:2px;}
+.pc .stk-badge{position:absolute;top:5px;right:5px;font-size:9px;padding:1px 5px;border-radius:6px;font-weight:700;}
+.stk-hi{background:#D1FAE5;color:#065F46;}.stk-mid{background:#FEF3C7;color:#92400E;}.stk-lo{background:#FEE2E2;color:#991B1B;}
+.pc-custom{border:2px dashed var(--primary);background:#F5F3FF;}
+/* SELECTED ITEMS */
+.sel-box{border:1px dashed var(--border);border-radius:8px;padding:10px;margin-bottom:10px;min-height:48px;}
+.si{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--border);}
+.si:last-child{border-bottom:none;}
+.si .sn{font-size:12px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.qty-c{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.qbtn{width:24px;height:24px;border-radius:6px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.qval{font-size:13px;font-weight:700;min-width:18px;text-align:center;}
+.price-pill{display:flex;align-items:center;gap:3px;background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:7px;padding:2px 6px;cursor:pointer;flex-shrink:0;}
+.price-pill .pp-val{font-size:11px;font-weight:700;color:var(--income);}
+.price-pill .pp-edit{font-size:10px;color:var(--muted);}
+.price-input-wrap{display:none;background:#FFF7ED;border:1.5px solid #FED7AA;border-radius:7px;padding:2px 4px;flex-shrink:0;}
+.price-input-wrap input{width:80px;border:none;outline:none;font-size:11px;font-weight:700;color:#C2410C;background:transparent;}
+.si-sub{font-size:11px;font-weight:700;color:var(--primary);min-width:56px;text-align:right;flex-shrink:0;}
+/* LAUNDRY SERVICE */
+.svc-section{margin-bottom:12px;}
+.svc-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:7px;}
+.svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.svc-card{border:2px solid var(--border);border-radius:10px;padding:10px 8px;cursor:pointer;background:#fff;transition:all .15s;}
+.svc-card.sel{border-color:var(--laundry);background:#ECFEFF;}
+.svc-card .svn{font-size:11px;font-weight:700;}.svc-card .svh{font-size:11px;color:var(--laundry);font-weight:600;}
+.svc-card.sel .svh{color:#0E7490;}
+.berat-box{background:#F0FDFA;border:1.5px solid #A7F3D0;border-radius:10px;padding:10px 12px;margin-bottom:10px;}
+.berat-box .bbl{font-size:11px;font-weight:600;color:#065F46;margin-bottom:6px;}
+.berat-box .brow{display:flex;align-items:center;gap:8px;}
+.berat-box input{width:80px;padding:8px;border:1.5px solid #A7F3D0;border-radius:8px;font-size:15px;font-weight:700;text-align:center;outline:none;background:#fff;}
+.berat-box .bsub{font-size:13px;font-weight:700;color:var(--income);}
+/* SATUAN */
+.satuan-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px;}
+.sat-card{border:2px solid var(--border);border-radius:10px;padding:9px 8px;cursor:pointer;background:#fff;transition:all .15s;text-align:center;}
+.sat-card.sel{border-color:#8B5CF6;background:#FAF5FF;}
+.sat-card .stn{font-size:11px;font-weight:700;}.sat-card .stp{font-size:10px;color:var(--muted);}
+.sat-sel{border:1px dashed var(--border);border-radius:8px;padding:8px;margin-bottom:10px;}
+.sat-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border);}
+.sat-row:last-child{border-bottom:none;}
+.sat-row .satn{font-size:12px;font-weight:600;flex:1;}
+.sat-row input{width:85px;padding:5px 7px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;text-align:right;}
+/* BON PREVIEW */
+.bon-prev{background:#1E293B;color:#E2E8F0;border-radius:10px;padding:14px;font-size:12px;line-height:1.7;white-space:pre-wrap;font-family:'Courier New',monospace;margin-bottom:10px;}
+/* UTANG */
+.ui{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);}
+.ui:last-child{border-bottom:none;}
+.uav{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;color:#fff;}
+.uin{flex:1;min-width:0;}.uin .un{font-size:13px;font-weight:600;}.uin .uk{font-size:10px;color:var(--muted);}
+.unom{font-weight:700;font-size:13px;color:var(--expense);}
+.btn-lunas{font-size:10px;padding:3px 9px;border-radius:6px;background:var(--income);color:#fff;border:none;cursor:pointer;font-weight:600;margin-top:3px;}
+/* LAPORAN */
+.pper{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-bottom:12px;}
+.pper::-webkit-scrollbar{display:none;}
+.pp{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:2px solid var(--border);background:#fff;color:var(--muted);white-space:nowrap;flex-shrink:0;transition:all .15s;}
+.pp.active{border-color:var(--primary);background:var(--primary);color:#fff;}
+.lrow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.lrow:last-child{border-bottom:none;}
+.lrow .ld{color:var(--muted);font-size:10px;}
+.lrow .ln.income{color:var(--income);font-weight:600;}.lrow .ln.expense{color:var(--expense);font-weight:600;}
+/* CHART */
+.bch{display:flex;align-items:flex-end;gap:6px;height:80px;margin-top:8px;}
+.bw{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end;}
+.bar{width:100%;border-radius:4px 4px 0 0;min-height:2px;}
+.bar.income{background:var(--income);}.bar.expense{background:var(--expense);}
+.blbl{font-size:9px;color:var(--muted);}
+/* KATALOG */
+.kat-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.kat-item:last-child{border-bottom:none;}
+.kat-info{flex:1;min-width:0;}
+.kat-info .kn{font-size:13px;font-weight:600;}.kat-info .kh{font-size:11px;color:var(--income);font-weight:600;}
+.stk-box{display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.stk-num{font-size:13px;font-weight:700;min-width:28px;text-align:center;}
+.stk-num.hi{color:var(--income);}.stk-num.mid{color:var(--cat);}.stk-num.lo{color:var(--expense);}
+.stk-btn{width:26px;height:26px;border-radius:7px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.stk-set{font-size:10px;padding:3px 7px;border-radius:6px;background:#F1F5F9;border:1px solid var(--border);cursor:pointer;color:var(--muted);font-weight:600;}
+.antrian-item{background:#F8FAFC;border:1.5px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;transition:border-color .2s;}
+.antrian-item:hover,.antrian-item:active{border-color:var(--primary);background:#F5F3FF;}
+.antrian-item .ai-nama{font-size:14px;font-weight:700;color:var(--text);}
+.antrian-item .ai-detail{font-size:11px;color:var(--muted);margin-top:2px;}
+.antrian-item .ai-total{font-size:15px;font-weight:800;color:var(--income);margin-top:4px;}
+.antrian-item .ai-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:8px;background:#FEF3C7;color:#92400E;font-weight:700;margin-top:4px;}
+/* EMPTY */
+.empty{text-align:center;padding:32px 20px;color:var(--muted);}
+.empty .ei{font-size:44px;margin-bottom:8px;}.empty p{font-size:13px;}
+/* SETUP */
+.setup-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;}
+.snum{width:26px;height:26px;border-radius:13px;background:var(--primary);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.stxt{flex:1;font-size:12px;line-height:1.6;color:var(--text);}
+.section-hdr{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin:12px 0 7px;}
+/* TOTAL ROW */
+.total-row{background:#F0FDF4;border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.total-row .tl{font-size:13px;font-weight:700;color:var(--muted);}
+.total-row .tv{font-size:18px;font-weight:800;color:var(--income);}
+/* ── PIN SCREEN ── */
+#pin-screen{position:fixed;inset:0;background:#4F46E5;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;}
+#pin-screen .pin-logo{font-size:48px;margin-bottom:12px;}
+#pin-screen .pin-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px;}
+#pin-screen .pin-sub{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:32px;}
+#pin-screen .pin-dots{display:flex;gap:14px;margin-bottom:28px;}
+#pin-screen .pin-dot{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.3);transition:background .15s;}
+#pin-screen .pin-dot.filled{background:#fff;}
+#pin-screen .pin-err{font-size:13px;color:#FCA5A5;height:18px;margin-bottom:16px;font-weight:600;}
+#pin-screen .numpad{display:grid;grid-template-columns:repeat(3,72px);gap:12px;}
+#pin-screen .nk{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:22px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .1s;}
+#pin-screen .nk:active{background:rgba(255,255,255,.35);}
+#pin-screen .nk.del{font-size:18px;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);}}
+.pin-shake{animation:shake .35s ease;}
+</style>
+</head>
+<body>
+
+<!-- PIN SCREEN -->
+<div id="pin-screen">
+  <div class="pin-logo">🐾</div>
+  <div class="pin-title">Sister Laundry & Pet Shop</div>
+  <div class="pin-sub">Masukkan PIN untuk melanjutkan</div>
+  <div class="pin-dots" id="pin-dots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+  </div>
+  <div class="pin-err" id="pin-err"></div>
+  <div class="numpad">
+    <button class="nk" onclick="pinKey('1')">1</button>
+    <button class="nk" onclick="pinKey('2')">2</button>
+    <button class="nk" onclick="pinKey('3')">3</button>
+    <button class="nk" onclick="pinKey('4')">4</button>
+    <button class="nk" onclick="pinKey('5')">5</button>
+    <button class="nk" onclick="pinKey('6')">6</button>
+    <button class="nk" onclick="pinKey('7')">7</button>
+    <button class="nk" onclick="pinKey('8')">8</button>
+    <button class="nk" onclick="pinKey('9')">9</button>
+    <button class="nk" style="background:transparent;"></button>
+    <button class="nk" onclick="pinKey('0')">0</button>
+    <button class="nk del" onclick="pinDel()">⌫</button>
+  </div>
+</div>
+
+<div class="hdr">
+  <div>
+    <h1>🐾 Sister Laundry &amp; Pet Shop</h1>
+    <div class="sub" id="hdr-sub">Laporan Keuangan Harian</div>
+  </div>
+  <div style="text-align:right;">
+    <div style="font-size:11px;opacity:.85;" id="hdr-date"></div>
+    <div class="sync-badge sy-off" id="sync-badge" onclick="manualSync()">⚠️ Offline</div>
+    <div id="role-badge" style="display:none;"></div>
+    <div id="logout-btn" onclick="logoutApp()" style="display:none;font-size:10px;color:rgba(255,255,255,.6);cursor:pointer;margin-top:4px;">🔓 Ganti Akun</div>
+  </div>
+</div>
+<div class="sync-bar hidden" id="sync-bar">
+  <span id="sync-msg">☁️ Menyinkronkan...</span>
+  <button onclick="manualSync()" style="font-size:10px;background:#6D28D9;color:#fff;border:none;padding:2px 8px;border-radius:8px;cursor:pointer;">🔄</button>
+</div>
+
+<!-- ═══ TRANSAKSI ═══ -->
+<div id="tab-transaksi" class="tab active">
+  <div class="pills">
+    <div class="pill a-all" onclick="fBisnis('semua',this)">Semua</div>
+    <div class="pill" onclick="fBisnis('kucing',this)">🐾 Pet Shop</div>
+    <div class="pill" onclick="fBisnis('laundry',this)">👕 Laundry</div>
+  </div>
+  <div class="srow">
+    <div class="sc inc"><div class="lbl">Masuk</div><div class="val" id="s-inc">Rp 0</div></div>
+    <div class="sc exp"><div class="lbl">Keluar</div><div class="val" id="s-exp">Rp 0</div></div>
+    <div class="sc laba"><div class="lbl">Laba</div><div class="val" id="s-laba">Rp 0</div></div>
+  </div>
+  <div class="card"><div class="ctitle">Hari Ini</div><div id="trx-today"></div></div>
+  <div class="card"><div class="ctitle">7 Hari Terakhir</div><div id="trx-week"></div></div>
+</div>
+
+<!-- ═══ BON WA ═══ -->
+<div id="tab-bon" class="tab">
+  <div class="bon-type" style="grid-template-columns:1fr 1fr 1fr;">
+    <div class="bbt ac" id="bbt-cat" onclick="setBonType('kucing')"><div class="bi">🐾</div><div class="bn">Pet Shop</div></div>
+    <div class="bbt" id="bbt-lau" onclick="setBonType('laundry')"><div class="bi">👕</div><div class="bn">Laundry Masuk</div></div>
+    <div class="bbt" id="bbt-laukeluar" onclick="setBonType('laundry_keluar')"><div class="bi">✅</div><div class="bn">Laundry Keluar <span id="antrian-badge" style="display:none;background:#EF4444;color:#fff;font-size:10px;font-weight:700;border-radius:8px;padding:1px 5px;vertical-align:middle;"></span></div></div>
+  </div>
+
+  <!-- BON KUCING -->
+  <div id="bon-kucing">
+    <div class="card">
+      <div class="fg"><label class="fl">Nama Pelanggan</label><input class="fc" id="bk-nama" placeholder="Contoh: Kak Sarah"></div>
+      <div class="section-hdr">Pilih Produk (tap untuk pilih)</div>
+      <div class="prod-grid" id="prod-grid"></div>
+      <!-- Lainnya custom row -->
+      <div id="bk-custom-row" style="display:none;background:#F5F3FF;border-radius:10px;padding:10px;margin-bottom:10px;">
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:7px;">✏️ Produk Lainnya</div>
+        <div class="fr">
+          <div class="fg"><label class="fl">Nama</label><input class="fc" id="bk-cust-nama" placeholder="Nama produk"></div>
+          <div class="fg"><label class="fl">Harga (Rp)</label><input class="fc" id="bk-cust-harga" type="number" placeholder="0"></div>
+        </div>
+        <div class="fg"><label class="fl">Qty</label><input class="fc" id="bk-cust-qty" type="number" value="1" min="1" style="width:80px;"></div>
+        <button class="btn btn-o" onclick="addCustomKucing()" style="padding:8px;margin-top:0;">+ Tambah</button>
+      </div>
+      <div class="section-hdr">Item Dipilih <span id="bk-total-lbl" style="color:var(--income);font-size:12px;font-weight:700;"></span></div>
+      <div class="sel-box" id="bk-sel"></div>
+      <div class="fg"><label class="fl">Catatan (opsional)</label><input class="fc" id="bk-catatan" placeholder="Contoh: Titip kirim ya"></div>
+      <div id="bon-kat-err" style="display:none;background:#FEE2E2;color:#991B1B;border-radius:9px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:10px;"></div>
+      <button class="btn btn-p" onclick="generateBon()" style="margin-top:4px;">🧾 Generate Bon</button>
+    </div>
+  </div>
+
+  <!-- BON LAUNDRY -->
+  <div id="bon-laundry" style="display:none;">
+    <div class="card">
+      <div class="fg"><label class="fl">Nama Pelanggan</label><input class="fc" id="bl-nama" placeholder="Contoh: Pak Budi"></div>
+
+      <div class="svc-section">
+        <div class="svc-label">Layanan Utama (per kg)</div>
+        <div class="svc-grid" id="svc-grid"></div>
+      </div>
+      <div class="berat-box" id="bl-berat-box" style="display:none;">
+        <div class="bbl" id="bl-svc-name">Cuci Gosok Biasa</div>
+        <div class="brow">
+          <input id="bl-berat" type="number" placeholder="0" min="0" step="0.5" oninput="updateBeratSubtotal()">
+          <span style="font-size:13px;color:var(--muted);">kg × <span id="bl-hpkg" style="font-weight:700;">Rp 7.000</span></span>
+          <span class="bsub" id="bl-sub-kg">= Rp 0</span>
+        </div>
+      </div>
+
+      <div class="svc-section">
+        <div class="svc-label">Item Satuan (optional)</div>
+        <div class="satuan-grid" id="sat-grid"></div>
+      </div>
+      <div class="sat-sel" id="sat-sel" style="display:none;"></div>
+
+      <div class="fr">
+        <div class="fg"><label class="fl">Tgl Masuk</label><input class="fc" id="bl-masuk" type="date"></div>
+        <div class="fg">
+          <label class="fl">Estimasi Selesai <span id="bl-est-badge" style="display:none;font-size:9px;padding:1px 6px;border-radius:6px;font-weight:700;margin-left:4px;"></span></label>
+          <input class="fc" id="bl-selesai" type="date">
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Catatan</label><input class="fc" id="bl-catatan" placeholder="Contoh: Jangan dicampur"></div>
+      <div id="bon-lau-err" style="display:none;background:#FEE2E2;color:#991B1B;border-radius:9px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:10px;"></div>
+      <button class="btn btn-p" onclick="generateBon()">🧾 Generate Bon</button>
+    </div>
+  </div>
+
+  <!-- BON LAUNDRY KELUAR -->
+  <div id="bon-laundry-keluar" style="display:none;">
+    <div class="card">
+      <div class="ctitle" style="margin-bottom:12px;">✅ Daftar Laundry Menunggu Diambil</div>
+      <div id="antrian-list"><div class="empty"><div class="ei">👕</div><p>Belum ada laundry masuk</p></div></div>
+    </div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="card" id="bon-result" style="display:none;">
+    <div class="ctitle">Preview Bon WhatsApp</div>
+    <div class="bon-prev" id="bon-text"></div>
+    <button class="btn btn-c" onclick="copyBon()">📋 Copy Teks</button>
+    <button class="btn btn-g" onclick="kirimWA()">💬 Kirim ke WhatsApp</button>
+    <button class="btn" style="background:#0EA5E9;color:#fff;margin-top:6px;" onclick="openBonVisual()">📸 Bon Visual + QRIS</button>
+    <button class="btn" id="btn-catat" onclick="catatTrx()" style="background:var(--primary);color:#fff;margin-top:6px;">📒 Catat ke Transaksi</button>
+    <div id="catat-info" style="display:none;background:#D1FAE5;border-radius:8px;padding:9px 12px;margin-top:8px;font-size:12px;color:#065F46;font-weight:600;"></div>
+  </div>
+</div>
+
+<!-- MODAL BON VISUAL + QRIS -->
+<div class="mbg" id="m-bon-visual">
+  <div class="modal" style="padding:0;border-radius:20px 20px 0 0;overflow:hidden;">
+    <!-- Header modal -->
+    <div style="background:var(--primary);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:14px;font-weight:700;">📸 Bon Visual + QRIS</div>
+      <button class="mclose" style="color:#fff;" onclick="closeM('m-bon-visual')">✕</button>
+    </div>
+    <div style="padding:16px;overflow-y:auto;max-height:80vh;">
+
+      <!-- Setup QRIS (tampil kalau belum ada QRIS) -->
+      <div id="qris-setup" style="display:none;background:#FEF3C7;border-radius:10px;padding:12px;margin-bottom:12px;">
+        <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:8px;">📤 Upload Gambar QRIS kamu</div>
+        <div style="font-size:11px;color:#92400E;margin-bottom:8px;">Foto/screenshot QRIS dari aplikasi bank atau dompet digital. Disimpan di HP, tidak dikirim ke mana-mana.</div>
+        <input type="file" id="qris-file" accept="image/*" onchange="uploadQRIS(this)" style="font-size:12px;width:100%;">
+      </div>
+
+      <!-- BON VISUAL (area screenshot) -->
+      <div id="bon-visual-card" style="background:#fff;border-radius:14px;overflow:hidden;border:1px solid #E2E8F0;margin-bottom:12px;">
+        <!-- Struk Header -->
+        <div style="background:linear-gradient(135deg,#7C3AED,#4F46E5);color:#fff;padding:16px;text-align:center;">
+          <div style="font-size:18px;font-weight:900;letter-spacing:.5px;">🐾 SISTER LAUNDRY</div>
+          <div style="font-size:13px;font-weight:700;letter-spacing:.5px;">& PET SHOP</div>
+          <div style="font-size:10px;opacity:.8;margin-top:4px;" id="bv-tanggal"></div>
+        </div>
+        <!-- Pelanggan -->
+        <div style="padding:12px 14px;border-bottom:1px dashed #E2E8F0;">
+          <div style="font-size:11px;color:#64748B;font-weight:600;">PELANGGAN</div>
+          <div style="font-size:15px;font-weight:700;" id="bv-nama">-</div>
+        </div>
+        <!-- Items -->
+        <div style="padding:10px 14px;border-bottom:1px dashed #E2E8F0;" id="bv-items"></div>
+        <!-- Total -->
+        <div style="padding:12px 14px;background:#F8FAFC;border-bottom:1px dashed #E2E8F0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:13px;font-weight:700;color:#64748B;">TOTAL PEMBAYARAN</div>
+            <div style="font-size:20px;font-weight:900;color:#7C3AED;" id="bv-total">Rp 0</div>
+          </div>
+        </div>
+        <!-- QRIS Section -->
+        <div id="bv-qris-section" style="padding:14px;text-align:center;display:none;">
+          <div style="font-size:11px;font-weight:700;color:#64748B;margin-bottom:8px;letter-spacing:.5px;">SCAN UNTUK BAYAR</div>
+          <img id="bv-qris-img" src="" style="max-width:200px;width:100%;border-radius:8px;border:1px solid #E2E8F0;">
+          <div style="font-size:10px;color:#94A3B8;margin-top:6px;">QRIS • Semua Aplikasi Pembayaran</div>
+        </div>
+        <!-- No QRIS placeholder -->
+        <div id="bv-qris-placeholder" style="padding:14px;text-align:center;">
+          <div style="font-size:11px;color:#94A3B8;margin-bottom:4px;">💳 Belum ada QRIS</div>
+          <div style="font-size:10px;color:#CBD5E1;">Upload QRIS di atas untuk ditampilkan di sini</div>
+        </div>
+        <!-- Footer struk -->
+        <div style="padding:12px;text-align:center;background:#F8FAFC;">
+          <div style="font-size:10px;color:#94A3B8;">Terima kasih sudah berbelanja! 🙏</div>
+          <div style="font-size:10px;color:#CBD5E1;margin-top:2px;">Sister Laundry & Pet Shop</div>
+        </div>
+      </div>
+
+      <!-- Tombol aksi -->
+      <div id="qris-change-row" style="display:none;margin-bottom:10px;">
+        <input type="file" id="qris-file2" accept="image/*" onchange="uploadQRIS(this)" style="display:none;">
+        <button onclick="document.getElementById('qris-file2').click()" style="width:100%;padding:9px;border-radius:8px;border:1.5px dashed #CBD5E1;background:#fff;color:#64748B;font-size:12px;font-weight:600;cursor:pointer;">🔄 Ganti Gambar QRIS</button>
+      </div>
+      <div style="background:#EFF6FF;border-radius:10px;padding:10px 12px;margin-bottom:10px;">
+        <div style="font-size:11px;font-weight:700;color:#1D4ED8;margin-bottom:3px;">📱 Cara kirim ke pelanggan:</div>
+        <div style="font-size:11px;color:#3B82F6;line-height:1.6;">Screenshot halaman ini → kirim gambarnya ke WhatsApp pelanggan</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LAPORAN ═══ -->
+<div id="tab-laporan" class="tab">
+  <div class="pper">
+    <div class="pp active" onclick="setPeriod('hari',this)">Hari Ini</div>
+    <div class="pp" onclick="setPeriod('minggu',this)">7 Hari</div>
+    <div class="pp" onclick="setPeriod('bulan',this)">Bulan Ini</div>
+    <div class="pp" onclick="setPeriod('all',this)">Semua</div>
+  </div>
+  <div class="pills">
+    <div class="pill a-all" onclick="fLap('semua',this)">Semua</div>
+    <div class="pill" onclick="fLap('kucing',this)">🐾 Pet Shop</div>
+    <div class="pill" onclick="fLap('laundry',this)">👕 Laundry</div>
+  </div>
+  <div class="srow">
+    <div class="sc inc"><div class="lbl">Masuk</div><div class="val" id="l-inc">Rp 0</div></div>
+    <div class="sc exp"><div class="lbl">Keluar</div><div class="val" id="l-exp">Rp 0</div></div>
+    <div class="sc laba"><div class="lbl">Laba</div><div class="val" id="l-laba">Rp 0</div></div>
+  </div>
+  <div class="card"><div class="ctitle">Grafik 7 Hari</div><div class="bch" id="bch"></div>
+    <div style="display:flex;gap:14px;margin-top:5px;font-size:10px;"><span style="color:var(--income);">■ Masuk</span><span style="color:var(--expense);">■ Keluar</span></div>
+  </div>
+  <div class="card"><div class="ctitle">Rincian</div><div id="l-list"></div></div>
+</div>
+
+<!-- ═══ UTANG ═══ -->
+<div id="tab-utang" class="tab">
+  <div class="pills">
+    <div class="pill a-all" onclick="fUtang('aktif',this)">Belum Lunas</div>
+    <div class="pill" onclick="fUtang('lunas',this)">Lunas</div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Total Utang Aktif</div>
+    <div style="font-size:24px;font-weight:800;color:var(--expense);" id="total-utang">Rp 0</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:2px;" id="utang-cnt">0 pelanggan</div>
+  </div>
+  <div class="card"><div id="utang-list"></div></div>
+</div>
+
+<!-- ═══ STOK ═══ -->
+<div id="tab-stok" class="tab">
+  <div class="pills">
+    <div class="pill a-all" onclick="fStok('semua',this)">Semua</div>
+    <div class="pill" onclick="fStok('kucing',this)">🐾 Pet Shop</div>
+    <div class="pill" onclick="fStok('laundry',this)">👕 Laundry</div>
+  </div>
+  <div class="card" style="background:#FEF3C7;border-left:3px solid var(--cat);">
+    <div style="font-size:12px;font-weight:600;color:#92400E;margin-bottom:10px;">📦 Stok otomatis berkurang saat catat transaksi.</div>
+    <div id="stok-admin-panel"></div>
+  </div>
+  <div class="card"><div id="stok-list"></div></div>
+</div>
+
+<!-- NAV -->
+<nav class="bnav">
+  <button class="nbtn active" id="nav-transaksi" onclick="showTab('transaksi')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    <span>Transaksi</span></button>
+  <button class="nbtn" id="nav-bon" onclick="showTab('bon')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    <span>Bon WA</span></button>
+  <button class="nbtn" id="nav-laporan" onclick="showTab('laporan')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+    <span>Laporan</span></button>
+  <button class="nbtn" id="nav-utang" onclick="showTab('utang')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+    <span>Utang</span></button>
+  <button class="nbtn" id="nav-stok" onclick="showTab('stok')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+    <span>Stok</span></button>
+</nav>
+
+<button class="fab" id="fab-btn" onclick="openTrxModal()">＋</button>
+
+<!-- MODAL TRANSAKSI -->
+<div class="mbg" id="m-trx">
+  <div class="modal">
+    <div class="mtitle">Tambah Transaksi <button class="mclose" onclick="closeM('m-trx')">✕</button></div>
+    <div class="fg"><label class="fl">Bisnis</label>
+      <select class="fc" id="trx-bisnis"><option value="kucing">🐾 Pet Shop</option><option value="laundry">👕 Laundry</option></select></div>
+    <div class="fg"><label class="fl">Tipe</label>
+      <select class="fc" id="trx-tipe"><option value="income">💚 Pemasukan</option><option value="expense">🔴 Pengeluaran</option></select></div>
+    <div class="fg"><label class="fl">Kategori</label>
+      <select class="fc" id="trx-kat"><option>Penjualan</option><option>Laundry</option><option>Pembelian Stok</option><option>Operasional</option><option>Gaji</option><option>Lainnya</option></select></div>
+    <div class="fg"><label class="fl">Keterangan</label><input class="fc" id="trx-ket" placeholder="Contoh: Jual Royal Canin 1kg"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Nominal (Rp)</label><input class="fc" id="trx-nom" type="number" placeholder="50000"></div>
+      <div class="fg"><label class="fl">Tanggal</label><input class="fc" id="trx-tgl" type="date"></div>
+    </div>
+    <button class="btn btn-p" onclick="simpanTrx()">✅ Simpan</button>
+  </div>
+</div>
+
+<!-- MODAL UTANG -->
+<div class="mbg" id="m-utang">
+  <div class="modal">
+    <div class="mtitle">Tambah Catatan Utang <button class="mclose" onclick="closeM('m-utang')">✕</button></div>
+    <div class="fg"><label class="fl">Nama Pelanggan</label><input class="fc" id="u-nama" placeholder="Nama pelanggan"></div>
+    <div class="fg"><label class="fl">Bisnis</label>
+      <select class="fc" id="u-bisnis"><option value="kucing">🐾 Pet Shop</option><option value="laundry">👕 Laundry</option></select></div>
+    <div class="fg"><label class="fl">Nominal (Rp)</label><input class="fc" id="u-nom" type="number"></div>
+    <div class="fg"><label class="fl">Keterangan</label><input class="fc" id="u-ket" placeholder="Contoh: Laundry 3kg"></div>
+    <div class="fg"><label class="fl">Tanggal</label><input class="fc" id="u-tgl" type="date"></div>
+    <button class="btn btn-p" onclick="simpanUtang()">✅ Simpan</button>
+  </div>
+</div>
+
+<!-- MODAL SET STOK -->
+<div class="mbg" id="m-stok">
+  <div class="modal">
+    <div class="mtitle">Kelola Stok <button class="mclose" onclick="closeM('m-stok')">✕</button></div>
+    <div id="m-stok-nama" style="font-size:15px;font-weight:700;margin-bottom:4px;"></div>
+    <div id="m-stok-sisa" style="font-size:12px;color:var(--muted);margin-bottom:14px;"></div>
+    <!-- Tab SET vs MASUK -->
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <button id="stok-tab-masuk" onclick="switchStokTab('masuk')" style="flex:1;padding:8px;border-radius:9px;border:2px solid var(--primary);background:var(--primary);color:#fff;font-weight:700;font-size:13px;cursor:pointer;">📦 Stok Masuk</button>
+      <button id="stok-tab-set" onclick="switchStokTab('set')" style="flex:1;padding:8px;border-radius:9px;border:2px solid var(--border);background:#fff;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;">🔧 Set Manual</button>
+    </div>
+    <div id="stok-panel-masuk">
+      <div class="fg"><label class="fl">Jumlah stok yang baru masuk</label><input class="fc" id="stok-masuk-val" type="number" min="1" placeholder="Contoh: 60"></div>
+      <div id="stok-masuk-preview" style="font-size:12px;color:#059669;font-weight:600;margin-bottom:10px;text-align:center;"></div>
+      <button class="btn btn-p" onclick="simpanStokMasuk()">📦 Tambah Stok Masuk</button>
+    </div>
+    <div id="stok-panel-set" style="display:none;">
+      <div class="fg"><label class="fl">Set jumlah stok (override total)</label><input class="fc" id="stok-val" type="number" min="0"></div>
+      <div style="font-size:11px;color:#EF4444;margin-bottom:10px;">⚠️ Ini akan mengganti stok, bukan menambah.</div>
+      <button class="btn" style="background:#EF4444;color:#fff;" onclick="simpanStok()">🔧 Override Stok</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDIT PRODUK -->
+<div class="mbg" id="m-edit-produk">
+  <div class="modal">
+    <div class="mtitle">✏️ Edit Produk <button class="mclose" onclick="closeM('m-edit-produk')">✕</button></div>
+    <div class="fg"><label class="fl">Nama Produk</label><input class="fc" id="ep-nama" type="text"></div>
+    <div class="fg"><label class="fl">Harga (Rp)</label><input class="fc" id="ep-harga" type="number" min="0"></div>
+    <button class="btn btn-p" onclick="simpanEditProduk()">✅ Simpan</button>
+  </div>
+</div>
+
+<!-- MODAL TAMBAH PRODUK BARU -->
+<div class="mbg" id="m-add-produk">
+  <div class="modal">
+    <div class="mtitle">➕ Produk Baru <button class="mclose" onclick="closeM('m-add-produk')">✕</button></div>
+    <div class="fg">
+      <label class="fl">Kategori</label>
+      <select class="fc" id="ap-bisnis">
+        <option value="kucing">🐾 Pet Shop</option>
+        <option value="laundry">👕 Laundry</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">Nama Produk</label><input class="fc" id="ap-nama" type="text" placeholder="cth: Royal Canin Kitten"></div>
+    <div class="fg"><label class="fl">Harga (Rp)</label><input class="fc" id="ap-harga" type="number" min="0" placeholder="0"></div>
+    <div class="fg"><label class="fl">Stok Awal</label><input class="fc" id="ap-stok" type="number" min="0" placeholder="0"></div>
+    <button class="btn btn-p" onclick="simpanProdukBaru()">✅ Tambah Produk</button>
+  </div>
+</div>
+
+<!-- MODAL SETUP -->
+<div class="mbg" id="m-setup">
+  <div class="modal">
+    <div class="mtitle">⚙️ Setup Google Sheets Sync</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Lakukan sekali untuk sinkronkan data ke Google Sheets — bisa dipantau dari HP/laptop manapun.</p>
+    <div class="setup-step"><div class="snum">1</div><div class="stxt">Buka <a href="https://sheets.google.com" target="_blank" style="color:var(--primary);">sheets.google.com</a> → buat spreadsheet baru → beri nama <em>"Sister Laundry & Pet Shop"</em></div></div>
+    <div class="setup-step"><div class="snum">2</div><div class="stxt">Klik menu <strong>Extensions → Apps Script</strong></div></div>
+    <div class="setup-step"><div class="snum">3</div><div class="stxt">Hapus semua kode, paste isi file <strong>apps_script_warung.gs</strong>, Save.</div></div>
+    <div class="setup-step"><div class="snum">4</div><div class="stxt"><strong>Deploy → New deployment → Web App</strong><br>Execute as: <em>Me</em> · Access: <em>Anyone</em> → Deploy → copy URL</div></div>
+    <div class="fg"><label class="fl">Web App URL</label><input class="fc" id="setup-url" placeholder="https://script.google.com/macros/s/..."></div>
+    <button class="btn btn-p" onclick="saveSetup()">✅ Hubungkan</button>
+    <button class="btn" style="background:#94A3B8;color:#fff;" onclick="closeM('m-setup');localStorage.setItem('wk_skip','1')">Lewati (offline saja)</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// DEFAULT KATALOG
+// ══════════════════════════════════════════════
+var DEFAULT_KATALOG = [
+  // === PET SHOP (WARUNG KUCING) ===
+  {id:'k1', bisnis:'kucing',nama_produk:'Cat Choize Adult',  harga:21000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k2', bisnis:'kucing',nama_produk:'Cat Choize Kitten', harga:28000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k3', bisnis:'kucing',nama_produk:'Bolt Adult',         harga:21000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k4', bisnis:'kucing',nama_produk:'Bolt Kitten',        harga:15000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k5', bisnis:'kucing',nama_produk:'Misterpuss',         harga:13000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k6', bisnis:'kucing',nama_produk:'Felibite',           harga:15000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k7', bisnis:'kucing',nama_produk:'Excel Adult',        harga:13000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k8', bisnis:'kucing',nama_produk:'Excel Kitten',       harga:15000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k9', bisnis:'kucing',nama_produk:'Cester',             harga:20000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k10',bisnis:'kucing',nama_produk:'Lezatto',            harga:24000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k11',bisnis:'kucing',nama_produk:'Ori Cat',            harga:20000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k12',bisnis:'kucing',nama_produk:'Beauty',             harga:30000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k13',bisnis:'kucing',nama_produk:'Meo 1 Kilo',         harga:60000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k14',bisnis:'kucing',nama_produk:'Meo 400 gram',       harga:20000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k15',bisnis:'kucing',nama_produk:'Meo Kaleng',         harga:21000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k16',bisnis:'kucing',nama_produk:'Meo Sachet',         harga:7000, satuan:'pcs',stok:20,aktif:true},
+  {id:'k17',bisnis:'kucing',nama_produk:'Lifecat Kaleng',     harga:15000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k18',bisnis:'kucing',nama_produk:'Lifecat Sachet',     harga:7000, satuan:'pcs',stok:20,aktif:true},
+  {id:'k19',bisnis:'kucing',nama_produk:'Snack Kucing',       harga:2000, satuan:'pcs',stok:20,aktif:true},
+  {id:'k20',bisnis:'kucing',nama_produk:'Pasir 25L',          harga:125000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k21',bisnis:'kucing',nama_produk:'Pasir 10L',          harga:60000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k22',bisnis:'kucing',nama_produk:'Pasir 5L',           harga:35000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k23',bisnis:'kucing',nama_produk:'Perapatan',          harga:7000, satuan:'pcs',stok:20,aktif:true},
+  {id:'k24',bisnis:'kucing',nama_produk:'Tasty Kitten',       harga:32000,satuan:'pcs',stok:20,aktif:true},
+  {id:'k26',bisnis:'kucing',nama_produk:'Whiskas Sachet',      harga:7000, satuan:'pcs',stok:20,aktif:true},
+  {id:'k27',bisnis:'kucing',nama_produk:'Bolt Curah Karungan',harga:600000,satuan:'karung',stok:1,aktif:true},
+  {id:'k25',bisnis:'kucing',nama_produk:'✏️ Lainnya',         harga:0,    satuan:'pcs',stok:null,aktif:true,is_custom:true},
+  // === LAUNDRY — Per Kg ===
+  {id:'l1',bisnis:'laundry',nama_produk:'Cuci Gosok Biasa',  harga:7000,satuan:'kg',stok:null,aktif:true,tipe:'per_kg'},
+  {id:'l2',bisnis:'laundry',nama_produk:'Cuci Gosok Express', harga:8000,satuan:'kg',stok:null,aktif:true,tipe:'per_kg'},
+  {id:'l3',bisnis:'laundry',nama_produk:'Gosok Biasa',        harga:5000,satuan:'kg',stok:null,aktif:true,tipe:'per_kg'},
+  {id:'l4',bisnis:'laundry',nama_produk:'Gosok Express',      harga:6000,satuan:'kg',stok:null,aktif:true,tipe:'per_kg'},
+  {id:'l5',bisnis:'laundry',nama_produk:'Cuci Kering',        harga:5000,satuan:'kg',stok:null,aktif:true,tipe:'per_kg'},
+  // === LAUNDRY — Satuan ===
+  {id:'l6', bisnis:'laundry',nama_produk:'Karpet',  harga:0,satuan:'pcs',stok:null,aktif:true,tipe:'satuan'},
+  {id:'l7', bisnis:'laundry',nama_produk:'Selimut', harga:0,satuan:'pcs',stok:null,aktif:true,tipe:'satuan'},
+  {id:'l8', bisnis:'laundry',nama_produk:'Badcover',harga:0,satuan:'pcs',stok:null,aktif:true,tipe:'satuan'},
+  {id:'l9', bisnis:'laundry',nama_produk:'Baju',    harga:0,satuan:'pcs',stok:null,aktif:true,tipe:'satuan'},
+  {id:'l10',bisnis:'laundry',nama_produk:'✏️ Lainnya',harga:0,satuan:'pcs',stok:null,aktif:true,tipe:'satuan',is_custom:true},
+];
+
+// ══════════════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════════════
+function gd(k,d){try{return JSON.parse(localStorage.getItem(k))||d;}catch(e){return d;}}
+function sd(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+var transaksi = gd('trx_data',[]);
+var utangData = gd('utang_data',[]);
+var katalog   = gd('kat_v3',[]);
+if(!katalog.length){
+  katalog = JSON.parse(JSON.stringify(DEFAULT_KATALOG));
+  sd('kat_v3', katalog);
+} else {
+  // Migration: add stok to kucing items that don't have it
+  var changed=false;
+  katalog.forEach(function(p){
+    if(p.bisnis==='kucing'&&p.stok===undefined){p.stok=20;changed=true;}
+  });
+  if(changed) sd('kat_v3',katalog);
+}
+
+// ══════════════════════════════════════════════
+// KONFIGURASI — GANTI PIN DI SINI
+// ══════════════════════════════════════════════
+var APP_PIN    = '4305'; // ← PIN PEMILIK (akses penuh) — GANTI!
+var KASIR_PIN  = '1701'; // ← PIN KASIR (jualan saja) — GANTI!
+var SCRIPT_URL_FIXED = 'https://script.google.com/macros/s/AKfycbwpn-HwknJOq99vFV833x4qDg-Fv2vEG9gDl5gR-RruxnKxURSb6SFlCjY1fC3kbmowvg/exec';
+var AUTH_DURATION_MS = 24 * 60 * 60 * 1000; // 24 jam
+var LOCKOUT_DURATION_MS = 5 * 60 * 1000;     // 5 menit blokir
+var MAX_ATTEMPTS = 3;
+var _isOwner = false;
+
+// ── PIN LOGIC ──
+var _pin = '';
+var _pinAttempts = parseInt(localStorage.getItem('pin_attempts')||'0');
+
+function pinKey(k){
+  if(_pin.length>=4) return;
+  _pin+=k;
+  updatePinDots();
+  if(_pin.length===4) setTimeout(checkPin,100);
+}
+function pinDel(){
+  _pin=_pin.slice(0,-1);
+  updatePinDots();
+  document.getElementById('pin-err').textContent='';
+}
+function updatePinDots(){
+  for(var i=0;i<4;i++) document.getElementById('pd'+i).classList.toggle('filled',i<_pin.length);
+}
+function setNumpadDisabled(dis){
+  document.querySelectorAll('.nk').forEach(function(b){b.disabled=dis;});
+}
+function showLockout(ms){
+  setNumpadDisabled(true);
+  var endTime=Date.now()+ms;
+  localStorage.setItem('pin_lockout',endTime);
+  function tick(){
+    var rem=Math.ceil((endTime-Date.now())/1000);
+    if(rem<=0){
+      localStorage.removeItem('pin_lockout');
+      localStorage.setItem('pin_attempts','0');
+      _pinAttempts=0;
+      document.getElementById('pin-err').textContent='';
+      document.getElementById('pin-sub').textContent='Masukkan PIN untuk melanjutkan';
+      setNumpadDisabled(false);
+    } else {
+      var m=Math.floor(rem/60),s=rem%60;
+      document.getElementById('pin-err').textContent='🔒 Terlalu banyak percobaan. Coba lagi dalam '+m+':'+String(s).padStart(2,'0');
+      document.getElementById('pin-sub').textContent='Akses sementara diblokir';
+      setTimeout(tick,1000);
+    }
+  }
+  tick();
+}
+function checkPin(){
+  // Cek apakah masih dalam masa blokir
+  var lockUntil=parseInt(localStorage.getItem('pin_lockout')||'0');
+  if(Date.now()<lockUntil){showLockout(lockUntil-Date.now());_pin='';updatePinDots();return;}
+
+  if(_pin===APP_PIN||_pin===KASIR_PIN){
+    _isOwner=(_pin===APP_PIN);
+    localStorage.setItem('auth_ts',Date.now());
+    localStorage.setItem('auth_role',_isOwner?'owner':'kasir');
+    localStorage.setItem('pin_attempts','0');
+    document.getElementById('pin-screen').style.display='none';
+    appInit();
+  } else {
+    _pinAttempts++;
+    localStorage.setItem('pin_attempts',_pinAttempts);
+    var sisaPercobaan=MAX_ATTEMPTS-_pinAttempts;
+    if(_pinAttempts>=MAX_ATTEMPTS){
+      _pin=''; updatePinDots();
+      showLockout(LOCKOUT_DURATION_MS);
+    } else {
+      document.getElementById('pin-err').textContent='PIN salah! Sisa percobaan: '+sisaPercobaan+'x';
+      document.getElementById('pin-dots').classList.add('pin-shake');
+      setTimeout(function(){document.getElementById('pin-dots').classList.remove('pin-shake');},400);
+      _pin=''; updatePinDots();
+    }
+  }
+}
+var CFG = {URL: localStorage.getItem('wk_url') || SCRIPT_URL_FIXED};
+
+// ══════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════
+function fmt(n){var a=Math.abs(n);if(a>=1000000)return 'Rp '+(n/1000000).toFixed(1)+'jt';return 'Rp '+Number(n).toLocaleString('id-ID');}
+function fmtF(n){return 'Rp '+Number(n).toLocaleString('id-ID');}
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function localDate(v){if(!v)return '';var s=String(v);if(s.length===10)return s;var d=new Date(v);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function fmtD(d){var D=['Min','Sen','Sel','Rab','Kam','Jum','Sab'],M=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'],dt=new Date(d+'T00:00:00');return D[dt.getDay()]+' '+dt.getDate()+' '+M[dt.getMonth()];}
+function uid(){return Date.now().toString()+Math.floor(Math.random()*999);}
+
+// Header date
+(function(){var n=new Date(),M=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'],D=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];document.getElementById('hdr-date').textContent=D[n.getDay()]+', '+n.getDate()+' '+M[n.getMonth()]+' '+n.getFullYear();})();
+
+// ══════════════════════════════════════════════
+// SETUP & SYNC
+// ══════════════════════════════════════════════
+function setSyncBadge(s){
+  var b=document.getElementById('sync-badge'),bar=document.getElementById('sync-bar');
+  if(s==='ok'){b.className='sync-badge sy-ok';b.textContent='✅ Tersinkron';bar.classList.add('hidden');}
+  else if(s==='ing'){b.className='sync-badge sy-ing';b.textContent='⏳ Sync...';bar.classList.remove('hidden');document.getElementById('sync-msg').textContent='☁️ Menyinkronkan...';}
+  else{b.className='sync-badge sy-off';b.textContent='⚠️ Offline';bar.classList.add('hidden');}
+}
+function saveSetup(){
+  var u=document.getElementById('setup-url').value.trim();
+  if(!u){alert('Paste URL dulu!');return;}
+  CFG.URL=u; localStorage.setItem('wk_url',u);
+  closeM('m-setup'); setSyncBadge('ing'); manualSync();
+}
+async function cloudGet(p){
+  if(!CFG.URL)return null;
+  try{var r=await fetch(CFG.URL+'?'+Object.keys(p).map(k=>k+'='+encodeURIComponent(p[k])).join('&'));return await r.json();}catch(e){return null;}
+}
+async function manualSync(){
+  if(!CFG.URL){setSyncBadge('off');return;}
+  setSyncBadge('ing');
+  var res=await cloudGet({action:'read'});
+  if(res&&res.success){
+    // Normalisasi tanggal dari Sheets (UTC ISO → local YYYY-MM-DD)
+    if(res.transaksi) res.transaksi.forEach(function(t){t.tanggal=localDate(t.tanggal);});
+    if(res.utang) res.utang.forEach(function(t){t.tanggal=localDate(t.tanggal);});
+    // Merge transaksi: gabung lokal + cloud, deduplikasi by id
+    if(res.transaksi&&res.transaksi.length){
+      var idMap={};
+      transaksi.forEach(function(t){idMap[t.id]=t;});
+      res.transaksi.forEach(function(t){idMap[t.id]=t;});
+      transaksi=Object.values(idMap).sort(function(a,b){return a.tanggal>b.tanggal?1:-1;});
+    }
+    if(res.utang&&res.utang.length){
+      var idMapU={};
+      utangData.forEach(function(t){idMapU[t.id]=t;});
+      res.utang.forEach(function(t){idMapU[t.id]=t;});
+      utangData=Object.values(idMapU);
+    }
+    if(res.produk&&res.produk.length) katalog=res.produk;
+    sd('trx_data',transaksi);sd('utang_data',utangData);sd('kat_v3',katalog);
+    setSyncBadge('ok'); renderAll();
+  }else setSyncBadge('off');
+}
+async function cAction(p){if(CFG.URL)await cloudGet(p);}
+
+// Init: dipanggil setelah PIN benar
+function logoutApp(){
+  localStorage.removeItem('auth_ts');
+  localStorage.removeItem('auth_role');
+  location.reload();
+}
+function applyRole(){
+  var adminPanel=document.getElementById('stok-admin-panel');
+  if(adminPanel){
+    if(_isOwner){
+      adminPanel.innerHTML=
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'+
+          '<button onclick="resetStokSaja()" style="padding:9px;border-radius:9px;border:none;background:#FDE68A;color:#92400E;font-size:11px;font-weight:700;cursor:pointer;">🔄 Reset Stok ke 0</button>'+
+          '<button onclick="resetSemuaData()" style="padding:9px;border-radius:9px;border:none;background:#FEE2E2;color:#991B1B;font-size:11px;font-weight:700;cursor:pointer;">⚠️ Reset Semua Data</button>'+
+        '</div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'+
+          '<button onclick="bukaGantiURL()" style="padding:9px;border-radius:9px;border:none;background:#EDE9FE;color:#5B21B6;font-size:11px;font-weight:700;cursor:pointer;">⚙️ Ganti URL Script</button>'+
+          '<button onclick="resetTotal()" style="padding:9px;border-radius:9px;border:none;background:#FEE2E2;color:#7F1D1D;font-size:11px;font-weight:700;cursor:pointer;">💀 Reset Total + URL</button>'+
+        '</div>'+
+        '<button id="btn-push-cloud" onclick="pushStokKeCloud()" style="width:100%;padding:10px;border-radius:9px;border:none;background:#DBEAFE;color:#1E40AF;font-size:12px;font-weight:700;cursor:pointer;">☁️ Upload Stok ke Cloud (sync HP lain)</button>'+
+        '<div id="push-cloud-info" style="display:none;font-size:11px;color:#166534;margin-top:6px;text-align:center;"></div>'+
+        '<button onclick="document.getElementById(\'m-add-produk\').classList.add(\'open\')" style="width:100%;padding:10px;border-radius:9px;border:none;background:#D1FAE5;color:#065F46;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;">➕ Tambah Produk Baru</button>';
+    } else {
+      adminPanel.innerHTML='';
+    }
+  }
+
+  // Sembunyikan tab Stok/Laporan/Utang & FAB untuk kasir
+  var ownerOnlyTabs=['nav-laporan','nav-utang','nav-stok'];
+  ownerOnlyTabs.forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.style.display=_isOwner?'':'none';
+  });
+  var fab=document.getElementById('fab-btn');
+  if(fab) fab.style.display=_isOwner?'flex':'none';
+
+  // Role badge di header
+  var badge=document.getElementById('role-badge');
+  if(badge){
+    if(_isOwner){
+      badge.textContent='👑 Pemilik';
+      badge.style.cssText='font-size:10px;font-weight:700;color:#FCD34D;margin-top:2px;';
+    } else {
+      badge.textContent='🛒 Mode Kasir';
+      badge.style.cssText='font-size:10px;font-weight:700;color:rgba(255,255,255,.8);margin-top:2px;background:rgba(255,255,255,.15);padding:2px 7px;border-radius:8px;';
+    }
+    badge.style.display='block';
+  }
+  // Tombol Ganti Akun — selalu tampil
+  var lb=document.getElementById('logout-btn');
+  if(lb) lb.style.display='block';
+}
+function appInit(){
+  applyRole();
+  loadAntrian();
+  if(CFG.URL){setSyncBadge('ing');manualSync();}
+  else setSyncBadge('off');
+  renderAll();
+  document.querySelectorAll('.mbg').forEach(b=>{b.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});});
+  setInterval(()=>{if(CFG.URL)manualSync();},5*60*1000);
+}
+
+// ══════════════════════════════════════════════
+// TAB NAV
+// ══════════════════════════════════════════════
+var curTab='transaksi';
+function showTab(n){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+n).classList.add('active');
+  document.getElementById('nav-'+n).classList.add('active');
+  curTab=n;
+  var fab=document.getElementById('fab-btn');
+  if(n==='transaksi'){fab.style.display='flex';fab.onclick=openTrxModal;}
+  else if(n==='utang'){fab.style.display='flex';fab.onclick=openUtangModal;}
+  else{fab.style.display='none';}
+  renderAll();
+}
+
+// ══════════════════════════════════════════════
+// TRANSAKSI
+// ══════════════════════════════════════════════
+var bisFil='semua';
+function fBisnis(v,el){
+  bisFil=v;
+  document.querySelectorAll('#tab-transaksi .pill').forEach(p=>{p.classList.remove('a-all','a-cat','a-lau');});
+  el.classList.add(v==='semua'?'a-all':v==='kucing'?'a-cat':'a-lau');
+  renderTrx();
+}
+function renderTrx(){
+  var t=today();
+  var todT=transaksi.filter(x=>x.tanggal===t&&(bisFil==='semua'||x.bisnis===bisFil));
+  var wkT=transaksi.filter(x=>{var d=(new Date(t+'T00:00:00')-new Date(x.tanggal+'T00:00:00'))/86400000;return d>0&&d<=7&&(bisFil==='semua'||x.bisnis===bisFil);});
+  var inc=todT.filter(x=>x.tipe==='income').reduce((a,b)=>a+Number(b.nominal),0);
+  var exp=todT.filter(x=>x.tipe==='expense').reduce((a,b)=>a+Number(b.nominal),0);
+  document.getElementById('s-inc').textContent=fmt(inc);
+  document.getElementById('s-exp').textContent=fmt(exp);
+  var lb=inc-exp,le=document.getElementById('s-laba');le.textContent=fmt(lb);le.style.color=lb>=0?'var(--primary)':'var(--expense)';
+  var el=document.getElementById('trx-today');
+  el.innerHTML=todT.length?todT.map(x=>trxHTML(x,transaksi.indexOf(x))).join(''):'<div class="empty"><div class="ei">📋</div><p>Belum ada transaksi hari ini</p></div>';
+  var we=document.getElementById('trx-week');
+  if(!wkT.length){we.innerHTML='<div style="color:var(--muted);font-size:13px;text-align:center;padding:14px;">Tidak ada transaksi minggu ini</div>';return;}
+  var grp={};wkT.forEach(x=>{if(!grp[x.tanggal])grp[x.tanggal]=[];grp[x.tanggal].push(x);});
+  we.innerHTML=Object.keys(grp).sort((a,b)=>b>a?1:-1).map(d=>'<div style="font-size:11px;font-weight:700;color:var(--muted);padding:5px 0 2px;">'+fmtD(d)+'</div>'+grp[d].map(x=>trxHTML(x,transaksi.indexOf(x))).join('')).join('');
+}
+function trxHTML(x,idx){
+  var isI=x.tipe==='income';
+  var delBtn=_isOwner?'<button class="tag-del" onclick="hapusTrx('+idx+')">🗑</button>':'';
+  var jamStr=x.jam?'<span style="font-size:10px;color:var(--muted);margin-left:4px;">⏰ '+x.jam+'</span>':'';
+  return '<div class="ti"><div class="tic '+x.tipe+'">'+(isI?'💰':'💸')+'</div><div class="tii"><div class="k">'+x.keterangan+'</div><div class="m"><span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span> · '+x.kategori+jamStr+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;"><div class="tam '+x.tipe+'">'+(isI?'+':'-')+fmt(Number(x.nominal))+'</div>'+delBtn+'</div></div>';
+}
+async function hapusTrx(idx){
+  if(!confirm('Hapus?'))return;
+  var id=transaksi[idx].id;
+  transaksi.splice(idx,1);sd('trx_data',transaksi);renderTrx();
+  await cAction({action:'del_trx',id:id});
+}
+function openTrxModal(){document.getElementById('trx-tgl').value=today();document.getElementById('m-trx').classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+async function simpanTrx(){
+  var b=document.getElementById('trx-bisnis').value,tp=document.getElementById('trx-tipe').value,
+      k=document.getElementById('trx-kat').value,ke=document.getElementById('trx-ket').value.trim(),
+      n=parseFloat(document.getElementById('trx-nom').value),tg=document.getElementById('trx-tgl').value;
+  if(!ke||!n||n<=0){alert('Isi keterangan dan nominal!');return;}
+  var _n0=new Date(),_j0=String(_n0.getHours()).padStart(2,'0')+':'+String(_n0.getMinutes()).padStart(2,'0');
+  var item={id:uid(),bisnis:b,tipe:tp,kategori:k,keterangan:ke,nominal:n,tanggal:tg||today(),jam:_j0};
+  transaksi.push(item);sd('trx_data',transaksi);
+  document.getElementById('trx-ket').value='';document.getElementById('trx-nom').value='';
+  closeM('m-trx');renderTrx();setSyncBadge('ing');
+  await cAction({action:'add_trx',data:encodeURIComponent(JSON.stringify(item))});
+  setSyncBadge('ok');
+}
+
+// ══════════════════════════════════════════════
+// BON WA
+// ══════════════════════════════════════════════
+var bonType='kucing';
+var bkSel=[]; // {id,nama,harga_def,harga_custom,satuan,qty,is_custom}
+var blSvcId=null;
+var blSatSel=[]; // {id,nama,qty,harga_custom,is_custom,custom_nama}
+var laundryAntrian=[]; // antrian laundry masuk belum diambil
+
+function loadAntrian(){ laundryAntrian=gd('laundry_antrian',[]); }
+function saveAntrian(){ sd('laundry_antrian',laundryAntrian); }
+
+function setBonType(t){
+  bonType=t;
+  document.getElementById('bon-kucing').style.display=t==='kucing'?'block':'none';
+  document.getElementById('bon-laundry').style.display=t==='laundry'?'block':'none';
+  document.getElementById('bon-laundry-keluar').style.display=t==='laundry_keluar'?'block':'none';
+  document.getElementById('bbt-cat').className='bbt'+(t==='kucing'?' ac':'');
+  document.getElementById('bbt-lau').className='bbt'+(t==='laundry'?' al':'');
+  document.getElementById('bbt-laukeluar').className='bbt'+(t==='laundry_keluar'?' al':'');
+  document.getElementById('bon-result').style.display='none';
+  if(t==='laundry_keluar'){loadAntrian();renderAntrian();}
+  renderBonForms();
+}
+
+function renderAntrian(){
+  loadAntrian();
+  var pending=laundryAntrian.filter(function(x){return x.status==='pending';});
+  // Update badge
+  var bdg=document.getElementById('antrian-badge');
+  if(bdg){if(pending.length){bdg.textContent=pending.length;bdg.style.display='inline';}else{bdg.style.display='none';}}
+  var el=document.getElementById('antrian-list');
+  if(!el)return;
+  if(!pending.length){
+    el.innerHTML='<div class="empty"><div class="ei">👕</div><p>Belum ada laundry masuk yang menunggu</p></div>';
+    return;
+  }
+  el.innerHTML=pending.map(function(a){
+    var hariMasuk=a.tanggal_masuk?fmtD(a.tanggal_masuk):'?';
+    var detail=a.layanan+(a.berat?' '+a.berat+'kg':'')+(a.catatan?' · '+a.catatan:'');
+    return '<div class="antrian-item" onclick="pilihAntrian(\''+a.id+'\')">'
+      +'<div class="ai-nama">'+a.nama+'</div>'
+      +'<div class="ai-detail">'+detail+'</div>'
+      +'<div class="ai-total">'+fmtF(a.total)+'</div>'
+      +'<div class="ai-badge">📅 Masuk: '+hariMasuk+(a.jam_masuk?' ⏰ '+a.jam_masuk:'')+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function pilihAntrian(id){
+  loadAntrian();
+  var a=laundryAntrian.find(function(x){return x.id===id;});
+  if(!a)return;
+  if(!confirm('✅ Konfirmasi pengambilan laundry milik '+a.nama+'?\n\nTotal: '+fmtF(a.total)+'\n\nTransaksi akan tercatat sebagai pemasukan hari ini.'))return;
+  catatLaundryKeluar(a);
+}
+
+async function catatLaundryKeluar(a){
+  var now=new Date();
+  var jam=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  var ket='Laundry Keluar - '+a.nama+(a.layanan?' ('+a.layanan+(a.berat?' '+a.berat+'kg':'')+')':'');
+  var item={id:uid(),bisnis:'laundry',tipe:'income',kategori:'Laundry',keterangan:ket,nominal:a.total,tanggal:today(),jam:jam};
+  transaksi.push(item);sd('trx_data',transaksi);
+  // update status antrian
+  a.status='selesai'; a.tanggal_keluar=today(); a.jam_keluar=jam;
+  saveAntrian();
+  renderAntrian();renderTrx();
+  setSyncBadge('ing');
+  await cAction({action:'add_trx',data:encodeURIComponent(JSON.stringify(item))});
+  setSyncBadge('ok');
+  // Generate WA terima kasih
+  generateBonKeluar(a,item);
+}
+
+function generateBonKeluar(a,trx){
+  var M=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  var now=new Date();
+  var tglStr=now.getDate()+' '+M[now.getMonth()]+' '+now.getFullYear();
+  var txt='👕 *SISTER LAUNDRY*\n';
+  txt+='━━━━━━━━━━━━━━━━━\n';
+  txt+='✅ *Laundry Selesai & Siap Diambil*\n\n';
+  txt+='👤 Pelanggan: *'+a.nama+'*\n';
+  txt+='🧺 Layanan: '+a.layanan+(a.berat?' ('+a.berat+' kg)':'')+'\n';
+  if(a.catatan) txt+='📝 Catatan: '+a.catatan+'\n';
+  txt+='━━━━━━━━━━━━━━━━━\n';
+  txt+='💰 *Total: '+fmtF(a.total)+'*\n';
+  txt+='📅 Tanggal Ambil: '+tglStr+'\n\n';
+  txt+='🙏 Terima kasih sudah mempercayakan laundry ke *Sister Laundry*!\n\n';
+  txt+='✨ Pakaian sudah bersih, wangi, dan siap pakai.\n\n';
+  txt+='💬 _Puas dengan pelayanan kami? Ajak teman & keluarga ya!_\n';
+  txt+='📱 Sister Laundry & Pet Shop — Pelayanan Terbaik untuk Keluarga Anda 🐾';
+  document.getElementById('bon-text').textContent=txt;
+  document.getElementById('bon-result').style.display='block';
+  document.getElementById('bon-result').scrollIntoView({behavior:'smooth'});
+}
+
+// ─── KUCING BON ────────────────────────────────
+function renderProdGrid(){
+  var prods=katalog.filter(p=>p.bisnis==='kucing'&&p.aktif);
+  var g=document.getElementById('prod-grid');
+  if(!prods.length){g.innerHTML='<div style="color:var(--muted);font-size:12px;grid-column:1/-1;">Katalog kosong</div>';return;}
+  g.innerHTML=prods.map(p=>{
+    var isSel=bkSel.some(s=>s.id===p.id);
+    var stk='';
+    if(p.stok!==null&&p.stok!==undefined){
+      var sc=p.stok>10?'stk-hi':p.stok>4?'stk-mid':'stk-lo';
+      stk='<span class="stk-badge '+sc+'">'+p.stok+'</span>';
+    }
+    if(p.is_custom) return '<div class="pc pc-custom'+(isSel?' sel':'')+'" onclick="toggleCustomCard()"><div class="pn">✏️ Lainnya</div><div class="ph">Harga custom</div></div>';
+    return '<div class="pc'+(isSel?' sel':'')+'" onclick="toggleProd(\''+p.id+'\')">'+(stk)+'<div class="pn">'+p.nama_produk+'</div><div class="ph">'+fmtF(p.harga)+'</div></div>';
+  }).join('');
+}
+function toggleCustomCard(){
+  var row=document.getElementById('bk-custom-row');
+  row.style.display=row.style.display==='none'?'block':'none';
+}
+function addCustomKucing(){
+  var nama=document.getElementById('bk-cust-nama').value.trim();
+  var harga=parseFloat(document.getElementById('bk-cust-harga').value)||0;
+  var qty=parseInt(document.getElementById('bk-cust-qty').value)||1;
+  if(!nama){alert('Isi nama produk!');return;}
+  bkSel.push({id:'c'+uid(),nama,harga_def:harga,harga_custom:harga,satuan:'pcs',qty,is_custom:true});
+  document.getElementById('bk-cust-nama').value='';document.getElementById('bk-cust-harga').value='';
+  document.getElementById('bk-cust-qty').value='1';
+  renderSelItems();
+}
+function toggleProd(pid){
+  var p=katalog.find(x=>x.id===pid);if(!p)return;
+  var idx=bkSel.findIndex(s=>s.id===pid);
+  if(idx>=0){bkSel.splice(idx,1);}
+  else{bkSel.push({id:p.id,nama:p.nama_produk,harga_def:p.harga,harga_custom:p.harga,satuan:p.satuan,qty:1,is_custom:false});}
+  renderProdGrid();renderSelItems();
+}
+function changeQty(id,d){
+  var s=bkSel.find(x=>x.id===id);if(s){s.qty=Math.max(1,s.qty+d);renderSelItems();}
+}
+function startEditPrice(id){
+  document.getElementById('pp-show-'+id).style.display='none';
+  document.getElementById('pp-inp-'+id).style.display='flex';
+  document.getElementById('pi-'+id).focus();
+}
+function applyPrice(id){
+  var val=parseFloat(document.getElementById('pi-'+id).value)||0;
+  var s=bkSel.find(x=>x.id===id);
+  if(s){s.harga_custom=val;renderSelItems();}
+}
+function renderSelItems(){
+  var el=document.getElementById('bk-sel');
+  var total=bkSel.reduce((a,b)=>a+b.qty*(b.harga_custom||b.harga_def),0);
+  document.getElementById('bk-total-lbl').textContent=bkSel.length?'— Total: '+fmtF(total):'';
+  if(!bkSel.length){el.innerHTML='<div style="color:var(--muted);font-size:12px;text-align:center;padding:8px;">Belum ada item dipilih</div>';return;}
+  el.innerHTML=bkSel.map(s=>{
+    var harga=s.harga_custom||s.harga_def;
+    var sub=s.qty*harga;
+    return '<div class="si" id="si-'+s.id+'">'+
+      '<div class="sn">'+s.nama+'</div>'+
+      '<div class="qty-c"><button class="qbtn" onclick="changeQty(\''+s.id+'\',-1)">−</button><div class="qval">'+s.qty+'</div><button class="qbtn" onclick="changeQty(\''+s.id+'\',1)">+</button></div>'+
+      '<div id="pp-show-'+s.id+'" class="price-pill" onclick="startEditPrice(\''+s.id+'\')"><span class="pp-val">'+fmtF(harga)+'</span><span class="pp-edit">✏️</span></div>'+
+      '<div id="pp-inp-'+s.id+'" class="price-input-wrap"><input id="pi-'+s.id+'" type="number" value="'+harga+'" onchange="applyPrice(\''+s.id+'\')" onblur="renderSelItems()"></div>'+
+      '<div class="si-sub">'+fmtF(sub)+'</div>'+
+      '<button class="tag-del" onclick="removeSel(\''+s.id+'\')">✕</button></div>';
+  }).join('');
+}
+function removeSel(id){bkSel=bkSel.filter(x=>x.id!==id);renderProdGrid();renderSelItems();}
+
+// ─── LAUNDRY BON ──────────────────────────────
+function renderSvcGrid(){
+  var svcs=katalog.filter(x=>x.bisnis==='laundry'&&x.tipe==='per_kg'&&x.aktif);
+  var g=document.getElementById('svc-grid');
+  g.innerHTML=svcs.map(s=>'<div class="svc-card'+(blSvcId===s.id?' sel':'')+'" onclick="selectSvc(\''+s.id+'\')"><div class="svn">'+s.nama_produk+'</div><div class="svh">'+fmtF(s.harga)+'/kg</div></div>').join('');
+}
+// Estimasi hari per layanan
+var EST_HARI = {
+  'Cuci Gosok Biasa':  {hari:3, label:'3 hari', color:'#0EA5E9'},
+  'Cuci Gosok Express':{hari:1, label:'Express 1 hari', color:'#F59E0B'},
+  'Gosok Biasa':       {hari:2, label:'2 hari', color:'#0EA5E9'},
+  'Gosok Express':     {hari:1, label:'Express 1 hari', color:'#F59E0B'},
+  'Cuci Kering':       {hari:2, label:'2 hari', color:'#0EA5E9'},
+};
+function selectSvc(id){
+  blSvcId=blSvcId===id?null:id;
+  var svc=katalog.find(x=>x.id===id);
+  var box=document.getElementById('bl-berat-box');
+  if(blSvcId&&svc){
+    document.getElementById('bl-svc-name').textContent=svc.nama_produk+' — '+fmtF(svc.harga)+'/kg';
+    document.getElementById('bl-hpkg').textContent=fmtF(svc.harga);
+    box.style.display='block'; updateBeratSubtotal();
+    // Auto-hitung estimasi selesai
+    var est=EST_HARI[svc.nama_produk];
+    var badge=document.getElementById('bl-est-badge');
+    if(est){
+      var d=new Date(); d.setDate(d.getDate()+est.hari);
+      document.getElementById('bl-selesai').value=d.toISOString().slice(0,10);
+      badge.textContent='⚡ Auto '+est.label;
+      badge.style.background=est.color+'22';
+      badge.style.color=est.color;
+      badge.style.display='inline';
+    } else {
+      badge.style.display='none';
+    }
+  } else {
+    box.style.display='none';
+    document.getElementById('bl-est-badge').style.display='none';
+  }
+  renderSvcGrid();
+}
+function updateBeratSubtotal(){
+  var berat=parseFloat(document.getElementById('bl-berat').value)||0;
+  var svc=katalog.find(x=>x.id===blSvcId);
+  document.getElementById('bl-sub-kg').textContent='= '+fmtF(berat*(svc?svc.harga:0));
+}
+function renderSatGrid(){
+  var sats=katalog.filter(x=>x.bisnis==='laundry'&&x.tipe==='satuan'&&x.aktif);
+  var g=document.getElementById('sat-grid');
+  g.innerHTML=sats.map(s=>{
+    var isSel=blSatSel.some(x=>x.id===s.id);
+    if(s.is_custom)return '<div class="sat-card'+(isSel?' sel':'')+'" onclick="toggleSat(\''+s.id+'\')"><div class="stn">✏️</div><div class="stp">Lainnya</div></div>';
+    return '<div class="sat-card'+(isSel?' sel':'')+'" onclick="toggleSat(\''+s.id+'\')"><div class="stn">'+s.nama_produk+'</div><div class="stp">Harga custom</div></div>';
+  }).join('');
+}
+function toggleSat(id){
+  var p=katalog.find(x=>x.id===id);if(!p)return;
+  var idx=blSatSel.findIndex(x=>x.id===id);
+  if(idx>=0){blSatSel.splice(idx,1);}
+  else{blSatSel.push({id:p.id,nama:p.nama_produk,qty:1,harga_custom:0,is_custom:p.is_custom||false,custom_nama:''});}
+  renderSatGrid();renderSatSel();
+}
+function renderSatSel(){
+  var el=document.getElementById('sat-sel');
+  if(!blSatSel.length){el.style.display='none';return;}
+  el.style.display='block';
+  el.innerHTML=blSatSel.map(s=>'<div class="sat-row">'+
+    (s.is_custom?'<input style="flex:1;padding:5px 7px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;" placeholder="Nama item" value="'+s.custom_nama+'" oninput="updateSatNama(\''+s.id+'\',this.value)">':'<div class="satn">'+s.nama+'</div>')+
+    '<div class="qty-c"><button class="qbtn" onclick="changeSatQty(\''+s.id+'\',-1)">−</button><div class="qval">'+s.qty+'</div><button class="qbtn" onclick="changeSatQty(\''+s.id+'\',1)">+</button></div>'+
+    '<input type="number" placeholder="Harga" value="'+(s.harga_custom||'')+'" oninput="updateSatHarga(\''+s.id+'\',this.value)" style="width:85px;padding:5px 7px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;text-align:right;">'+
+    '<div class="si-sub">'+fmtF(s.qty*(s.harga_custom||0))+'</div>'+
+    '<button class="tag-del" onclick="removeSat(\''+s.id+'\')">✕</button></div>'
+  ).join('');
+}
+function updateSatNama(id,v){var s=blSatSel.find(x=>x.id===id);if(s)s.custom_nama=v;}
+function updateSatHarga(id,v){var s=blSatSel.find(x=>x.id===id);if(s){s.harga_custom=parseFloat(v)||0;renderSatSel();}}
+function changeSatQty(id,d){var s=blSatSel.find(x=>x.id===id);if(s){s.qty=Math.max(1,s.qty+d);renderSatSel();}}
+function removeSat(id){blSatSel=blSatSel.filter(x=>x.id!==id);renderSatGrid();renderSatSel();}
+
+function renderBonForms(){renderProdGrid();renderSelItems();renderSvcGrid();renderSatGrid();renderSatSel();}
+
+// ─── GENERATE BON ─────────────────────────────
+var _lastBon = null; // simpan data bon terakhir untuk "Catat ke Transaksi"
+function showLauErr(msg){
+  var el=document.getElementById('bon-lau-err');
+  if(!el)return;
+  el.textContent='⚠️ '+msg;
+  el.style.display='block';
+  el.scrollIntoView({behavior:'smooth'});
+}
+function hideLauErr(){
+  var el=document.getElementById('bon-lau-err');
+  if(el){el.style.display='none';el.textContent='';}
+}
+function showKatErr(msg){
+  var el=document.getElementById('bon-kat-err');
+  if(!el)return;
+  el.textContent='⚠️ '+msg;
+  el.style.display='block';
+  el.scrollIntoView({behavior:'smooth'});
+}
+function hideKatErr(){
+  var el=document.getElementById('bon-kat-err');
+  if(el){el.style.display='none';el.textContent='';}
+}
+
+function generateBon(){
+  try{
+  var now=new Date();
+  var M=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  var tgl=now.getDate()+' '+M[now.getMonth()]+' '+now.getFullYear();
+  var txt='';
+
+  if(bonType==='kucing'){
+    hideKatErr();
+    var nama=document.getElementById('bk-nama').value||'Pelanggan';
+    var cat=document.getElementById('bk-catatan').value;
+    if(!bkSel.length){showKatErr('Pilih minimal 1 produk dulu!');return;}
+    var total=bkSel.reduce((a,b)=>a+b.qty*(b.harga_custom||b.harga_def),0);
+    txt='🐾 *SISTER LAUNDRY DAN PET SHOP*\n';
+    txt+='📅 '+tgl+'\n\n';
+    txt+='👤 Pelanggan: *'+nama+'*\n';
+    txt+='━━━━━━━━━━━━━━━━━━━━\n';
+    bkSel.forEach(s=>{
+      var h=s.harga_custom||s.harga_def;
+      txt+='• '+s.nama+'\n';
+      txt+='  '+s.qty+' x '+fmtF(h)+' = *'+fmtF(s.qty*h)+'*\n';
+    });
+    txt+='━━━━━━━━━━━━━━━━━━━━\n';
+    txt+='💰 *TOTAL: '+fmtF(total)+'*\n';
+    if(cat)txt+='\n📝 '+cat+'\n';
+    txt+='\nTerima kasih sudah berbelanja! 🐱\n_Sister Laundry & Pet Shop_';
+  } else {
+    // LAUNDRY MASUK — simpan ke antrian, tidak langsung income
+    hideLauErr();
+    var nama=document.getElementById('bl-nama').value.trim();
+    var svc=blSvcId?katalog.find(function(x){return x.id===blSvcId;}):null;
+    var berat=parseFloat(document.getElementById('bl-berat').value)||0;
+    var tgMasuk=document.getElementById('bl-masuk').value||today();
+    var tgSelesai=document.getElementById('bl-selesai').value;
+    var cat=document.getElementById('bl-catatan').value;
+    var subKg=svc?berat*svc.harga:0;
+    var subSat=blSatSel.reduce(function(a,b){return a+b.qty*(b.harga_custom||0);},0);
+    var total=subKg+subSat;
+    if(!nama){showLauErr('Isi nama pelanggan dulu!');return;}
+    if(!svc&&!blSatSel.length){showLauErr('Pilih layanan laundry dulu!');return;}
+    if(!total){showLauErr('Total 0 — pilih layanan dan isi berat (kg)!');return;}
+
+    // Simpan ke antrian
+    var nowJam=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    var antrian={
+      id:uid(), nama:nama,
+      layanan:svc?svc.nama_produk:'',
+      berat:berat, harga_per_kg:svc?svc.harga:0,
+      satuan_items:blSatSel.slice(),
+      total:total, catatan:cat,
+      tanggal_masuk:tgMasuk, jam_masuk:nowJam,
+      estimasi_selesai:tgSelesai, status:'pending'
+    };
+    loadAntrian(); laundryAntrian.push(antrian); saveAntrian();
+
+    // Generate WA konfirmasi masuk
+    txt='👕 *SISTER LAUNDRY DAN PET SHOP*\n';
+    txt+='📥 *Konfirmasi Laundry Masuk*\n';
+    txt+='━━━━━━━━━━━━━━━━━━━━\n';
+    txt+='👤 Pelanggan: *'+nama+'*\n';
+    txt+='📅 Tanggal Masuk: '+fmtD(tgMasuk)+'\n';
+    if(svc&&berat>0){
+      txt+='\n🧺 *'+svc.nama_produk+'*\n';
+      txt+='⚖️ '+berat+' kg × '+fmtF(svc.harga)+'/kg = *'+fmtF(subKg)+'*\n';
+    }
+    if(blSatSel.length){
+      txt+='\n📦 Item Satuan:\n';
+      blSatSel.forEach(function(s){
+        var nm=s.is_custom?(s.custom_nama||'Lainnya'):s.nama;
+        txt+='• '+nm+' x'+s.qty+' = *'+fmtF(s.qty*(s.harga_custom||0))+'*\n';
+      });
+    }
+    txt+='━━━━━━━━━━━━━━━━━━━━\n';
+    txt+='💰 *TOTAL: '+fmtF(total)+'*\n';
+    if(tgSelesai)txt+='\n⏳ Estimasi Selesai: *'+fmtD(tgSelesai)+'*\n';
+    if(cat)txt+='\n📝 Catatan: '+cat+'\n';
+    txt+='\nTerima kasih sudah mempercayakan laundry ke Sister! 🙏\n';
+    txt+='Kami akan kabari jika sudah selesai ya 😊\n_Sister Laundry & Pet Shop_';
+
+    // Sembunyikan tombol "Catat ke Transaksi" untuk laundry masuk
+    document.getElementById('btn-catat').style.display='none';
+    document.getElementById('catat-info').style.display='block';
+    document.getElementById('catat-info').innerHTML='✅ <b>Laundry '+nama+' sudah masuk antrian!</b><br>Pencatatan income saat laundry diambil (tab Laundry Keluar).';
+  }
+  document.getElementById('bon-text').textContent=txt;
+  document.getElementById('bon-result').style.display='block';
+  document.getElementById('bon-result').scrollIntoView({behavior:'smooth'});
+  if(bonType==='kucing'){
+    document.getElementById('btn-catat').style.display='block';
+    document.getElementById('btn-catat').textContent='📒 Catat ke Transaksi';
+    document.getElementById('btn-catat').disabled=false;
+    document.getElementById('catat-info').style.display='none';
+  }
+  }catch(err){
+    // Tangkap error JS dan tampilkan ke user (berguna saat testing di file://)
+    var errTarget=bonType==='laundry'?document.getElementById('bon-lau-err'):document.getElementById('bon-kat-err');
+    if(errTarget){errTarget.textContent='⚠️ Error JS: '+err.message;errTarget.style.display='block';}
+    console.error('generateBon error:',err);
+  }
+}
+async function catatTrx(){
+  var btn=document.getElementById('btn-catat');
+  if(btn.disabled)return;
+  var nama, total, bisnis, ket;
+  if(bonType==='kucing'){
+    nama=document.getElementById('bk-nama').value||'Pelanggan';
+    total=bkSel.reduce((a,b)=>a+b.qty*(b.harga_custom||b.harga_def),0);
+    bisnis='kucing';
+    var items=bkSel.map(s=>s.qty>1?s.nama+' x'+s.qty:s.nama).join(', ');
+    ket='Penjualan ke '+nama+' ('+items+')';
+  } else {
+    nama=document.getElementById('bl-nama').value||'Pelanggan';
+    var svc=blSvcId?katalog.find(x=>x.id===blSvcId):null;
+    var berat=parseFloat(document.getElementById('bl-berat').value)||0;
+    var subKg=svc?berat*svc.harga:0;
+    var subSat=blSatSel.reduce((a,b)=>a+b.qty*(b.harga_custom||0),0);
+    total=subKg+subSat;
+    bisnis='laundry';
+    ket='Laundry '+nama+(svc?' - '+svc.nama_produk+(berat?' '+berat+'kg':''):'');
+  }
+  if(!total||total<=0){alert('Total 0, tidak ada yang dicatat.');return;}
+  var _nc=new Date(),_jc=String(_nc.getHours()).padStart(2,'0')+':'+String(_nc.getMinutes()).padStart(2,'0');
+  var item={id:uid(),bisnis,tipe:'income',kategori:bisnis==='kucing'?'Penjualan':'Laundry',keterangan:ket,nominal:total,tanggal:today(),jam:_jc};
+  transaksi.push(item);sd('trx_data',transaksi);
+
+  // ── Auto-kurangi stok untuk item pet shop ─────────────────────────────
+  if(bisnis==='kucing'){
+    var stokBerubah=[];
+    bkSel.forEach(function(s){
+      if(s.is_custom)return; // item custom tidak ada di katalog
+      var p=katalog.find(function(k){return k.id===s.id;});
+      if(p&&p.stok!==null&&p.stok!==undefined){
+        p.stok=Math.max(0, p.stok - s.qty);
+        stokBerubah.push(p);
+      }
+    });
+    if(stokBerubah.length){
+      sd('kat_v3',katalog);
+      renderStok();renderProdGrid();
+      // sync stok ke cloud
+      stokBerubah.forEach(async function(p){
+        await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(p))});
+      });
+    }
+  }
+
+  btn.textContent='✅ Tercatat!';btn.disabled=true;
+  document.getElementById('catat-info').style.display='block';
+  document.getElementById('catat-info').textContent='✅ Tercatat: '+fmtF(total)+' – '+ket.substring(0,50)+(ket.length>50?'...':'');
+  setSyncBadge('ing');
+  await cAction({action:'add_trx',data:encodeURIComponent(JSON.stringify(item))});
+  setSyncBadge('ok');
+  // ── Reset form bon setelah tercatat ──
+  setTimeout(function(){
+    bkSel=[]; blSvcId=null; blSatSel=[];
+    document.getElementById('bk-nama').value='';
+    document.getElementById('bl-nama').value='';
+    var beratEl=document.getElementById('bl-berat'); if(beratEl) beratEl.value='';
+    document.getElementById('bon-result').style.display='none';
+    document.getElementById('catat-info').style.display='none';
+    btn.textContent='📒 Catat ke Transaksi'; btn.disabled=false;
+    renderBonForms();
+  }, 1500);
+}
+function copyBon(){
+  var t=document.getElementById('bon-text').textContent;
+  navigator.clipboard.writeText(t).then(()=>{
+    var b=document.querySelector('#bon-result .btn-c');b.textContent='✅ Tersalin!';
+    setTimeout(()=>{b.textContent='📋 Copy Teks';},2000);
+  }).catch(()=>{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);alert('Tersalin!');});
+}
+function kirimWA(){window.open('https://wa.me/?text='+encodeURIComponent(document.getElementById('bon-text').textContent),'_blank');}
+
+// ══════════════════════════════════════════════
+// BON VISUAL + QRIS
+// ══════════════════════════════════════════════
+function uploadQRIS(inp){
+  var file=inp.files[0]; if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    localStorage.setItem('wk_qris',e.target.result);
+    renderQRISInBon(e.target.result);
+  };
+  reader.readAsDataURL(file);
+}
+function renderQRISInBon(src){
+  if(src){
+    document.getElementById('bv-qris-img').src=src;
+    document.getElementById('bv-qris-section').style.display='block';
+    document.getElementById('bv-qris-placeholder').style.display='none';
+    document.getElementById('qris-setup').style.display='none';
+    document.getElementById('qris-change-row').style.display='block';
+  } else {
+    document.getElementById('bv-qris-section').style.display='none';
+    document.getElementById('bv-qris-placeholder').style.display='block';
+    document.getElementById('qris-setup').style.display='block';
+    document.getElementById('qris-change-row').style.display='none';
+  }
+}
+function openBonVisual(){
+  // Isi data bon ke struk visual
+  var now=new Date();
+  var M=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  var D=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  document.getElementById('bv-tanggal').textContent=D[now.getDay()]+', '+now.getDate()+' '+M[now.getMonth()]+' '+now.getFullYear();
+
+  var itemsHtml='', total=0, namaEl='';
+  if(bonType==='kucing'){
+    namaEl=document.getElementById('bk-nama').value||'Pelanggan';
+    if(!bkSel.length){alert('Generate bon dulu!');return;}
+    itemsHtml=bkSel.map(function(s){
+      var h=s.harga_custom||s.harga_def, sub=s.qty*h;total+=sub;
+      return '<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;border-bottom:1px solid #F1F5F9;">'
+        +'<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:600;color:#1E293B;">'+s.nama+'</div>'
+        +'<div style="font-size:11px;color:#64748B;">'+s.qty+' × '+fmtF(h)+'</div></div>'
+        +'<div style="font-size:13px;font-weight:700;color:#1E293B;flex-shrink:0;">'+fmtF(sub)+'</div></div>';
+    }).join('');
+  } else {
+    namaEl=document.getElementById('bl-nama').value||'Pelanggan';
+    var svc=blSvcId?katalog.find(function(x){return x.id===blSvcId;}):null;
+    var berat=parseFloat(document.getElementById('bl-berat').value)||0;
+    if(svc&&berat>0){
+      var subKg=berat*svc.harga; total+=subKg;
+      itemsHtml+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #F1F5F9;">'
+        +'<div><div style="font-size:12px;font-weight:600;color:#1E293B;">'+svc.nama_produk+'</div>'
+        +'<div style="font-size:11px;color:#64748B;">'+berat+' kg × '+fmtF(svc.harga)+'/kg</div></div>'
+        +'<div style="font-size:13px;font-weight:700;">'+fmtF(subKg)+'</div></div>';
+    }
+    blSatSel.forEach(function(s){
+      var nm=s.is_custom?(s.custom_nama||'Lainnya'):s.nama;
+      var sub=s.qty*(s.harga_custom||0); total+=sub;
+      itemsHtml+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #F1F5F9;">'
+        +'<div><div style="font-size:12px;font-weight:600;">'+nm+'</div>'
+        +'<div style="font-size:11px;color:#64748B;">'+s.qty+' pcs</div></div>'
+        +'<div style="font-size:13px;font-weight:700;">'+fmtF(sub)+'</div></div>';
+    });
+    if(!svc&&!blSatSel.length){alert('Generate bon dulu!');return;}
+  }
+  document.getElementById('bv-nama').textContent=namaEl;
+  document.getElementById('bv-items').innerHTML=itemsHtml||'<div style="color:#94A3B8;font-size:12px;text-align:center;padding:8px;">Tidak ada item</div>';
+  document.getElementById('bv-total').textContent=fmtF(total);
+
+  // Load QRIS dari localStorage
+  var qris=localStorage.getItem('wk_qris');
+  renderQRISInBon(qris||null);
+  document.getElementById('m-bon-visual').classList.add('open');
+}
+
+// Init bon dates
+(function(){
+  document.getElementById('bl-masuk').value=today();
+  var tmr=new Date();tmr.setDate(tmr.getDate()+2);
+  document.getElementById('bl-selesai').value=tmr.toISOString().slice(0,10);
+})();
+
+// ══════════════════════════════════════════════
+// LAPORAN
+// ══════════════════════════════════════════════
+var lapPeriod='hari',lapBis='semua';
+function setPeriod(v,el){lapPeriod=v;document.querySelectorAll('.pp').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderLap();}
+function fLap(v,el){lapBis=v;document.querySelectorAll('#tab-laporan .pill').forEach(p=>{p.classList.remove('a-all','a-cat','a-lau');});el.classList.add(v==='semua'?'a-all':v==='kucing'?'a-cat':'a-lau');renderLap();}
+function getRng(){
+  var t=today();
+  if(lapPeriod==='hari')return{f:t,to:t};
+  if(lapPeriod==='minggu'){var d=new Date();d.setDate(d.getDate()-6);return{f:d.toISOString().slice(0,10),to:t};}
+  if(lapPeriod==='bulan')return{f:t.slice(0,7)+'-01',to:t};
+  return{f:'2000-01-01',to:'2099-12-31'};
+}
+function renderLap(){
+  var rng=getRng();
+  var fil=transaksi.filter(x=>x.tanggal>=rng.f&&x.tanggal<=rng.to&&(lapBis==='semua'||x.bisnis===lapBis));
+  var inc=fil.filter(x=>x.tipe==='income').reduce((a,b)=>a+Number(b.nominal),0);
+  var exp=fil.filter(x=>x.tipe==='expense').reduce((a,b)=>a+Number(b.nominal),0);
+  document.getElementById('l-inc').textContent=fmt(inc);
+  document.getElementById('l-exp').textContent=fmt(exp);
+  var lb=inc-exp;var le=document.getElementById('l-laba');le.textContent=fmt(lb);le.style.color=lb>=0?'var(--primary)':'var(--expense)';
+  var ll=document.getElementById('l-list');
+  ll.innerHTML=fil.length?[...fil].sort((a,b)=>b.tanggal>a.tanggal?1:-1).map(x=>'<div class="lrow"><div><div style="font-size:13px;font-weight:600;">'+x.keterangan+'</div><div class="ld">'+fmtD(x.tanggal)+(x.jam?' ⏰ '+x.jam:'')+' · <span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span></div></div><div class="ln '+x.tipe+'">'+(x.tipe==='income'?'+':'-')+fmt(Number(x.nominal))+'</div></div>').join(''):'<div class="empty"><div class="ei">📊</div><p>Belum ada data</p></div>';
+  // chart
+  var d7=[];for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);d7.push(d.toISOString().slice(0,10));}
+  var cd=d7.map(date=>{var dt=transaksi.filter(x=>x.tanggal===date&&(lapBis==='semua'||x.bisnis===lapBis));return{date,inc:dt.filter(x=>x.tipe==='income').reduce((a,b)=>a+Number(b.nominal),0),exp:dt.filter(x=>x.tipe==='expense').reduce((a,b)=>a+Number(b.nominal),0)};});
+  var mx=Math.max(...cd.map(x=>Math.max(x.inc,x.exp)),1);
+  var dn=['M','S','S','R','K','J','S'];
+  document.getElementById('bch').innerHTML=cd.map(d=>{var dt=new Date(d.date+'T00:00:00');return '<div class="bw"><div class="bar income" style="height:'+Math.round(d.inc/mx*68)+'px;"></div><div class="bar expense" style="height:'+Math.round(d.exp/mx*68)+'px;"></div><div class="blbl">'+dn[dt.getDay()]+'</div></div>';}).join('');
+}
+
+// ══════════════════════════════════════════════
+// UTANG
+// ══════════════════════════════════════════════
+var utangFil='aktif';
+function fUtang(v,el){utangFil=v;document.querySelectorAll('#tab-utang .pill').forEach(p=>{p.classList.remove('a-all');});el.classList.add('a-all');renderUtang();}
+function renderUtang(){
+  var act=utangData.filter(x=>!x.lunas);
+  document.getElementById('total-utang').textContent=fmtF(act.reduce((a,b)=>a+Number(b.nominal),0));
+  document.getElementById('utang-cnt').textContent=act.length+' pelanggan';
+  var data=utangFil==='aktif'?act:utangData.filter(x=>x.lunas);
+  var el=document.getElementById('utang-list');
+  if(!data.length){el.innerHTML='<div class="empty"><div class="ei">'+(utangFil==='aktif'?'🎉':'📋')+'</div><p>'+(utangFil==='aktif'?'Tidak ada utang aktif!':'Belum ada yang lunas')+'</p></div>';return;}
+  el.innerHTML=data.map(x=>{
+    var ri=utangData.indexOf(x);
+    return '<div class="ui"><div class="uav" style="background:'+(x.bisnis==='kucing'?'var(--cat)':'var(--laundry)')+'">'+x.nama.charAt(0).toUpperCase()+'</div><div class="uin"><div class="un">'+x.nama+' <span class="badge '+x.bisnis+'">'+(x.bisnis==='kucing'?'Pet Shop':'Laundry')+'</span></div><div class="uk">'+x.keterangan+' · '+fmtD(x.tanggal)+'</div>'+(!x.lunas?'<button class="btn-lunas" onclick="lunaskan('+ri+')">✅ Lunas</button>':'<span style="font-size:10px;color:var(--income);font-weight:700;">✅ Lunas</span>')+'</div><div style="text-align:right;"><div class="unom">'+fmtF(Number(x.nominal))+'</div><button class="tag-del" onclick="hapusUtang('+ri+')">🗑</button></div></div>';
+  }).join('');
+}
+function openUtangModal(){document.getElementById('u-tgl').value=today();document.getElementById('m-utang').classList.add('open');}
+async function simpanUtang(){
+  var nama=document.getElementById('u-nama').value.trim(),bisnis=document.getElementById('u-bisnis').value,
+      nom=parseFloat(document.getElementById('u-nom').value),ket=document.getElementById('u-ket').value.trim(),tgl=document.getElementById('u-tgl').value;
+  if(!nama||!nom||nom<=0){alert('Isi nama dan nominal!');return;}
+  var item={id:uid(),nama,bisnis,nominal:nom,keterangan:ket,tanggal:tgl||today(),lunas:false};
+  utangData.push(item);sd('utang_data',utangData);
+  document.getElementById('u-nama').value='';document.getElementById('u-nom').value='';document.getElementById('u-ket').value='';
+  closeM('m-utang');renderUtang();setSyncBadge('ing');
+  await cAction({action:'add_utang',data:encodeURIComponent(JSON.stringify(item))});
+  setSyncBadge('ok');
+}
+async function lunaskan(idx){
+  var id=utangData[idx].id;utangData[idx].lunas=true;utangData[idx].tgl_lunas=today();
+  sd('utang_data',utangData);renderUtang();setSyncBadge('ing');
+  await cAction({action:'lunas_utang',id:id,tgl:today()});setSyncBadge('ok');
+}
+async function hapusUtang(idx){
+  if(!confirm('Hapus?'))return;
+  var id=utangData[idx].id;utangData.splice(idx,1);sd('utang_data',utangData);renderUtang();
+  await cAction({action:'del_utang',id:id});
+}
+
+// ══════════════════════════════════════════════
+// STOK / KATALOG
+// ══════════════════════════════════════════════
+var stokFil='semua';
+var stokEditId=null;
+function fStok(v,el){stokFil=v;document.querySelectorAll('#tab-stok .pill').forEach(p=>{p.classList.remove('a-all','a-cat','a-lau');});el.classList.add(v==='semua'?'a-all':v==='kucing'?'a-cat':'a-lau');renderStok();}
+function renderStok(){
+  var data=katalog.filter(x=>stokFil==='semua'||(stokFil==='kucing'&&x.bisnis==='kucing')||(stokFil==='laundry'&&x.bisnis==='laundry'));
+  // Sort: stok paling sedikit di atas, layanan (null) paling bawah
+  data.sort(function(a,b){
+    var sa=a.stok!==null&&a.stok!==undefined?a.stok:99999;
+    var sb=b.stok!==null&&b.stok!==undefined?b.stok:99999;
+    return sa-sb;
+  });
+  var el=document.getElementById('stok-list');
+  if(!data.length){el.innerHTML='<div class="empty"><div class="ei">📦</div><p>Belum ada item</p></div>';return;}
+  el.innerHTML=data.map(p=>{
+    var ri=katalog.indexOf(p);
+    var hasStok=p.stok!==null&&p.stok!==undefined;
+    var stokCls=!hasStok?'':p.stok>10?'hi':p.stok>4?'mid':'lo';
+    var icon=p.bisnis==='kucing'?'🐾':'👕';
+    return '<div class="kat-item">'+
+      '<div style="width:32px;height:32px;border-radius:9px;background:'+(p.bisnis==='kucing'?'#FEF3C7':'#CFFAFE')+';display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">'+icon+'</div>'+
+      (_isOwner?
+        '<div class="kat-info" onclick="openEditProduk('+ri+')" style="cursor:pointer;flex:1;">'+
+          '<div class="kn">'+p.nama_produk.replace('✏️ ','')+'</div>'+
+          '<div class="kh">'+fmtF(p.harga)+' <span style="font-size:10px;color:var(--muted);">✏️</span></div>'+
+        '</div>':
+        '<div class="kat-info" style="flex:1;">'+
+          '<div class="kn">'+p.nama_produk.replace('✏️ ','')+'</div>'+
+          '<div class="kh">'+fmtF(p.harga)+'</div>'+
+        '</div>')+
+      (hasStok?
+        '<div class="stk-box">'+
+          (_isOwner?'<button class="stk-btn" onclick="adjustStok('+ri+',-1)">−</button>':'')+
+          '<div class="stk-num '+stokCls+'">'+p.stok+'</div>'+
+          (_isOwner?'<button class="stk-btn" onclick="adjustStok('+ri+',1)">+</button>':'')+
+          (_isOwner?'<button class="stk-set" style="background:#D1FAE5;color:#065F46;border-color:#A7F3D0;" onclick="openStokMasuk('+ri+')">📦</button>':'')+
+          (_isOwner?'<button class="stk-set" onclick="openSetStok('+ri+')">SET</button>':'')+
+        '</div>':
+        '<span style="font-size:11px;color:var(--muted);">Layanan</span>')+
+      '</div>';
+  }).join('');
+}
+async function adjustStok(ri,d){
+  var p=katalog[ri];if(p.stok===null||p.stok===undefined)return;
+  p.stok=Math.max(0,p.stok+d);sd('kat_v3',katalog);renderStok();renderProdGrid();
+  await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(p))});
+}
+var _stokRi=null;
+function switchStokTab(tab){
+  var isMasuk=(tab==='masuk');
+  document.getElementById('stok-panel-masuk').style.display=isMasuk?'':'none';
+  document.getElementById('stok-panel-set').style.display=isMasuk?'none':'';
+  document.getElementById('stok-tab-masuk').style.cssText=isMasuk?'flex:1;padding:8px;border-radius:9px;border:2px solid var(--primary);background:var(--primary);color:#fff;font-weight:700;font-size:13px;cursor:pointer;':'flex:1;padding:8px;border-radius:9px;border:2px solid var(--border);background:#fff;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;';
+  document.getElementById('stok-tab-set').style.cssText=!isMasuk?'flex:1;padding:8px;border-radius:9px;border:2px solid #EF4444;background:#EF4444;color:#fff;font-weight:700;font-size:13px;cursor:pointer;':'flex:1;padding:8px;border-radius:9px;border:2px solid var(--border);background:#fff;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;';
+}
+function openStokMasuk(ri){
+  _stokRi=ri; var p=katalog[ri];
+  document.getElementById('m-stok-nama').textContent='📦 '+p.nama_produk.replace('✏️ ','');
+  document.getElementById('m-stok-sisa').textContent='Stok saat ini: '+p.stok+' '+p.satuan;
+  document.getElementById('stok-masuk-val').value='';
+  document.getElementById('stok-masuk-preview').textContent='';
+  document.getElementById('stok-val').value=p.stok||0;
+  switchStokTab('masuk');
+  document.getElementById('m-stok').classList.add('open');
+  document.getElementById('stok-masuk-val').oninput=function(){
+    var tambah=parseInt(this.value)||0;
+    var sisa=katalog[_stokRi]?katalog[_stokRi].stok||0:0;
+    document.getElementById('stok-masuk-preview').textContent=tambah>0?'Stok baru: '+sisa+' + '+tambah+' = '+(sisa+tambah):'';
+  };
+}
+function openSetStok(ri){
+  _stokRi=ri; var p=katalog[ri];
+  document.getElementById('m-stok-nama').textContent='📦 '+p.nama_produk.replace('✏️ ','');
+  document.getElementById('m-stok-sisa').textContent='Stok saat ini: '+p.stok+' '+p.satuan;
+  document.getElementById('stok-val').value=p.stok||0;
+  document.getElementById('stok-masuk-val').value='';
+  document.getElementById('stok-masuk-preview').textContent='';
+  switchStokTab('set');
+  document.getElementById('m-stok').classList.add('open');
+}
+async function simpanStokMasuk(){
+  var tambah=parseInt(document.getElementById('stok-masuk-val').value)||0;
+  if(!tambah||tambah<=0){alert('Isi jumlah stok yang masuk!');return;}
+  if(_stokRi===null)return;
+  katalog[_stokRi].stok=(katalog[_stokRi].stok||0)+tambah;
+  sd('kat_v3',katalog);
+  closeM('m-stok');renderStok();renderProdGrid();
+  await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(katalog[_stokRi]))});
+  _stokRi=null;
+}
+async function simpanStok(){
+  var val=parseInt(document.getElementById('stok-val').value)||0;
+  if(_stokRi===null)return;
+  katalog[_stokRi].stok=val;sd('kat_v3',katalog);
+  closeM('m-stok');renderStok();renderProdGrid();
+  await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(katalog[_stokRi]))});
+  _stokRi=null;
+}
+var _editRi=null;
+function openEditProduk(ri){
+  _editRi=ri;var p=katalog[ri];
+  document.getElementById('ep-nama').value=p.nama_produk.replace('✏️ ','');
+  document.getElementById('ep-harga').value=p.harga||0;
+  document.getElementById('m-edit-produk').classList.add('open');
+}
+async function simpanEditProduk(){
+  if(_editRi===null)return;
+  var nama=document.getElementById('ep-nama').value.trim();
+  var harga=parseInt(document.getElementById('ep-harga').value)||0;
+  if(!nama){alert('Nama tidak boleh kosong');return;}
+  katalog[_editRi].nama_produk=nama;
+  katalog[_editRi].harga=harga;
+  sd('kat_v3',katalog);
+  closeM('m-edit-produk');renderStok();renderProdGrid();
+  await cAction({action:'update_produk',data:encodeURIComponent(JSON.stringify(katalog[_editRi]))});
+  _editRi=null;
+}
+
+async function simpanProdukBaru(){
+  var nama=document.getElementById('ap-nama').value.trim();
+  var harga=parseInt(document.getElementById('ap-harga').value)||0;
+  var stok=parseInt(document.getElementById('ap-stok').value)||0;
+  var bisnis=document.getElementById('ap-bisnis').value;
+  if(!nama){alert('Nama produk tidak boleh kosong');return;}
+  var newId=(bisnis==='kucing'?'k':'l')+'_'+Date.now();
+  var prod={id:newId,bisnis:bisnis,nama_produk:nama,harga:harga,satuan:'pcs',stok:stok,aktif:true};
+  katalog.push(prod);
+  sd('kat_v3',katalog);
+  closeM('m-add-produk');
+  document.getElementById('ap-nama').value='';
+  document.getElementById('ap-harga').value='';
+  document.getElementById('ap-stok').value='';
+  renderStok();renderProdGrid();
+  await cAction({action:'add_produk',data:encodeURIComponent(JSON.stringify(prod))});
+  alert('✅ Produk "'+nama+'" berhasil ditambahkan!');
+}
+
+// ══════════════════════════════════════════════
+// RENDER ALL + INIT
+// ══════════════════════════════════════════════
+function renderAll(){renderTrx();renderLap();renderUtang();renderStok();renderBonForms();renderAntrian();}
+
+// ══════════════════════════════════════════════
+// RESET
+// ══════════════════════════════════════════════
+async function pushStokKeCloud(){
+  if(!CFG.URL){alert('URL Google Sheets belum diisi.\nTap icon ☁️ di atas untuk setup dulu.');return;}
+  var btn=document.getElementById('btn-push-cloud');
+  var info=document.getElementById('push-cloud-info');
+  btn.textContent='⏳ Mempersiapkan...';btn.disabled=true;info.style.display='none';
+  try{
+    // Cek produk yang sudah ada di cloud
+    var res=await cloudGet({action:'read'});
+    var cloudIds=(res&&res.produk)?res.produk.map(function(p){return String(p.id);}):[];
+    var ok=0,fail=0;
+    for(var i=0;i<katalog.length;i++){
+      var p=katalog[i];
+      var act=cloudIds.indexOf(String(p.id))>=0?'update_produk':'add_produk';
+      btn.textContent='⏳ '+(i+1)+'/'+katalog.length+' produk...';
+      var r=await cloudGet({action:act,data:encodeURIComponent(JSON.stringify(p))});
+      if(r&&r.success) ok++; else fail++;
+    }
+    if(fail===0){
+      btn.textContent='✅ Upload Berhasil!';
+      info.textContent='✅ '+ok+' produk ter-upload. HP lain sync otomatis saat dibuka.';
+    } else {
+      btn.textContent='⚠️ Sebagian gagal ('+fail+')';
+      info.textContent=ok+' berhasil, '+fail+' gagal. Coba ulangi.';
+    }
+    info.style.display='block';
+    setTimeout(function(){btn.textContent='☁️ Upload Stok ke Cloud (sync HP lain)';btn.disabled=false;},4000);
+  }catch(e){
+    btn.textContent='❌ Error';btn.disabled=false;
+    info.textContent='Error: '+e.message;info.style.display='block';
+  }
+}
+
+function adminAction(fn){
+  var p=prompt('🔒 Masukkan PIN untuk akses admin:');
+  if(p===APP_PIN){fn();}
+  else{alert('❌ PIN salah.');}
+}
+function bukaGantiURL(){
+  adminAction(function(){
+    document.getElementById('setup-url').value=CFG.URL||'';
+    document.getElementById('m-setup').classList.add('open');
+  });
+}
+function resetTotal(){
+  adminAction(function(){
+    if(!confirm('💀 RESET TOTAL?\n\nSemua data + URL Google Sheets akan dihapus.\nApp kembali seperti pertama kali dipasang.\n\nLanjut?')) return;
+    if(!confirm('Yakin? Ini BENAR-BENAR tidak bisa dibatalkan.')) return;
+    localStorage.clear();
+    location.reload();
+  });
+}
+
+function resetStokSaja(){
+  if(!confirm('Reset semua stok ke 0?\nNanti isi ulang pakai tombol SET sesuai jumlah sebenarnya.')) return;
+  katalog.forEach(function(p){
+    if(p.stok!==null&&p.stok!==undefined) p.stok=0;
+  });
+  sd('kat_v3',katalog);
+  renderStok();renderProdGrid();
+  alert('✅ Semua stok direset ke 0. Silakan isi ulang dengan tombol SET.');
+}
+function resetSemuaData(){
+  if(!confirm('⚠️ HAPUS SEMUA DATA?\n\nTransaksi, utang, dan stok akan dihapus.\nKatalog produk & harga tetap ada.\nURL Google Sheets tetap tersimpan.\n\nLanjut?')) return;
+  if(!confirm('Yakin? Ini tidak bisa dibatalkan.')) return;
+  // Hapus transaksi & utang
+  transaksi=[]; utangData=[];
+  sd('trx_data',[]); sd('utang_data',[]);
+  // Reset stok semua ke 0
+  katalog.forEach(function(p){
+    if(p.stok!==null&&p.stok!==undefined) p.stok=0;
+  });
+  sd('kat_v3',katalog);
+  // Reset selected bon
+  bkSel=[]; blSvcId=null; blSatSel=[];
+  renderAll();
+  showTab('stok');
+  alert('✅ Semua data direset. Silakan isi stok sebenarnya via tombol SET di tab Stok.');
+}
+// ── AUTH CHECK: jalan setelah semua fungsi & variabel siap ──
+(function(){
+  // Cek lockout aktif saat buka app
+  var lockUntil=parseInt(localStorage.getItem('pin_lockout')||'0');
+  if(Date.now()<lockUntil){showLockout(lockUntil-Date.now());return;}
+
+  var ts=parseInt(localStorage.getItem('auth_ts')||'0');
+  if(Date.now()-ts < AUTH_DURATION_MS){
+    _isOwner=(localStorage.getItem('auth_role')==='owner');
+    document.getElementById('pin-screen').style.display='none';
+    appInit();
+  }
+  // Kalau belum auth, pin-screen tetap tampil — user input PIN → checkPin() → appInit()
+})();
+</script>
+</body>
+</html>
